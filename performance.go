@@ -30,3 +30,7 @@ type Performance struct {
 	Trace      TraceInformation
 	TraceLevel tracer.Level
 }
+
+func (Performance) TableName() string {
+	return "performance"
+}

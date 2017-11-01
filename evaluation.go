@@ -19,3 +19,7 @@ type Evaluation struct {
 	PerformanceID      bson.ObjectId
 	Public             bool
 }
+
+func (Evaluation) TableName() string {
+	return "evaluation"
+}
