@@ -10,7 +10,6 @@ import (
 )
 
 type TraceInformation struct {
-	json   string            `json:"-"`
 	Traces []model.Trace     `json:"data"`
 	Total  int               `json:"total"`
 	Limit  int               `json:"limit"`

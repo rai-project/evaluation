@@ -12,7 +12,7 @@ type InputPrediction struct {
 	CreatedAt     time.Time     `json:"created_at"  bson:"created_at"`
 	InputID       string
 	ExpectedLabel string
-	Predictions   dlframework.Features
+	Features      dlframework.Features
 }
 
 func (InputPrediction) TableName() string {
