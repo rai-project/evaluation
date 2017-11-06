@@ -12427,34 +12427,56 @@ Cell[BoxData[
         RowBox[{
          RowBox[{"Table", "[", "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"Tooltip", "[", 
-            RowBox[{
-             RowBox[{"{", 
+           RowBox[{
+            RowBox[{"duration", "=", 
+             RowBox[{"UnitConvert", "[", 
               RowBox[{
-               RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}], ",", 
-               RowBox[{
-                RowBox[{"Median", "[", 
-                 RowBox[{"e", "[", "\"\<Durations\>\"", "]"}], "]"}], "/", 
-                RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}]}]}], "}"}], ",", 
-             "\[IndentingNewLine]", 
-             RowBox[{"GeneralUtilities`Infobox", "[", "\[IndentingNewLine]", 
-              RowBox[{
-               RowBox[{"<|", "\[IndentingNewLine]", 
+               RowBox[{"Quantity", "[", 
                 RowBox[{
-                 RowBox[{"\"\<HostName\>\"", "->", 
-                  RowBox[{"e", "[", "\"\<HostName\>\"", "]"}]}], ",", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{"\"\<MachineArchitecture\>\"", "->", 
-                  RowBox[{"e", "[", "\"\<MachineArchitecture\>\"", "]"}]}], 
-                 ",", "\[IndentingNewLine]", 
-                 RowBox[{"\"\<UsingGPU\>\"", "->", 
-                  RowBox[{"e", "[", "\"\<UsingGPU\>\"", "]"}]}], ",", 
-                 "\[IndentingNewLine]", 
-                 RowBox[{"\"\<BatchSize\>\"", "->", 
-                  RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}]}]}], 
-                "\[IndentingNewLine]", "|>"}], ",", "\[IndentingNewLine]", 
-               "\"\<Information\>\""}], "\[IndentingNewLine]", "]"}]}], 
-            "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"Median", "[", 
+                   RowBox[{"e", "[", "\"\<Durations\>\"", "]"}], "]"}], "/", 
+                  RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}]}], ",", 
+                 "\"\<Microseconds\>\""}], "]"}], ",", 
+               "\"\<Milliseconds\>\""}], "]"}]}], ";", "\[IndentingNewLine]", 
+            
+            RowBox[{"Tooltip", "[", "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"Callout", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}], ",", 
+                  "duration"}], "}"}], ",", "\[IndentingNewLine]", 
+                RowBox[{
+                 RowBox[{"e", "[", "\"\<HostName\>\"", "]"}], "<>", 
+                 "\"\<::\>\"", "<>", 
+                 RowBox[{"e", "[", "\"\<Framework\>\"", "]"}], "<>", 
+                 "\"\<::\>\"", "<>", 
+                 RowBox[{"ToString", "[", 
+                  RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}], "]"}]}]}], 
+               "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+              "GeneralUtilities`Infobox", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"<|", "\[IndentingNewLine]", 
+                 RowBox[{
+                  RowBox[{"\"\<HostName\>\"", "->", 
+                   RowBox[{"e", "[", "\"\<HostName\>\"", "]"}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"\"\<MachineArchitecture\>\"", "->", 
+                   RowBox[{"e", "[", "\"\<MachineArchitecture\>\"", "]"}]}], 
+                  ",", "\[IndentingNewLine]", 
+                  RowBox[{"\"\<UsingGPU\>\"", "->", 
+                   RowBox[{"e", "[", "\"\<UsingGPU\>\"", "]"}]}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"\"\<Duration\>\"", "\[Rule]", "duration"}], ",", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"\"\<BatchSize\>\"", "->", 
+                   RowBox[{"e", "[", "\"\<BatchSize\>\"", "]"}]}]}], 
+                 "\[IndentingNewLine]", "|>"}], ",", "\[IndentingNewLine]", 
+                "\"\<Information\>\""}], "\[IndentingNewLine]", "]"}]}], 
+             "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
            RowBox[{"{", 
             RowBox[{"e", ",", 
              RowBox[{"SortBy", "[", 
@@ -12476,17 +12498,19 @@ Cell[BoxData[
    RowBox[{"PlotTheme", "->", "\"\<Grid\>\""}], ",", "\[IndentingNewLine]", 
    RowBox[{"AxesLabel", "\[Rule]", 
     RowBox[{"{", 
-     RowBox[{"\"\<BatchSize\>\"", ",", "\"\<Median Time (us)\>\""}], 
+     RowBox[{"\"\<BatchSize\>\"", ",", "\"\<Median Time (ms)\>\""}], 
      "}"}]}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"1afbb18e-19b2-4930-9b2d-ffdfd38a1f02"],
 
 Cell[BoxData[
  TemplateBox[{GraphicsBox[{{}, 
      GraphicsComplexBox[CompressedData["
-1:eJxTTMoPSmViYGAwAGIQDQEODiAyoHKHA4QfAKZZsmB8iPyC4/tQ5Nki9qHI
-P6k8iiLvAOdD5K/sP4gir9t9EEX+gFwTCp9BqhdFfcPUZhT+h0s9qPrbJqK6
-N28ainqPkgkofIu/k1HUXyhaisL/oLUYRf2G6qUofI+SxSjqC5hXofADZq9G
-Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
+1:eJxTTMoPSmViYGAwAGIQDQEODh4Pq0TW8Us6QPgBDntKJkuwMMD4Dg63f9Zl
+7WmRh8uDuCVC8nD5JQW2XNf/qsLly/bNl9KH8x0cqkXWuT/UUYLLR1huOfHt
+myJcHihbJdL3yB7GP3sGBN7aw9Q//73y4yXeJ3B+5Us1Q46Wt3D19/17p+d9
++gjnzz6isKHoxze4eh/zTseEmx/g/AqQ/oovcPXWIAO+scLdkyQAdOECZrh7
+Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
+2pvG7bqNUD8a/gMT/gA7q84U
       "], {{{}, 
         TagBox[{
           Hue[0.67, 0.6, 0.6], 
@@ -12495,7 +12519,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.368417, 0.506779, 0.709798], 
            AbsoluteThickness[1.6]], 
           PointBox[{25, 26}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {1}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {1}}]& ], 
         TagBox[{
           Hue[0.9060679774997897, 0.6, 0.6], 
           Directive[
@@ -12503,7 +12527,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.880722, 0.611041, 0.142051], 
            AbsoluteThickness[1.6]], 
           PointBox[{27, 28}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {2}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {2}}]& ], 
         TagBox[{
           Hue[0.1421359549995791, 0.6, 0.6], 
           Directive[
@@ -12511,7 +12535,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.560181, 0.691569, 0.194885], 
            AbsoluteThickness[1.6]], 
           PointBox[{29, 30}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {3}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {3}}]& ], 
         TagBox[{
           Hue[0.37820393249936934`, 0.6, 0.6], 
           Directive[
@@ -12519,7 +12543,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.922526, 0.385626, 0.209179], 
            AbsoluteThickness[1.6]], 
           PointBox[{31, 32}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {4}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {4}}]& ], 
         TagBox[{
           Hue[0.6142719099991583, 0.6, 0.6], 
           Directive[
@@ -12527,7 +12551,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.528488, 0.470624, 0.701351], 
            AbsoluteThickness[1.6]], 
           PointBox[{33, 34, 35, 36}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {5}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {5}}]& ], 
         TagBox[{
           Hue[0.8503398874989481, 0.6, 0.6], 
           Directive[
@@ -12535,7 +12559,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.772079, 0.431554, 0.102387], 
            AbsoluteThickness[1.6]], 
           PointBox[{37, 38, 39, 40}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {6}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {6}}]& ], 
         TagBox[{
           Hue[0.08640786499873876, 0.6, 0.6], 
           Directive[
@@ -12543,7 +12567,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[0.363898, 0.618501, 0.782349], 
            AbsoluteThickness[1.6]], 
           PointBox[{41, 42, 43, 44}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {7}}]& ], 
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {7}}]& ], 
         TagBox[{
           Hue[0.3224758424985268, 0.6, 0.6], 
           Directive[
@@ -12551,12 +12575,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            RGBColor[1, 0.75, 0], 
            AbsoluteThickness[1.6]], 
           PointBox[{45, 46, 47, 48}]}, 
-         Annotation[#, {{Legended}, Charting`Private`Tag$47266, {
+         Annotation[#, {{Legended}, Charting`Private`Tag$154132, {
            8}}]& ], {}}, {
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[25]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[25]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {1, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -12592,6 +12618,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "6.2653125`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -12623,7 +12657,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[6.2653125, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -12654,6 +12690,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[6.2653125, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -12671,11 +12712,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[6.2653125, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[26]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[26]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {1, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -12711,6 +12756,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "6.250015625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -12742,7 +12795,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[6.250015625, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -12773,6 +12828,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[6.250015625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -12790,11 +12850,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[6.250015625, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[27]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[27]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {2, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -12830,6 +12894,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "7.879625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -12861,7 +12933,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[7.879625, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -12892,6 +12966,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[7.879625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -12909,11 +12988,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[7.879625, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[28]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[28]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {2, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -12949,6 +13032,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "7.768023437499999`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -12980,7 +13071,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[7.768023437499999, "Milliseconds"], "BatchSize" -> 64]]],
+          Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13011,6 +13104,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[7.768023437499999, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13028,11 +13126,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[7.768023437499999, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[29]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[29]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {3, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13068,6 +13170,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "10.99578125`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -13099,7 +13209,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[10.99578125, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13130,6 +13242,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[10.99578125, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13147,11 +13264,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[10.99578125, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[30]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[30]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {3, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13187,6 +13308,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "10.994499999999999`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -13218,7 +13347,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[10.994499999999999`, "Milliseconds"], "BatchSize" -> 
+            64]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13249,6 +13380,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[10.994499999999999`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13266,11 +13402,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[10.994499999999999`, "Milliseconds"], "BatchSize" -> 
+            64]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[31]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[31]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {4, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13306,6 +13446,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "9.08765625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -13337,7 +13485,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[9.08765625, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13368,6 +13518,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[9.08765625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13385,11 +13540,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[9.08765625, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[32]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[32]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {4, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13425,6 +13584,13 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    TemplateBox[{
+                    "8.9823515625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -13456,7 +13622,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[8.9823515625, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13487,6 +13655,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[8.9823515625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13504,11 +13677,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[8.9823515625, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[33]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[33]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {5, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13546,6 +13723,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "0.57984375`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -13575,7 +13760,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.57984375, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13606,6 +13793,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[0.57984375, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13623,11 +13815,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.57984375, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[34]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[34]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {5, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13665,6 +13861,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "0.93125`", "\"ms\"", "milliseconds", "\"Milliseconds\""},
+                     "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -13694,7 +13898,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.93125, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13725,6 +13931,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[0.93125, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13742,11 +13953,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.93125, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[35]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[35]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {5, 3}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13784,6 +13999,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "0.6266875`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -13813,7 +14036,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.6266875, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13844,6 +14069,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[0.6266875, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13861,11 +14091,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.6266875, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[36]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[36]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {5, 4}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -13903,6 +14137,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "0.9223671875`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -13932,7 +14174,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.9223671875, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -13963,6 +14207,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[0.9223671875, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -13980,11 +14229,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[0.9223671875, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[37]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[37]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {6, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14022,6 +14275,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "1.1216875`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -14051,7 +14312,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.1216875, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14082,6 +14345,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[1.1216875, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14099,11 +14367,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.1216875, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[38]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[38]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {6, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14141,6 +14413,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "1.4356562499999999`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -14170,7 +14450,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.4356562499999999`, "Milliseconds"], "BatchSize" -> 
+            32]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14201,6 +14483,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[1.4356562499999999`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14218,11 +14505,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.4356562499999999`, "Milliseconds"], "BatchSize" -> 
+            32]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[39]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[39]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {6, 3}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14260,6 +14551,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "1.0530703125`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -14289,7 +14588,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.0530703125, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14320,6 +14621,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[1.0530703125, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14337,11 +14643,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.0530703125, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[40]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[40]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {6, 4}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14377,6 +14687,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "1.2793046874999998`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -14408,7 +14726,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.2793046874999998`, "Milliseconds"], "BatchSize" -> 
+            64]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14439,6 +14759,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[1.2793046874999998`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14456,11 +14781,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[1.2793046874999998`, "Milliseconds"], "BatchSize" -> 
+            64]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[41]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[41]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {7, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14496,6 +14825,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     StyleBox["\"UsingGPU\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "True"}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "2.74540625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
@@ -14527,7 +14864,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.74540625, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14558,6 +14897,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[2.74540625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14575,11 +14919,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.74540625, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[42]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[42]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {7, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14617,6 +14965,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "2.45346875`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -14646,7 +15002,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.45346875, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14677,6 +15035,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[2.45346875, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14694,11 +15057,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.45346875, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[43]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[43]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {7, 3}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14736,6 +15103,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "2.7498437499999997`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -14765,7 +15140,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.7498437499999997`, "Milliseconds"], "BatchSize" -> 
+            64]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14796,6 +15173,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[2.7498437499999997`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14813,11 +15195,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.7498437499999997`, "Milliseconds"], "BatchSize" -> 
+            64]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[44]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[44]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {7, 4}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14855,6 +15241,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "2.4901406249999996`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -14884,7 +15278,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.4901406249999996`, "Milliseconds"], "BatchSize" -> 
+            64]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -14915,6 +15311,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[2.4901406249999996`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -14932,11 +15333,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[2.4901406249999996`, "Milliseconds"], "BatchSize" -> 
+            64]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[45]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[45]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {8, 1}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -14974,6 +15379,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "3.3297187499999996`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -15003,7 +15416,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.3297187499999996`, "Milliseconds"], "BatchSize" -> 
+            32]]], Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -15034,6 +15449,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[3.3297187499999996`, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -15051,11 +15471,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.3297187499999996`, "Milliseconds"], "BatchSize" -> 
+            32]], "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[46]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[46]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {8, 2}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -15093,6 +15517,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "3.53365625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "32"}}, AutoDelete -> False, 
@@ -15122,7 +15554,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.53365625, "Milliseconds"], "BatchSize" -> 32]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -15153,6 +15587,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[3.53365625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 32}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -15170,11 +15609,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 32]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.53365625, "Milliseconds"], "BatchSize" -> 32]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[47]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[47]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {8, 3}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -15212,6 +15655,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "3.2188515625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -15241,7 +15692,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.2188515625, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -15272,6 +15725,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[3.2188515625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -15289,11 +15747,15 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "whatever", "MachineArchitecture" -> "amd64", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], "Tooltip"]& ], 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.2188515625, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ], 
         TagBox[
-         TooltipBox[{
-           Opacity[0.], 
-           PointBox[48]}, 
+         TooltipBox[
+          TagBox[{
+            Opacity[0.], 
+            PointBox[48]}, 
+           Annotation[#, {{Callout}, Charting`Private`Tag$154132, {8, 4}}]& ], 
           InterpretationBox[
            TagBox[
             StyleBox[
@@ -15331,6 +15793,14 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     "True"}, {
                     TemplateBox[{
                     TemplateBox[{5}, "Spacer1"], 
+                    StyleBox["\"Duration\"", 
+                    GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
+                    TemplateBox[{
+                    "3.3572890625`", "\"ms\"", "milliseconds", 
+                    "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
+                    TemplateBox[{
+                    TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"BatchSize\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
                     "64"}}, AutoDelete -> False, 
@@ -15360,7 +15830,9 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
             "Deploy"], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]]], Annotation[#, 
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.3572890625, "Milliseconds"], "BatchSize" -> 64]]], 
+         Annotation[#, 
           Interpretation[
            Deploy[
             Style[
@@ -15391,6 +15863,11 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     GrayLevel[0.4]]}], True}, {
                     Row[{
                     Spacer[5], 
+                    Style["Duration", 
+                    GrayLevel[0.4]]}], 
+                    Quantity[3.3572890625, "Milliseconds"]}, {
+                    Row[{
+                    Spacer[5], 
                     Style["BatchSize", 
                     GrayLevel[0.4]]}], 64}}, Dividers -> {{False, {
                     Opacity[0.15]}, False}, {}}, ColumnWidths -> Automatic, 
@@ -15408,19 +15885,1995 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                RoundingRadius -> 5], LineBreakWithin -> False]], 
            Association[
            "HostName" -> "minsky1", "MachineArchitecture" -> "ppc64le", 
-            "UsingGPU" -> True, "BatchSize" -> 64]], 
-          "Tooltip"]& ]}}], {}, {}, {}, {}}, {
+            "UsingGPU" -> True, "Duration" -> 
+            Quantity[3.3572890625, "Milliseconds"], "BatchSize" -> 64]], 
+          "Tooltip"]& ]}}], {}, {{{{}, {}}, {{}, {
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               6.2653125}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               6.2653125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               6.2653125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               6.2653125}], 
+              
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               6.2653125}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               6.2653125}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               6.2653125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               6.2653125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               6.2653125}], 
+              
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               6.2653125}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{106.60405965600032`, -0.09448048330182246}, {32., 
+               6.2653125}], 
+              
+              Offset[{106.60405965600032`, -16.094480483301822`}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.60405965600031, -16.094480483301844`}, {32., 
+               6.2653125}], 
+              
+              Offset[{11.60405965600031, -0.09448048330184378}, {32., 
+               6.2653125}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{59.10405965600031, -8.094480483301833}, {32., 
+             6.2653125}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               6.250015625}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               6.250015625}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               6.250015625}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               6.250015625}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               6.250015625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301842`, -1.204059656000295}, {64., 
+               6.250015625}], 
+              
+              Offset[{-10.494480483301842`, -17.204059656000297`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-105.49448048330184`, -17.204059656000318`}, {64., 
+               6.250015625}], 
+              
+              Offset[{-105.49448048330184`, -1.2040596560003163`}, {64., 
+               6.250015625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-57.99448048330184, -9.204059656000306}, {64., 
+             6.250015625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               7.879625}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               7.879625}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               7.879625}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               7.879625}], 
+              
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               7.879625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               7.879625}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               7.879625}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               7.879625}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               7.879625}], 
+              
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               7.879625}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               7.879625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{106.60405965600032`, -0.09448048330182246}, {32., 
+               7.879625}], 
+              
+              Offset[{106.60405965600032`, -16.094480483301822`}, {32., 
+               7.879625}], 
+              
+              Offset[{11.60405965600031, -16.094480483301844`}, {32., 
+               7.879625}], 
+              
+              Offset[{11.60405965600031, -0.09448048330184378}, {32., 
+               7.879625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{59.10405965600031, -8.094480483301833}, {32., 
+             7.879625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               7.768023437499999}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301842`, -1.204059656000295}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-10.494480483301842`, -17.204059656000297`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-105.49448048330184`, -17.204059656000318`}, {64., 
+               7.768023437499999}], 
+              
+              Offset[{-105.49448048330184`, -1.2040596560003163`}, {64., 
+               7.768023437499999}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{-57.99448048330184, -9.204059656000306}, {64., 
+             7.768023437499999}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 10.99578125}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 10.99578125}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 10.99578125}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 10.99578125}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 10.99578125}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 10.99578125}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 10.99578125}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 10.99578125}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 10.99578125}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 10.99578125}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 10.99578125}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{107., 8.00000000000001}, {32., 10.99578125}], 
+              Offset[{107., -7.9999999999999885`}, {32., 10.99578125}], 
+              Offset[{12., -8.00000000000001}, {32., 10.99578125}], 
+              Offset[{12., 7.99999999999999}, {32., 10.99578125}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{59.5, 4.898587196589413*^-16}, {32., 10.99578125}], {0, 
+            0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               10.994499999999999`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{-12., 8.00000000000001}, {64., 10.994499999999999`}], 
+              
+              Offset[{-12., -7.9999999999999885`}, {64., 
+               10.994499999999999`}], 
+              Offset[{-107., -8.00000000000001}, {64., 10.994499999999999`}], 
+              
+              
+              Offset[{-107., 7.99999999999999}, {64., 
+               10.994499999999999`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-59.5, 4.898587196589413*^-16}, {64., 
+             10.994499999999999`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               9.08765625}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               9.08765625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               9.08765625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               9.08765625}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               9.08765625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               9.08765625}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               9.08765625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               9.08765625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               9.08765625}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               9.08765625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{105.49448048330183`, 17.204059656000318`}, {32., 
+               9.08765625}], 
+              
+              Offset[{105.49448048330183`, 1.2040596560003198`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301835`, 1.2040596560002985`}, {32., 
+               9.08765625}], 
+              
+              Offset[{10.494480483301835`, 17.204059656000297`}, {32., 
+               9.08765625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{57.994480483301835`, 9.20405965600031}, {32., 
+             9.08765625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               8.9823515625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               8.9823515625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301835`, 17.204059656000318`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-10.494480483301835`, 1.2040596560003198`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-105.49448048330183`, 1.2040596560002985`}, {64., 
+               8.9823515625}], 
+              
+              Offset[{-105.49448048330183`, 17.204059656000297`}, {64., 
+               8.9823515625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::Caffe2::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-57.994480483301835`, 9.20405965600031}, {64., 
+             8.9823515625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 0.57984375}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 0.57984375}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 0.57984375}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 0.57984375}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 0.57984375}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 0.57984375}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 0.57984375}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 0.57984375}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 0.57984375}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 0.57984375}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 0.57984375}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{108., 8.00000000000001}, {32., 0.57984375}], 
+              Offset[{108., -7.9999999999999885`}, {32., 0.57984375}], 
+              Offset[{12., -8.00000000000001}, {32., 0.57984375}], 
+              Offset[{12., 7.99999999999999}, {32., 0.57984375}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{60., 4.898587196589413*^-16}, {32., 0.57984375}], {0, 
+            0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               0.93125}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               0.93125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               0.93125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               0.93125}], 
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 0.93125}], 
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 0.93125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               0.93125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               0.93125}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               0.93125}], 
+              
+              Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
+               0.93125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               0.93125}], 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
+               0.93125}], 
+              Offset[{7.604059656000311, -6.494480483301834}, {32., 0.93125}], 
+              Offset[{9.604059656000311, -6.494480483301834}, {32., 0.93125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               0.93125}], 
+              
+              Offset[{11.604059656000311`, -6.494480483301834}, {32., 
+               0.93125}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{111.60405965600032`, -0.8944804833018232}, {32., 
+               0.93125}], 
+              
+              Offset[{111.60405965600032`, -14.894480483301823`}, {32., 
+               0.93125}], 
+              
+              Offset[{11.60405965600031, -14.894480483301844`}, {32., 
+               0.93125}], 
+              
+              Offset[{11.60405965600031, -0.8944804833018445}, {32., 
+               0.93125}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{61.60405965600031, -7.894480483301834}, {32., 0.93125}], {
+            0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 0.6266875}], 
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 0.6266875}], 
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 0.6266875}], 
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 0.6266875}], 
+              Offset[{-8., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-10., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-12., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-12., 4.898587196589413*^-16}, {64., 0.6266875}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 0.6266875}], 
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 0.6266875}], 
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 0.6266875}], 
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 0.6266875}], 
+              Offset[{-8., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-10., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-12., 4.898587196589413*^-16}, {64., 0.6266875}], 
+              Offset[{-12., 4.898587196589413*^-16}, {64., 0.6266875}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{-12., 8.00000000000001}, {64., 0.6266875}], 
+              Offset[{-12., -7.9999999999999885`}, {64., 0.6266875}], 
+              Offset[{-108., -8.00000000000001}, {64., 0.6266875}], 
+              Offset[{-108., 7.99999999999999}, {64., 0.6266875}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{-60., 4.898587196589413*^-16}, {64., 0.6266875}], {0, 
+            0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-6.494480483301841, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-8.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-10.49448048330184, -7.604059656000306}, {64., 
+               0.9223671875}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301842`, -2.0040596560002957`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-10.494480483301842`, -16.004059656000294`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-110.49448048330184`, -16.004059656000315`}, {64., 
+               0.9223671875}], 
+              
+              Offset[{-110.49448048330184`, -2.004059656000317}, {64., 
+               0.9223671875}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-60.49448048330184, -9.004059656000306}, {64., 
+             0.9223671875}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               1.1216875}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               1.1216875}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               1.1216875}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               1.1216875}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               1.1216875}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               1.1216875}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               1.1216875}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               1.1216875}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               1.1216875}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               1.1216875}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{106.49448048330183`, 17.204059656000318`}, {32., 
+               1.1216875}], 
+              
+              Offset[{106.49448048330183`, 1.2040596560003198`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301835`, 1.2040596560002985`}, {32., 
+               1.1216875}], 
+              
+              Offset[{10.494480483301835`, 17.204059656000297`}, {32., 
+               1.1216875}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{58.494480483301835`, 9.20405965600031}, {32., 
+             1.1216875}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 
+               1.4356562499999999`}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{8., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{10., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{12., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{12., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{8., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{10., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{12., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}], 
+              
+              Offset[{12., 4.898587196589413*^-16}, {32., 
+               1.4356562499999999`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{112., 7.0000000000000115`}, {32., 1.4356562499999999`}], 
+              
+              Offset[{112., -6.9999999999999885`}, {32., 
+               1.4356562499999999`}], 
+              Offset[{12., -7.00000000000001}, {32., 1.4356562499999999`}], 
+              Offset[{12., 6.99999999999999}, {32., 1.4356562499999999`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{62., 4.898587196589413*^-16}, {32., 
+             1.4356562499999999`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.0530703125}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.0530703125}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301835`, 17.204059656000318`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-10.494480483301835`, 1.2040596560003198`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-106.49448048330183`, 1.2040596560002985`}, {64., 
+               1.0530703125}], 
+              
+              Offset[{-106.49448048330183`, 17.204059656000297`}, {64., 
+               1.0530703125}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-58.494480483301835`, 9.20405965600031}, {64., 
+             1.0530703125}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.2793046874999998`}], 
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               1.2793046874999998`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301835`, 16.004059656000322`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-10.494480483301835`, 2.0040596560003205`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-110.49448048330183`, 2.0040596560002992`}, {64., 
+               1.2793046874999998`}], 
+              
+              Offset[{-110.49448048330183`, 16.0040596560003}, {64., 
+               1.2793046874999998`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-60.494480483301835`, 9.00405965600031}, {64., 
+             1.2793046874999998`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.74540625}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.74540625}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.74540625}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.74540625}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.74540625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.74540625}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.74540625}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.74540625}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.74540625}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.74540625}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.74540625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{112., 7.0000000000000115`}, {32., 2.74540625}], 
+              Offset[{112., -6.9999999999999885`}, {32., 2.74540625}], 
+              Offset[{12., -7.00000000000001}, {32., 2.74540625}], 
+              Offset[{12., 6.99999999999999}, {32., 2.74540625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{62., 4.898587196589413*^-16}, {32., 2.74540625}], {0, 
+            0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.45346875}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.45346875}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.45346875}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.45346875}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.45346875}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.45346875}], 
+              Offset[{4., 2.4492935982947064`*^-16}, {32., 2.45346875}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.45346875}], 
+              Offset[{6., 3.6739403974420594`*^-16}, {32., 2.45346875}], 
+              Offset[{8., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{10., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.45346875}], 
+              Offset[{12., 4.898587196589413*^-16}, {32., 2.45346875}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{108., 8.00000000000001}, {32., 2.45346875}], 
+              Offset[{108., -7.9999999999999885`}, {32., 2.45346875}], 
+              Offset[{12., -8.00000000000001}, {32., 2.45346875}], 
+              Offset[{12., 7.99999999999999}, {32., 2.45346875}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            Offset[{60., 4.898587196589413*^-16}, {32., 2.45346875}], {0, 
+            0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.7498437499999997`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{-12., 7.0000000000000115`}, {64., 2.7498437499999997`}], 
+              
+              Offset[{-12., -6.9999999999999885`}, {64., 
+               2.7498437499999997`}], 
+              Offset[{-112., -7.00000000000001}, {64., 2.7498437499999997`}], 
+              
+              
+              Offset[{-112., 6.99999999999999}, {64., 
+               2.7498437499999997`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-62., 4.898587196589413*^-16}, {64., 
+             2.7498437499999997`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-4., 2.4492935982947064`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-6., 3.6739403974420594`*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-8., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-10., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}], 
+              
+              Offset[{-12., 4.898587196589413*^-16}, {64., 
+               2.4901406249999996`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              Offset[{-12., 8.00000000000001}, {64., 2.4901406249999996`}], 
+              
+              Offset[{-12., -7.9999999999999885`}, {64., 
+               2.4901406249999996`}], 
+              Offset[{-108., -8.00000000000001}, {64., 2.4901406249999996`}], 
+              
+              
+              Offset[{-108., 7.99999999999999}, {64., 
+               2.4901406249999996`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-60., 4.898587196589413*^-16}, {64., 
+             2.4901406249999996`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.3297187499999996`}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{110.49448048330183`, 16.004059656000322`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{110.49448048330183`, 2.0040596560003205`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301835`, 2.0040596560002992`}, {32., 
+               3.3297187499999996`}], 
+              
+              Offset[{10.494480483301835`, 16.0040596560003}, {32., 
+               3.3297187499999996`}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{60.494480483301835`, 9.00405965600031}, {32., 
+             3.3297187499999996`}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.53365625}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.53365625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.53365625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.53365625}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.53365625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.53365625}], 
+              
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
+               3.53365625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.53365625}], 
+              
+              Offset[{4.870860362476378, 5.703044742000232}, {32., 
+               3.53365625}], 
+              
+              Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
+               3.53365625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{106.49448048330183`, 17.204059656000318`}, {32., 
+               3.53365625}], 
+              
+              Offset[{106.49448048330183`, 1.2040596560003198`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301835`, 1.2040596560002985`}, {32., 
+               3.53365625}], 
+              
+              Offset[{10.494480483301835`, 17.204059656000297`}, {32., 
+               3.53365625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::32\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{58.494480483301835`, 9.20405965600031}, {32., 
+             3.53365625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.2188515625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.2188515625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301835`, 16.004059656000322`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-10.494480483301835`, 2.0040596560003205`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-110.49448048330183`, 2.0040596560002992`}, {64., 
+               3.2188515625}], 
+              
+              Offset[{-110.49448048330183`, 16.0040596560003}, {64., 
+               3.2188515625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-60.494480483301835`, 9.00405965600031}, {64., 
+             3.2188515625}], {0, 0}]}], 
+         GraphicsGroupBox[{{
+            Directive[
+             AbsoluteThickness[4], 
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            CapForm["Butt"], 
+            JoinForm["Round"], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.3572890625}]}]}, {
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+            BSplineCurveBox[{
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-4.870860362476378, 5.703044742000232}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
+               3.3572890625}]}]}, {
+            Directive[
+             GrayLevel[1], 
+             Opacity[
+              NCache[
+               Rational[2, 3], 0.6666666666666666]]], 
+            EdgeForm[], 
+            PolygonBox[{
+              
+              Offset[{-10.494480483301835`, 17.204059656000318`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-10.494480483301835`, 1.2040596560003198`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-106.49448048330183`, 1.2040596560002985`}, {64., 
+               3.3572890625}], 
+              
+              Offset[{-106.49448048330183`, 17.204059656000297`}, {64., 
+               3.3572890625}]}]}, {
+            EdgeForm[], 
+            RGBColor[
+            0.6666666666666666, 0.6666666666666666, 0.6666666666666666]}, {}, 
+           
+           InsetBox[
+            FormBox[
+             StyleBox[
+              RotationBox["\"minsky1::MXNet::64\"", BoxRotation -> 0.], {
+               Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
+            Offset[{-58.494480483301835`, 9.20405965600031}, {64., 
+             3.3572890625}], {0, 0}]}]}}}, {{{}}, {{}}}}, {}, {}}, {
     DisplayFunction -> Identity, PlotRangePadding -> {{
         Scaled[0.02], 
-        Scaled[0.02]}, {
+        Scaled[0.08]}, {
         Scaled[0.02], 
-        Scaled[0.05]}}, AxesOrigin -> {31.5, 0}, 
-     PlotRange -> {{32., 64.}, {0, 10995.78125}}, PlotRangeClipping -> True, 
+        Scaled[0.0970820393249937]}}, AxesOrigin -> {31.5, 0}, 
+     PlotRange -> {{32., 64.}, {0, 10.99578125}}, PlotRangeClipping -> True, 
      ImagePadding -> All, DisplayFunction -> Identity, AspectRatio -> 
      NCache[GoldenRatio^(-1), 0.6180339887498948], Axes -> {True, True}, 
      AxesLabel -> {
        FormBox["\"BatchSize\"", TraditionalForm], 
-       FormBox["\"Median Time (us)\"", TraditionalForm]}, 
+       FormBox["\"Median Time (ms)\"", TraditionalForm]}, 
      AxesOrigin -> {31.5, 0}, DisplayFunction :> Identity, 
      Frame -> {{False, False}, {False, False}}, 
      FrameLabel -> {{None, None}, {None, None}}, 
@@ -15437,12 +17890,13 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
            (Identity[#]& )[
             Part[#, 1]], 
            (Identity[#]& )[
-            Part[#, 2]]}& )}}, PlotRange -> {{32., 64.}, {0, 10995.78125}}, 
+            Part[#, 2]]}& )}}, PlotRange -> {{32., 64.}, {0, 10.99578125}}, 
      PlotRangeClipping -> True, PlotRangePadding -> {{
         Scaled[0.02], 
-        Scaled[0.02]}, {
+        Scaled[0.08]}, {
         Scaled[0.02], 
-        Scaled[0.05]}}, Ticks -> {Automatic, Automatic}}],FormBox[
+        Scaled[0.0970820393249937]}}, Ticks -> {Automatic, Automatic}}],
+   FormBox[
     FormBox[
      TemplateBox[{
       "\"Caffe2/Caffe2::BVLC-AlexNet\"", "\"Caffe2/Caffe2::BVLC-GoogLeNet\"", 
@@ -16481,7 +18935,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
        RowBox[{"Placed", "[", 
          RowBox[{#2, ",", "After"}], "]"}]}], 
      "]"}]& )]], \
-"Output",ExpressionUUID->"f1304b0d-6cfd-4d33-87c7-1606d4d753a2"]
+"Output",ExpressionUUID->"35de4450-620a-45d0-9908-4f8540d45444"]
 }, Open  ]]
 }, Open  ]],
 
@@ -17145,6 +19599,7 @@ Cell[BoxData[
             ImageSize->{Automatic, 25}],
            Appearance->None,
            BaselinePosition->Baseline,
+           
            ButtonFunction:>OutputSizeLimit`ButtonFunction[
             OutputSizeLimit`Defer, 15, 24462496779054107927, 5/2],
            Enabled->True,

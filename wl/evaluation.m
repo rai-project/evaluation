@@ -79,7 +79,7 @@ accuracyInformation[eval0_] :=
     |>
   ];
 
-(* $AccuracyInformation = Map[accuracyInformation, evaluations]; *)
+$AccuracyInformation = Map[accuracyInformation, evaluations];
 
 debug = Print;
 
