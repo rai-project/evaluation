@@ -1,11 +1,12 @@
 BeginPackage["evaluation`", {
-  "JLink`",
-  "MongoDBLink`"
+  "JLink`"
 }]
 
 xBegin["`Private`"]
 
 ReinstallJava[JVMArguments -> "-Xmx2048m"]
+
+Needs["MongoDBLink`"]
 
 $MonogoDBHosts = <|
   "CSL224" -> "csl-224-01.csl.illinois.edu",
@@ -24,6 +25,17 @@ collections = {
   "input_prediction",
   "model_accuracy"
 };
+
+getSpans[span_] :=
+  If[KeyExistsQ[span, "spans"],
+    Join[{span}, Catenate[getSpans /@ span["spans"]]],
+    {span}
+  ];
+
+toAssociation0[e_] := e //.  List[a__Rule] :> Association[a];
+toAssociation1 = GeneralUtilities`ToAssociations;
+toAssociation[e_] := Replace[e, List[a__Rule] :> Association[a], {0, Infinity}];
+
 
 conn = OpenConnection[$MonogoDBHost, 27017];
 
@@ -55,7 +67,15 @@ accuracyInformation[eval0_] :=
     frameworkName
   },
     eval = Association[eval0];
+    If[!AssociationQ[eval],
+      Print["unable to set eval ", eval];
+      Return[Nothing]
+    ];
     model = toAssociation[eval["model"]];
+    If[!AssociationQ[eval],
+      Print["unable to get model ", eval["model"]];
+      Return[Nothing]
+    ];
     modelaccuracyid = eval["modelaccuracyid"];
     If[MissingQ[modelaccuracyid],
       Return[Nothing]
@@ -133,15 +153,6 @@ durationInformation[eval0_] :=
       (* , "Spans" -> spans *)
     |>
   ];
-
-getSpans[span_] :=
-  If[KeyExistsQ[span, "spans"],
-    Join[{span}, Catenate[getSpans /@ span["spans"]]],
-    {span}
-  ];
-
-toAssociation0[e_] := e //.  List[a__Rule] :> Association[a];
-toAssociation = GeneralUtilities`ToAssociations;
 
 (* $DurationInformation = Quiet[Map[durationInformation, evaluations]]; *)
 
