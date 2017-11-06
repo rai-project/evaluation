@@ -54,7 +54,7 @@ accuracyInformation[eval0_] :=
   },
     eval = Association[eval0];
     model = toAssociation[eval["model"]];
-    modelaccuracyid = eval["performanceid"];
+    modelaccuracyid = eval["modelaccuracyid"];
     If[MissingQ[modelaccuracyid],
       Return[Nothing]
     ];
@@ -81,7 +81,7 @@ accuracyInformation[eval0_] :=
 
 $AccuracyInformation = Map[accuracyInformation, evaluations];
 
-debug = Print;
+(* debug = Print; *)
 
 durationInformation[eval0_] :=
   Module[{
@@ -141,7 +141,7 @@ getSpans[span_] :=
 toAssociation0[e_] := e //.  List[a__Rule] :> Association[a];
 toAssociation = GeneralUtilities`ToAssociations;
 
-$DurationInformation = Quiet[Map[durationInformation, evaluations]];
+(* $DurationInformation = Quiet[Map[durationInformation, evaluations]]; *)
 
 (* CloseConnection[conn]; *)
 
