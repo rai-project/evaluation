@@ -1,9 +1,11 @@
 BeginPackage["evaluation`", {
+  "JLink`",
   "MongoDBLink`"
 }]
 
-
 xBegin["`Private`"]
+
+ReinstallJava[JVMArguments -> "-Xmx2048m"]
 
 $MonogoDBHosts = <|
   "CSL224" -> "csl-224-01.csl.illinois.edu",
