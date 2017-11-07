@@ -3,6 +3,8 @@ package evaluation
 import (
 	"time"
 
+	"github.com/rai-project/database"
+	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/tracer"
 	"gopkg.in/mgo.v2/bson"
 
@@ -32,4 +34,24 @@ type Performance struct {
 
 func (Performance) TableName() string {
 	return "performance"
+}
+
+type PerformanceCollection struct {
+	*mongodb.MongoTable
+}
+
+func NewPerformanceCollection(db database.Database) (*PerformanceCollection, error) {
+	tbl, err := mongodb.NewTable(db, Performance{}.TableName())
+	if err != nil {
+		return nil, err
+	}
+	tbl.Create(nil)
+
+	return &PerformanceCollection{
+		MongoTable: tbl.(*mongodb.MongoTable),
+	}, nil
+}
+
+func (m *PerformanceCollection) Close() error {
+	return nil
 }

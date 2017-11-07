@@ -3,6 +3,8 @@ package evaluation
 import (
 	"time"
 
+	"github.com/rai-project/database"
+	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/dlframework"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -19,13 +21,22 @@ func (InputPrediction) TableName() string {
 	return "input_prediction"
 }
 
-type ModelAccuracy struct {
-	ID        bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt time.Time     `json:"created_at"  bson:"created_at"`
-	Top1      float64
-	Top5      float64
+type InputPredictionCollection struct {
+	*mongodb.MongoTable
 }
 
-func (ModelAccuracy) TableName() string {
-	return "model_accuracy"
+func NewInputPredictionCollection(db database.Database) (*InputPredictionCollection, error) {
+	tbl, err := mongodb.NewTable(db, InputPrediction{}.TableName())
+	if err != nil {
+		return nil, err
+	}
+	tbl.Create(nil)
+
+	return &InputPredictionCollection{
+		MongoTable: tbl.(*mongodb.MongoTable),
+	}, nil
+}
+
+func (m *InputPredictionCollection) Close() error {
+	return nil
 }

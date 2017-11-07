@@ -3,6 +3,8 @@ package evaluation
 import (
 	"time"
 
+	"github.com/rai-project/database"
+	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/dlframework"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -28,4 +30,24 @@ type Evaluation struct {
 
 func (Evaluation) TableName() string {
 	return "evaluation"
+}
+
+type EvaluationCollection struct {
+	*mongodb.MongoTable
+}
+
+func NewEvaluationCollection(db database.Database) (*EvaluationCollection, error) {
+	tbl, err := mongodb.NewTable(db, Evaluation{}.TableName())
+	if err != nil {
+		return nil, err
+	}
+	tbl.Create(nil)
+
+	return &EvaluationCollection{
+		MongoTable: tbl.(*mongodb.MongoTable),
+	}, nil
+}
+
+func (m *EvaluationCollection) Close() error {
+	return nil
 }
