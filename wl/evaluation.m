@@ -17,7 +17,7 @@ $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml";
+$MongoDBDatabaseName = "carml3";
 
 collections = {
   "evaluation",
@@ -52,7 +52,7 @@ evaluations = Table[
     FindDocuments[evaluationCollection, "Offset"->ii, "Limit"->1]
   ]
   ,
-  {ii, evaluationCount}
+  {ii, 0, evaluationCount-1}
 ];
 
 $Evaluations = Dataset[evaluations];
