@@ -4,7 +4,5 @@
 
 Install MongoDBLink
 
-```
-    Get[FileNameJoin[{NotebookDirectory[], "install_dep.m"}]];
-    InstallMongoDBLink[]
-```
+        Get[FileNameJoin[{NotebookDirectory[], "install_dep.m"}]];
+        InstallMongoDBLink[]
