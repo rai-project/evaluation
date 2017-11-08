@@ -13,6 +13,7 @@ type InputPrediction struct {
 	ID            bson.ObjectId `json:"id" bson:"_id"`
 	CreatedAt     time.Time     `json:"created_at"  bson:"created_at"`
 	InputID       string
+	InputIndex       int
 	ExpectedLabel string
 	Features      dlframework.Features
 }
