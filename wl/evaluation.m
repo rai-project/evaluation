@@ -90,8 +90,9 @@ accuracyInformation[eval0_] :=
     <|
       "ID" -> Lookup[eval, "_id"],
       "Model" -> modelName,
+      "ModelVersion" -> Lookup[model, "version"],
       "Framework" -> frameworkName,
-      "FrameworkModel" -> frameworkName <> "::" <> modelName,
+      "FrameworkModel" -> frameworkName <> "::" <> modelName <> "::" <> Lookup[model, "version"],
       "MachineArchitecture" -> eval["machinearchitecture"],
       "UsingGPU" -> eval["usinggpu"],
       "BatchSize" -> eval["batchsize"],
@@ -143,8 +144,9 @@ durationInformation[eval0_] :=
     <|
       "ID" -> Lookup[eval, "_id"],
       "Model" -> modelName,
+      "ModelVersion" -> Lookup[model, "version"],
       "Framework" -> frameworkName,
-      "FrameworkModel" -> frameworkName <> "::" <> modelName,
+      "FrameworkModel" -> frameworkName <> "::" <> modelName <> "::" <> Lookup[model, "version"],
       "MachineArchitecture" -> eval["machinearchitecture"],
       "UsingGPU" -> eval["usinggpu"],
       "BatchSize" -> eval["batchsize"],
