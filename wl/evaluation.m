@@ -17,7 +17,7 @@ $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml3";
+$MongoDBDatabaseName = "carml4";
 
 collections = {
   "evaluation",
@@ -102,7 +102,7 @@ accuracyInformation[eval0_] :=
     |>
   ];
 
-$AccuracyInformation = Map[accuracyInformation, evaluations];
+(* $AccuracyInformation = Map[accuracyInformation, evaluations]; *)
 
 (* debug = Print; *)
 
@@ -121,6 +121,10 @@ durationInformation[eval0_] :=
   },
     eval = Association[eval0];
     model = toAssociation[eval["model"]];
+    modelName = Lookup[model, "name"];
+    If[ToLowerCase[modelName] =!= "resnet101",
+      Return[Nothing]
+    ];
     performanceid = eval["performanceid"];
     If[MissingQ[performanceid],
       Return[Nothing]
@@ -139,7 +143,6 @@ durationInformation[eval0_] :=
     spans = Flatten[getSpans /@ trace["spans"]];
     predictSpans = Select[spans, #["operationname"] === "Predict" &];
     durations = N[Lookup[predictSpans, "duration"]];
-    modelName = Lookup[model, "name"];
     frameworkName = Lookup[Lookup[model, "framework"], "name"];
     <|
       "ID" -> Lookup[eval, "_id"],
@@ -156,7 +159,7 @@ durationInformation[eval0_] :=
     |>
   ];
 
-(* $DurationInformation = Quiet[Map[durationInformation, evaluations]]; *)
+$DurationInformation = Quiet[Map[durationInformation, evaluations]];
 
 (* CloseConnection[conn]; *)
 
