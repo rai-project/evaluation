@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 BeginPackage["evaluation`", {
   "JLink`"
 }]
@@ -7,7 +9,6 @@ xBegin["`Private`"]
 ReinstallJava[JVMArguments -> "-Xmx2048m"]
 
 Needs["MongoDBLink`"]
-
 $MonogoDBHosts = <|
   "CSL224" -> "csl-224-01.csl.illinois.edu",
   "Minsky" -> "minsky1-1.csl.illinois.edu"
@@ -46,7 +47,7 @@ performanceCollection = GetCollection[db, "performance"];
 modelAccuracyCollection = GetCollection[db, "model_accuracy"];
 
 evaluationCount = CountDocuments[evaluationCollection];
-
+Print["begin evaluations"]
 evaluations = Table[
   Association[
     FindDocuments[evaluationCollection, "Offset"->ii, "Limit"->1]
@@ -102,7 +103,11 @@ accuracyInformation[eval0_] :=
     |>
   ];
 
-(* $AccuracyInformation = Map[accuracyInformation, evaluations]; *)
+$AccuracyInformation = 
+	Module[{numEvaluations = Length[evaluations], ii = 0},
+		Print[ProgressIndicator[Dynamic[ii], {1, numEvaluations}]];
+		Map[Function[{eval}, ii++; accuracyInformation[eval]], evaluations]
+	];
 
 (* debug = Print; *)
 
