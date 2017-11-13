@@ -8,17 +8,19 @@ xBegin["`Private`"]
 
 ReinstallJava[JVMArguments -> "-Xmx2048m"]
 
-Needs["MongoDBLink`"]
+Needs["MongoDBLink`"];
+
 $MonogoDBHosts = <|
   "CSL224" -> "csl-224-01.csl.illinois.edu",
-  "Minsky" -> "minsky1-1.csl.illinois.edu"
+  "Minsky" -> "minsky1-1.csl.illinois.edu",
+  "Local" -> "localhost"
 |>;
 
 $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml4";
+$MongoDBDatabaseName = "carml_frameworktrace_cpu";
 
 collections = {
   "evaluation",
@@ -103,11 +105,12 @@ accuracyInformation[eval0_] :=
     |>
   ];
 
-$AccuracyInformation = 
-	Module[{numEvaluations = Length[evaluations], ii = 0},
-		Print[ProgressIndicator[Dynamic[ii], {1, numEvaluations}]];
-		Map[Function[{eval}, ii++; accuracyInformation[eval]], evaluations]
-	];
+
+Module[{numEvaluations = Length[evaluations]},
+DynamicModule[{ii = 0},
+  PrintTemporary["Getting accuracy information: ", ProgressIndicator[Dynamic[ii], {1, numEvaluations}]];
+  $AccuracyInformation = Map[Function[{eval}, ii++; accuracyInformation[eval]], evaluations]
+]];
 
 (* debug = Print; *)
 
@@ -146,8 +149,8 @@ durationInformation[eval0_] :=
       Return[Nothing]
     ];
     spans = Flatten[getSpans /@ trace["spans"]];
-    predictSpans = Select[spans, #["operationname"] === "Predict" &];
-    durations = N[Lookup[predictSpans, "duration"]];
+    predictSpans = Select[spans, ToLowerCase[#["operationname"]] === "predict" &];
+    durations = N[Lookup[predictSpans, "duration", {}]];
     frameworkName = Lookup[Lookup[model, "framework"], "name"];
     <|
       "ID" -> Lookup[eval, "_id"],
@@ -164,7 +167,12 @@ durationInformation[eval0_] :=
     |>
   ];
 
-$DurationInformation = Quiet[Map[durationInformation, evaluations]];
+
+Module[{numEvaluations = Length[evaluations]},
+DynamicModule[{ii = 0},
+  PrintTemporary["Getting duration information: ", ProgressIndicator[Dynamic[ii], {1, numEvaluations}]];
+  $DurationInformation = Map[Function[{eval}, ii++; durationInformation[eval]], evaluations]
+]];
 
 (* CloseConnection[conn]; *)
 
