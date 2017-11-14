@@ -16,7 +16,7 @@ $MonogoDBHosts = <|
   "Local" -> "localhost"
 |>;
 
-$MonogoDBHostName = "Minsky";
+$MonogoDBHostName = "Local";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
@@ -130,9 +130,9 @@ durationInformation[eval0_] :=
     eval = Association[eval0];
     model = toAssociation[eval["model"]];
     modelName = Lookup[model, "name"];
-    If[ToLowerCase[modelName] =!= "resnet101",
+    (* If[ToLowerCase[modelName] =!= "resnet101",
       Return[Nothing]
-    ];
+    ]; *)
     performanceid = eval["performanceid"];
     If[MissingQ[performanceid],
       Return[Nothing]
