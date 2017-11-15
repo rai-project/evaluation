@@ -16,11 +16,11 @@ $MonogoDBHosts = <|
   "Local" -> "localhost"
 |>;
 
-$MonogoDBHostName = "Local";
+$MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml_frameworktrace_cpu";
+$MongoDBDatabaseName = "carml_frameworktrace_cpu_2";
 
 collections = {
   "evaluation",
@@ -49,7 +49,7 @@ performanceCollection = GetCollection[db, "performance"];
 modelAccuracyCollection = GetCollection[db, "model_accuracy"];
 
 evaluationCount = CountDocuments[evaluationCollection];
-Print["begin evaluations"]
+PrintTemporary["begin evaluations"];
 evaluations = Table[
   Association[
     FindDocuments[evaluationCollection, "Offset"->ii, "Limit"->1]
@@ -143,7 +143,15 @@ durationInformation[eval0_] :=
       Return[Nothing]
     ];
     debug["found performanceid = ", performanceid];
-    trace = First[toAssociation[First[performance]]["trace"]["traces"]];
+    With[{
+      traces = toAssociation[First[performance]]["trace"]["traces"]
+    },
+      trace = If[traces === {} || !ListQ[traces],
+        PrintTemporary[performance];
+        {},
+        First[traces]
+      ]
+    ];
     If[!AssociationQ[trace],
       debug["performanceid = ", performanceid, " is not an association"];
       Return[Nothing]
