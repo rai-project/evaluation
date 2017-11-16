@@ -6,7 +6,7 @@ BeginPackage["evaluation`", {
 
 xBegin["`Private`"]
 
-ReinstallJava[JVMArguments -> "-Xmx2048m"]
+ReinstallJava[JVMArguments -> "-Xmx8192m"]
 
 Needs["MongoDBLink`"];
 
@@ -20,7 +20,7 @@ $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml_frameworktrace_cpu_2";
+$MongoDBDatabaseName = "carml_frameworktrace_cpu_3";
 
 collections = {
   "evaluation",
