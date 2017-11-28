@@ -20,7 +20,7 @@ $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml_frameworktrace_11_17";
+$MongoDBDatabaseName = "carml_11_20_17";
 
 collections = {
   "evaluation",
