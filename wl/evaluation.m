@@ -20,7 +20,7 @@ $MonogoDBHostName = "Minsky";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
-$MongoDBDatabaseName = "carml_frameworktrace_11_17";
+$MongoDBDatabaseName = "carml_11_20_17";
 
 collections = {
   "evaluation",
@@ -50,13 +50,17 @@ modelAccuracyCollection = GetCollection[db, "model_accuracy"];
 
 evaluationCount = CountDocuments[evaluationCollection];
 PrintTemporary["begin evaluations"];
+
+DynamicModule[{progress = 0},
+PrintTemporary["Getting evaluation information: ", ProgressIndicator[Dynamic[progress], {0, evaluationCount-1}]];
 evaluations = Table[
+  progress = ii;
   Association[
     FindDocuments[evaluationCollection, "Offset"->ii, "Limit"->1]
   ]
   ,
   {ii, 0, evaluationCount-1}
-];
+]];
 
 $Evaluations = Dataset[evaluations];
 

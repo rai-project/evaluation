@@ -1,6 +1,26 @@
 Notebook[{
 
 Cell[CellGroupData[{
+Cell["11_20_17", \
+"Chapter",ExpressionUUID->"e4aac2a4-d001-4936-ae25-83e771f45579"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Get", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<evaluation.m\>\""}], 
+     "}"}], "]"}], "]"}], 
+  ";"}]], "Input",ExpressionUUID->"9857af4a-7f91-4c21-8dda-41ffc2756ffe"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Old", "Chapter",ExpressionUUID->"453305fa-fff5-4fa1-9126-1baf7cc3bf57"],
+
+Cell[CellGroupData[{
+
 Cell["Install Dependencies", \
 "Section",ExpressionUUID->"2ae65ef9-3fe3-486a-a8df-4d2a64e1c307"],
 
@@ -1931,7 +1951,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                0.55584}], 
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 0.55584}], 
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 0.55584}], 
-              
               Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
                0.55584}], 
               
@@ -2151,7 +2170,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               Offset[{4.870860362476378, 5.703044742000232}, {32., 0.55584}], 
               
               Offset[{4.870860362476378, 5.703044742000232}, {32., 0.55584}], 
-              
               
               Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
                0.55584}], 
@@ -2576,6 +2594,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                0.67754}], 
+              
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                0.67754}], 
               
@@ -2636,6 +2655,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-3.2472402416509203`, -3.802029828000153}, {50., 
                0.67754}], 
+              
               Offset[{-4.87086036247638, -5.7030447420002295`}, {50., 
                0.67754}], 
               
@@ -2746,7 +2766,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                0.67754}], 
-              
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                0.67754}], 
               Offset[{4.870860362476378, 5.703044742000232}, {32., 0.67754}], 
@@ -2819,6 +2838,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{6.494480483301837, 7.6040596560003095`}, {16., 
                0.67754}], 
+              
               Offset[{8.494480483301837, 7.6040596560003095`}, {16., 
                0.67754}], 
               
@@ -3045,7 +3065,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               RotationBox[
               "\"minsky1 MXNet::BVLC-GoogLeNet\"", BoxRotation -> 0.], {
                Opacity[1]}, StripOnInput -> False], TraditionalForm], 
-            
             Offset[{-91.99448048330184, -9.204059656000306}, {64., 
              0.67754}], {0, 0}]}], 
          GraphicsGroupBox[{{
@@ -3175,6 +3194,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                0.67754}], 
+              
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                0.67754}], 
               Offset[{4.870860362476378, 5.703044742000232}, {32., 0.67754}], 
@@ -3345,8 +3365,8 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {8., 
                0.67754}], 
               
-              Offset[{3.2472402416509185`, 3.8020298280001548`}, {8., 
-               0.67754}], 
+              Offset[{3.2472402416509185`, 3.8020298280001548`}, {8., 0.67754}
+               ], 
               Offset[{4.870860362476378, 5.703044742000232}, {8., 0.67754}], 
               Offset[{4.870860362476378, 5.703044742000232}, {8., 0.67754}], 
               Offset[{6.494480483301837, 7.6040596560003095`}, {8., 0.67754}], 
@@ -4350,6 +4370,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                0.7199}], 
+              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                0.7199}]}]}, {
             RGBColor[
@@ -4606,7 +4627,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                Rational[2, 3], 0.6666666666666666]]], 
             EdgeForm[], 
             PolygonBox[{
-              
               Offset[{-10.494480483301842`, -1.2040596560002914`}, {64., 
                0.7199}], 
               
@@ -4720,7 +4740,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
             CapForm["Butt"], 
             JoinForm["Round"], 
             BSplineCurveBox[{
-              
               Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
                0.7199}], 
               
@@ -4783,7 +4802,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{11.604059656000317`, -16.094480483301847`}, {32., 
                0.7199}], 
-              
               Offset[{11.604059656000317`, -0.09448048330184733}, {32., 
                0.7199}]}]}, {
             EdgeForm[], 
@@ -5553,7 +5571,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
             CapForm["Butt"], 
             JoinForm["Round"], 
             BSplineCurveBox[{
-              
               Offset[{-3.2472402416509185`, 3.8020298280001548`}, {50., 
                0.68084}], 
               
@@ -5861,6 +5878,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{175.49448048330186`, 1.2040596560003278`}, {8., 
                0.68084}], 
+              
               Offset[{10.494480483301842`, 1.2040596560002914`}, {8., 
                0.68084}], 
               
@@ -5902,7 +5920,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-8.494480483301837, 7.6040596560003095`}, {64., 
                0.68084}], 
-              
               Offset[{-10.494480483301837`, 7.6040596560003095`}, {64., 
                0.68084}], 
               
@@ -6157,6 +6174,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{6.494480483301837, 7.6040596560003095`}, {16., 
                0.68084}], 
+              
               Offset[{8.494480483301837, 7.6040596560003095`}, {16., 
                0.68084}], 
               
@@ -7000,7 +7018,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
             RGBColor[
             0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
             BSplineCurveBox[{
-              
               Offset[{-3.2472402416509203`, -3.802029828000153}, {32., 
                0.7199}], 
               
@@ -7070,6 +7087,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               Offset[{4.870860362476378, 5.703044742000232}, {16., 0.7199}], 
               Offset[{6.494480483301837, 7.6040596560003095`}, {16., 0.7199}], 
               Offset[{8.494480483301837, 7.6040596560003095`}, {16., 0.7199}], 
+              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {16., 
                0.7199}], 
               
@@ -7106,7 +7124,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                0.7199}], 
               Offset[{145.49448048330186`, 2.004059656000325}, {16., 0.7199}], 
               Offset[{10.494480483301842`, 2.004059656000295}, {16., 0.7199}], 
-              
               Offset[{10.494480483301842`, 16.004059656000294`}, {16., 
                0.7199}]}]}, {
             EdgeForm[], 
@@ -7231,6 +7248,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
             RGBColor[
             0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
             BSplineCurveBox[{
+              
               Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
                0.7199}], 
               
@@ -7388,7 +7406,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               Offset[{-8.49448048330184, -7.604059656000306}, {32., 0.7199}], 
               
               Offset[{-10.49448048330184, -7.604059656000306}, {32., 0.7199}], 
-              
               Offset[{-10.49448048330184, -7.604059656000306}, {32., 
                0.7199}]}]}, {
             RGBColor[
@@ -7403,8 +7420,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-4.87086036247638, -5.7030447420002295`}, {32., 
                0.7199}], 
-              Offset[{-4.87086036247638, -5.7030447420002295`}, {32., 0.7199}]
-              , 
+              
+              Offset[{-4.87086036247638, -5.7030447420002295`}, {32., 
+               0.7199}], 
               Offset[{-6.494480483301841, -7.604059656000306}, {32., 0.7199}], 
               Offset[{-8.49448048330184, -7.604059656000306}, {32., 0.7199}], 
               
@@ -7462,8 +7480,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{5.703044742000234, -4.8708603624763755`}, {16., 
                0.7199}], 
-              Offset[{5.703044742000234, -4.8708603624763755`}, {16., 0.7199}]
-              , 
+              
+              Offset[{5.703044742000234, -4.8708603624763755`}, {16., 
+               0.7199}], 
               Offset[{7.604059656000311, -6.494480483301834}, {16., 0.7199}], 
               
               Offset[{9.604059656000311, -6.494480483301834}, {16., 0.7199}], 
@@ -7506,7 +7525,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                Rational[2, 3], 0.6666666666666666]]], 
             EdgeForm[], 
             PolygonBox[{
-              
               Offset[{142.60405965600032`, -0.09448048330181891}, {16., 
                0.7199}], 
               
@@ -7738,7 +7756,6 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-6.494480483301837, 7.6040596560003095`}, {32., 
                0.55584}], 
-              
               Offset[{-8.494480483301837, 7.6040596560003095`}, {32., 
                0.55584}], 
               
@@ -8032,6 +8049,7 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
               
               Offset[{-10.494480483301837`, 7.6040596560003095`}, {32., 
                0.55584}], 
+              
               Offset[{-10.494480483301837`, 7.6040596560003095`}, {32., 
                0.55584}]}]}, {
             Directive[
@@ -8606,8 +8624,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8650,8 +8669,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RGBColor[
                     0.587148, 0.40736066666666665`, 0.09470066666666668], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8694,8 +8714,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RGBColor[
                     0.37345400000000006`, 0.461046, 0.12992333333333334`], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8739,8 +8760,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8784,8 +8806,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8829,8 +8852,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8872,8 +8896,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -8914,10 +8939,10 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -8959,8 +8984,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9002,11 +9028,11 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     True, FrameStyle -> 
                     RGBColor[0.38105933333333336`, 0.39098866666666665`, 0.], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[0.571589, 0.586483, 0.]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
-                    DefaultBaseStyle -> {}, ButtonFunction :> 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[0.571589, 0.586483, 0.]"], 
+                    Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+                    Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
                     Not[
@@ -9049,8 +9075,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9093,8 +9120,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RGBColor[
                     0.587148, 0.40736066666666665`, 0.09470066666666668], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9137,8 +9165,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RGBColor[
                     0.37345400000000006`, 0.461046, 0.12992333333333334`], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9182,8 +9211,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9227,8 +9257,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9272,8 +9303,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9315,8 +9347,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9357,10 +9390,10 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -9402,8 +9435,9 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -9445,11 +9479,11 @@ vQ219ISunlB6oDw94S+PRsvf0fJ3MOeX0fJ3tPwdnuUvALMyUU0=
                     True, FrameStyle -> 
                     RGBColor[0.38105933333333336`, 0.39098866666666665`, 0.], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[0.571589, 0.586483, 0.]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
-                    DefaultBaseStyle -> {}, ButtonFunction :> 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[0.571589, 0.586483, 0.]"], 
+                    Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+                    Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
                     Not[
@@ -17389,6 +17423,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-6.494480483301841, -7.604059656000306}, {64., 
                     0.67754}], 
+                    
                     Offset[{-8.49448048330184, -7.604059656000306}, {64., 
                     0.67754}], 
                     
@@ -17505,6 +17540,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.87086036247638, -5.7030447420002295`}, {50., 
                     0.67754}], 
+                    
                     Offset[{-6.494480483301841, -7.604059656000306}, {50., 
                     0.67754}], 
                     
@@ -17561,6 +17597,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
                     0.67754}], 
+                    
                     Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
                     0.67754}], 
                     
@@ -17621,6 +17658,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{134.60405965600032`, -16.09448048330182}, {32., 
                     0.67754}], 
+                    
                     Offset[{11.604059656000317`, -16.094480483301847`}, {32., 
                     0.67754}], 
                     
@@ -17769,7 +17807,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
-                    
                     Offset[{3.8020298280001557`, -3.247240241650917}, {8., 
                     0.67754}], 
                     
@@ -17914,6 +17951,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                    StyleBox[
                     RotationBox["\"MXNet::VGG16\"", BoxRotation -> 0.], {
                     Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+                  
                   Offset[{-48.49448048330184, -9.004059656000306}, {64., 
                    0.6568}], {0, 0}]}], 
                GraphicsGroupBox[{{
@@ -18005,7 +18043,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                    StyleBox[
                     RotationBox["\"MXNet::VGG16\"", BoxRotation -> 0.], {
                     Opacity[1]}, StripOnInput -> False], TraditionalForm], 
-                  
                   Offset[{-48.49448048330184, -9.004059656000306}, {50., 
                    0.6568}], {0, 0}]}], 
                GraphicsGroupBox[{{
@@ -18122,7 +18159,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{5.703044742000234, -4.8708603624763755`}, {16., 
                     0.6568}], 
-                    
                     Offset[{7.604059656000311, -6.494480483301834}, {16., 
                     0.6568}], 
                     
@@ -18265,7 +18301,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                     0.7199}], 
-                    
                     Offset[{-6.494480483301841, -7.604059656000306}, {64., 
                     0.7199}], 
                     
@@ -18384,7 +18419,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.870860362476378, 5.703044742000232}, {50., 
                     0.7199}], 
-                    
                     Offset[{-6.494480483301837, 7.6040596560003095`}, {50., 
                     0.7199}], 
                     
@@ -18440,7 +18474,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                     0.7199}], 
-                    
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                     0.7199}], 
                     
@@ -18464,6 +18497,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
+                    
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                     0.7199}], 
                     
@@ -18671,7 +18705,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                     0.55584}], 
-                    
                     Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
                     0.55584}], 
                     
@@ -18984,6 +19017,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     Rational[2, 3], 0.6666666666666666]]], 
                   EdgeForm[], 
                   PolygonBox[{
+                    
                     Offset[{116.49448048330183`, 16.004059656000322`}, {8., 
                     0.55584}], 
                     
@@ -19159,6 +19193,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-10.494480483301837`, 7.6040596560003095`}, {50., 
                     0.68084}], 
+                    
                     Offset[{-10.494480483301837`, 7.6040596560003095`}, {50., 
                     0.68084}]}]}, {
                   Directive[
@@ -19215,6 +19250,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {32., 
                     0.68084}], 
+                    
                     Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
                     0.68084}], 
                     
@@ -19250,7 +19286,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                     0.68084}], 
-                    
                     Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                     0.68084}]}]}, {
                   Directive[
@@ -19307,7 +19342,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {16., 
                     0.68084}], 
-                    
                     Offset[{6.494480483301837, 7.6040596560003095`}, {16., 
                     0.68084}], 
                     
@@ -19452,6 +19486,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{132.49448048330186`, 1.2040596560003225`}, {8., 
                     0.68084}], 
+                    
                     Offset[{10.494480483301842`, 1.204059656000295}, {8., 
                     0.68084}], 
                     
@@ -19599,7 +19634,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
-                    
                     Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
                     0.6568}], 
                     
@@ -20033,7 +20067,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
-                    
                     Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
                     0.55584}], 
                     
@@ -20830,8 +20863,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -20874,8 +20908,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.587148, 0.40736066666666665`, 
                     0.09470066666666668], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -20918,8 +20953,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.37345400000000006`, 0.461046, 
                     0.12992333333333334`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -20962,8 +20998,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21006,8 +21043,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21050,8 +21088,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21093,8 +21132,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21135,10 +21175,10 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -21179,8 +21219,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21222,11 +21263,11 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.38105933333333336`, 0.39098866666666665`, 0.], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[0.571589, 0.586483, 0.]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
-                    DefaultBaseStyle -> {}, ButtonFunction :> 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[0.571589, 0.586483, 0.]"], 
+                    Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+                    Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
                     Not[
@@ -21268,8 +21309,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21312,8 +21354,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.587148, 0.40736066666666665`, 
                     0.09470066666666668], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21356,8 +21399,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.37345400000000006`, 0.461046, 
                     0.12992333333333334`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21400,8 +21444,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21444,8 +21489,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21488,8 +21534,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21531,8 +21578,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21573,10 +21621,10 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -21617,8 +21665,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -21660,11 +21709,11 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.38105933333333336`, 0.39098866666666665`, 0.], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[0.571589, 0.586483, 0.]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
-                    DefaultBaseStyle -> {}, ButtonFunction :> 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[0.571589, 0.586483, 0.]"], 
+                    Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+                    Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
                     Not[
@@ -29133,7 +29182,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {32., 
                     0.55584}], 
-                    
                     Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
                     0.55584}], 
                     
@@ -29305,6 +29353,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {8., 
                     0.55584}], 
+                    
                     Offset[{6.494480483301837, 7.6040596560003095`}, {8., 
                     0.55584}], 
                     
@@ -29361,6 +29410,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
                     0.67754}], 
+                    
                     Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
                     0.67754}], 
                     
@@ -29421,6 +29471,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-10.494480483301842`, -17.204059656000293`}, {64.,
                      0.67754}], 
+                    
                     Offset[{-133.49448048330186`, -17.204059656000318`}, {64.,
                      0.67754}], 
                     
@@ -29476,6 +29527,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
+                    
                     Offset[{-3.2472402416509185`, 3.8020298280001548`}, {50., 
                     0.67754}], 
                     
@@ -29568,7 +29620,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
-                    
                     Offset[{3.8020298280001557`, -3.247240241650917}, {32., 
                     0.67754}], 
                     
@@ -29769,6 +29820,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{7.604059656000311, -6.494480483301834}, {8., 
                     0.67754}], 
+                    
                     Offset[{9.604059656000311, -6.494480483301834}, {8., 
                     0.67754}], 
                     
@@ -29825,6 +29877,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-3.2472402416509203`, -3.802029828000153}, {64., 
                     0.6568}], 
+                    
                     Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                     0.6568}], 
                     
@@ -29885,6 +29938,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-86.49448048330184, -16.004059656000315`}, {64., 
                     0.6568}], 
+                    
                     Offset[{-86.49448048330184, -2.004059656000315}, {64., 
                     0.6568}]}]}, {
                   EdgeForm[], 
@@ -30059,6 +30113,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     Rational[2, 3], 0.6666666666666666]]], 
                   EdgeForm[], 
                   PolygonBox[{
+                    
                     Offset[{87.60405965600032, -0.894480483301825}, {32., 
                     0.6568}], 
                     
@@ -30092,7 +30147,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   CapForm["Butt"], 
                   JoinForm["Round"], 
                   BSplineCurveBox[{
-                    
                     Offset[{3.8020298280001557`, -3.247240241650917}, {16., 
                     0.6568}], 
                     
@@ -30322,7 +30376,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.870860362476378, 5.703044742000232}, {50., 
                     0.7199}], 
-                    
                     Offset[{-4.870860362476378, 5.703044742000232}, {50., 
                     0.7199}], 
                     
@@ -30378,7 +30431,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   CapForm["Butt"], 
                   JoinForm["Round"], 
                   BSplineCurveBox[{
-                    
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                     0.7199}], 
                     
@@ -31195,7 +31247,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                     0.68084}], 
-                    
                     Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                     0.68084}]}]}, {
                   Directive[
@@ -31252,7 +31303,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {16., 
                     0.68084}], 
-                    
                     Offset[{6.494480483301837, 7.6040596560003095`}, {16., 
                     0.68084}], 
                     
@@ -31270,6 +31320,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {16., 
                     0.68084}], 
+                    
                     Offset[{3.2472402416509185`, 3.8020298280001548`}, {16., 
                     0.68084}], 
                     
@@ -31446,6 +31497,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-10.49448048330184, -7.604059656000306}, {64., 
                     0.6568}], 
+                    
                     Offset[{-10.49448048330184, -7.604059656000306}, {64., 
                     0.6568}]}]}, {
                   RGBColor[
@@ -31503,6 +31555,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                    StyleBox[
                     RotationBox["\"Caffe2::VGG16\"", BoxRotation -> 0.], {
                     Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+                  
                   Offset[{-47.99448048330184, -9.004059656000306}, {64., 
                    0.6568}], {0, 0}]}], 
                GraphicsGroupBox[{{
@@ -31542,7 +31595,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                   RGBColor[
                   0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
                   BSplineCurveBox[{
-                    
                     Offset[{-3.2472402416509185`, 3.8020298280001548`}, {50., 
                     0.6568}], 
                     
@@ -31778,7 +31830,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                    StyleBox[
                     RotationBox["\"Caffe2::VGG16\"", BoxRotation -> 0.], {
                     Opacity[1]}, StripOnInput -> False], TraditionalForm], 
-                  
                   Offset[{49.10405965600031, -7.894480483301834}, {16., 
                    0.6568}], {0, 0}]}], 
                GraphicsGroupBox[{{
@@ -32067,7 +32118,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RotationBox["\"Caffe2::ResNet101\"", BoxRotation -> 0.], {
                     
                     Opacity[1]}, StripOnInput -> False], TraditionalForm], 
-                  
                   Offset[{57.60405965600031, -7.894480483301834}, {32., 
                    0.7199}], {0, 0}]}], 
                GraphicsGroupBox[{{
@@ -32198,6 +32248,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                     0.55584}], 
+                    
                     Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
                     0.55584}], 
                     
@@ -32285,7 +32336,6 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     Offset[{-8., 4.898587196589413*^-16}, {50., 0.55584}], 
                     Offset[{-10., 4.898587196589413*^-16}, {50., 0.55584}], 
                     Offset[{-12., 4.898587196589413*^-16}, {50., 0.55584}], 
-                    
                     Offset[{-12., 4.898587196589413*^-16}, {50., 
                     0.55584}]}]}, {
                   RGBColor[
@@ -32343,6 +32393,7 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     
                     Offset[{4.870860362476378, 5.703044742000232}, {32., 
                     0.55584}], 
+                    
                     Offset[{4.870860362476378, 5.703044742000232}, {32., 
                     0.55584}], 
                     
@@ -32888,8 +32939,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -32932,8 +32984,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.587148, 0.40736066666666665`, 
                     0.09470066666666668], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -32976,8 +33029,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.37345400000000006`, 0.461046, 
                     0.12992333333333334`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33020,8 +33074,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33064,8 +33119,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33108,8 +33164,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33151,8 +33208,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33193,10 +33251,10 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -33237,8 +33295,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33283,8 +33342,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.24561133333333335`, 0.3378526666666667, 
                     0.4731986666666667], FrameTicks -> None, PlotRangePadding -> 
                     None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.368417, 0.506779, 0.709798]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33327,8 +33387,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.587148, 0.40736066666666665`, 
                     0.09470066666666668], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.880722, 0.611041, 0.142051]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33371,8 +33432,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.37345400000000006`, 0.461046, 
                     0.12992333333333334`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.560181, 0.691569, 0.194885]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33415,8 +33477,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.6150173333333333, 0.25708400000000003`, 
                     0.13945266666666667`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.922526, 0.385626, 0.209179]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33459,8 +33522,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.3523253333333333, 0.3137493333333333, 
                     0.46756733333333333`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.528488, 0.470624, 0.701351]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33503,8 +33567,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.772079, 0.431554, 0.102387]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33546,8 +33611,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     True, FrameStyle -> 
                     RGBColor[0.24259866666666668`, 0.412334, 0.521566], 
                     FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.363898, 0.618501, 0.782349]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -33588,10 +33654,10 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> RGBColor[0.6666666666666666, 0.5, 0.],
                      FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
-                    "RGBColor[1, 0.75, 0]"], Appearance -> None, 
-                    BaseStyle -> {}, BaselinePosition -> Baseline, 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], "RGBColor[1, 0.75, 0]"], Appearance -> 
+                    None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
                     With[{Typeset`box$ = EvaluationBox[]}, 
                     If[
@@ -33632,8 +33698,9 @@ NudzuHmofAc0vgEaXwGNT/3wg/Cfopn3FM28p2jmPUUzj1rhNfDhgZ4e0Pmj
                     RGBColor[0.4317493333333333, 0.2521066666666667, 
                     0.40935800000000006`], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
-                    Dynamic[{Automatic, 1.35 CurrentValue["FontCapHeight"]/
-                    AbsoluteCurrentValue[Magnification]}]], 
+                    Dynamic[{Automatic, 
+                    1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                    Magnification])}]], 
                     "RGBColor[0.647624, 0.37816, 0.614037]"], Appearance -> 
                     None, BaseStyle -> {}, BaselinePosition -> Baseline, 
                     DefaultBaseStyle -> {}, ButtonFunction :> 
@@ -37065,7 +37132,6 @@ Cell[BoxData[
                     GrayLevel[0.5], 
                     AbsoluteThickness[1.5], 
                     Opacity[0.66]}], {}, {}], 
-                 
                  RectangleBox[{24.5, 0.}, {25.5, 0.88484}, "RoundingRadius" -> 
                   0]}], StatusArea[#, 0.88484]& , TagBoxNote -> "0.88484"], 
               StyleBox["0.88484`", {}, StripOnInput -> False]], 
@@ -37350,7 +37416,6 @@ Cell[BoxData[
                 Offset[{56.5, 10.000000000000012`}, {12., 3.04573919241969}], 
                 
                 Offset[{-56.5, 9.999999999999988}, {12., 3.04573919241969}], 
-                
                 Offset[{-56.5, 24.999999999999986`}, {12., 
                  3.04573919241969}]}]}, {
               EdgeForm[], 
@@ -37572,6 +37637,7 @@ Cell[BoxData[
                  Rational[2, 3], 0.6666666666666666]]], 
               EdgeForm[], 
               PolygonBox[{
+                
                 Offset[{37.5, 25.000000000000007`}, {54., 
                  2.5165748943147674`}], 
                 
@@ -37745,7 +37811,6 @@ Cell[BoxData[
                  Rational[2, 3], 0.6666666666666666]]], 
               EdgeForm[], 
               PolygonBox[{
-                
                 Offset[{37., 25.000000000000007`}, {47., 
                  1.9874105962098452`}], 
                 
@@ -37925,6 +37990,7 @@ Cell[BoxData[
                 Offset[{37., 10.000000000000007`}, {44., 
                  1.4582462981049225`}], 
                 Offset[{-37., 9.999999999999993}, {44., 1.4582462981049225`}], 
+                
                 Offset[{-37., 24.999999999999993`}, {44., 
                  1.4582462981049225`}]}]}, {
               EdgeForm[], 
@@ -39308,8 +39374,7 @@ Cell[BoxData[
                Pane[
                 Annotation[
                  RawBoxes["True"], 
-                 TypeSystem`NestedGrid`PackagePrivate`$SliceMarker[1904375926]
-                 [
+                 TypeSystem`NestedGrid`PackagePrivate`$SliceMarker[1904375926][
                   GeneralUtilities`Slice[
                    Key["BVLC-AlexNet"], 2, 
                    Key["UsingGPU"]]], "Mouse"], 
@@ -39753,8 +39818,7 @@ Cell[BoxData[
                Pane[
                 Annotation[
                  RawBoxes["0.00678"], 
-                 TypeSystem`NestedGrid`PackagePrivate`$SliceMarker[1904375926]
-                 [
+                 TypeSystem`NestedGrid`PackagePrivate`$SliceMarker[1904375926][
                   GeneralUtilities`Slice[
                    Key["ResNet50"], 1, 
                    Key["Top5"]]], "Mouse"], 
@@ -40245,7 +40309,6 @@ Cell[BoxData[
                 LineBox[{{{3.249836514383689, 483929.}, {2.8495740770451046`, 
                  483929.}}, {{3.249836514383689, 1.036356*^6}, {
                  2.8495740770451046`, 1.036356*^6}}}]}, {}}]},
-            
             ImageSizeCache->{{323.5857864376269, 
              386.4142135623731}, {-136.4142135623731, 211.4142135623731}}],
            StyleBox[
@@ -40512,6 +40575,7 @@ Cell[BoxData[
                  351865.}}]}, {}, {
                 GrayLevel[0], 
                 GrayLevel[0.5], 
+                
                 LineBox[{{{6.099410591428793, 350287.75}, {6.099410591428793, 
                  344557.}}, {{6.099410591428793, 356283.25}, {
                  6.099410591428793, 837338.}}}]}, {
@@ -40695,7 +40759,6 @@ Cell[BoxData[
                  290805.}}]}, {}, {
                 GrayLevel[0], 
                 GrayLevel[0.5], 
-                
                 LineBox[{{{8.14911588714319, 289040.75}, {8.14911588714319, 
                  281798.}}, {{8.14911588714319, 295070.25}, {8.14911588714319,
                   1.015219*^6}}}]}, {
@@ -40954,6 +41017,7 @@ Cell[BoxData[
                 AbsoluteThickness[1.5], 
                 Opacity[0.66]}], {}, {}], 
              GraphicsGroupBox[{Antialiasing -> False, 
+               
                PolygonBox[{{10.798558745519001`, 20126.25}, {
                 11.59908362019617, 20126.25}, {11.59908362019617, 17756.}, {
                 10.798558745519001`, 17756.}}], {}, {{}, {}}, {}, {
@@ -43124,6 +43188,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{-6.494480483301841, -7.604059656000306}, {64., 
                6250.015625}], 
+              
               Offset[{-8.49448048330184, -7.604059656000306}, {64., 
                6250.015625}], 
               
@@ -43185,6 +43250,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{5.703044742000234, -4.8708603624763755`}, {32., 
                7879.625}], 
+              
               Offset[{7.604059656000311, -6.494480483301834}, {32., 
                7879.625}], 
               
@@ -43838,6 +43904,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{-10.49448048330184, -7.604059656000306}, {64., 
                922.3671875}], 
+              
               Offset[{-10.49448048330184, -7.604059656000306}, {64., 
                922.3671875}]}]}, {
             Directive[
@@ -43899,6 +43966,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
                1121.6875}], 
+              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                1121.6875}], 
               
@@ -44396,6 +44464,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                2490.140625}], 
+              
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                2490.140625}], 
               
@@ -44499,7 +44568,6 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                3329.71875}], 
-              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                3329.71875}]}]}, {
             Directive[
@@ -44561,7 +44629,6 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{8.494480483301837, 7.6040596560003095`}, {32., 
                3533.65625}], 
-              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                3533.65625}], 
               
@@ -44582,6 +44649,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{4.870860362476378, 5.703044742000232}, {32., 
                3533.65625}], 
+              
               Offset[{6.494480483301837, 7.6040596560003095`}, {32., 
                3533.65625}], 
               
@@ -44643,6 +44711,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                3218.8515625}], 
+              
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                3218.8515625}], 
               
@@ -44764,6 +44833,7 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
               
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                3357.2890625}], 
+              
               Offset[{-6.494480483301837, 7.6040596560003095`}, {64., 
                3357.2890625}], 
               
@@ -45328,7 +45398,8 @@ Ub9FdSUKf4oVmvrR8Efh0yP8AakVdAA=
                     RGBColor[0.772079, 0.431554, 0.102387], 
                     RectangleBox[{0, -1}, {2, 1}]}}, AspectRatio -> 1, Frame -> 
                     True, FrameStyle -> 
-                    RGBColor[0.5147193333333333, 0.28770266666666666`, 
+                    RGBColor[
+                    0.5147193333333333, 0.28770266666666666`, 
                     0.06825800000000001], FrameTicks -> None, 
                     PlotRangePadding -> None, ImageSize -> 
                     Dynamic[{Automatic, 
@@ -46379,6 +46450,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"Duration\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
                     TemplateBox[{
                     "7.879625`", "\"ms\"", "milliseconds", 
                     "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
@@ -47068,7 +47140,6 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"Duration\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
-                    
                     TemplateBox[{
                     "8.9823515625`", "\"ms\"", "milliseconds", 
                     "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
@@ -48862,6 +48933,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
                     TemplateBox[{5}, "Spacer1"], 
                     StyleBox["\"Duration\"", 
                     GrayLevel[0.4], StripOnInput -> False]}, "RowDefault"], 
+                    
                     TemplateBox[{
                     "3.3297187499999996`", "\"ms\"", "milliseconds", 
                     "\"Milliseconds\""}, "Quantity", SyntaxForm -> Mod]}, {
@@ -49690,6 +49762,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
               
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                7.768023437499999}], 
+              
               Offset[{-4.87086036247638, -5.7030447420002295`}, {64., 
                7.768023437499999}], 
               
@@ -49732,7 +49805,6 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
              StyleBox[
               RotationBox["\"minsky1::Caffe2::64\"", BoxRotation -> 0.], {
                Opacity[1]}, StripOnInput -> False], TraditionalForm], 
-            
             Offset[{-57.99448048330184, -9.204059656000306}, {64., 
              7.768023437499999}], {0, 0}]}], 
          GraphicsGroupBox[{{
@@ -49885,7 +49957,6 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
             CapForm["Butt"], 
             JoinForm["Round"], 
             BSplineCurveBox[{
-              
               Offset[{3.2472402416509185`, 3.8020298280001548`}, {32., 
                9.08765625}], 
               
@@ -49906,6 +49977,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
               
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                9.08765625}], 
+              
               Offset[{10.494480483301837`, 7.6040596560003095`}, {32., 
                9.08765625}]}]}, {
             RGBColor[
@@ -50271,6 +50343,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
               
               Offset[{-8.49448048330184, -7.604059656000306}, {64., 
                0.9223671875}], 
+              
               Offset[{-10.49448048330184, -7.604059656000306}, {64., 
                0.9223671875}], 
               
@@ -50331,6 +50404,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
              StyleBox[
               RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
                Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
             Offset[{-60.49448048330184, -9.004059656000306}, {64., 
              0.9223671875}], {0, 0}]}], 
          GraphicsGroupBox[{{
@@ -50438,7 +50512,6 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
               
               Offset[{4., 2.4492935982947064`*^-16}, {32., 
                1.4356562499999999`}], 
-              
               Offset[{4., 2.4492935982947064`*^-16}, {32., 
                1.4356562499999999`}], 
               
@@ -50619,7 +50692,6 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
               
               Offset[{-3.2472402416509185`, 3.8020298280001548`}, {64., 
                1.2793046874999998`}], 
-              
               Offset[{-4.870860362476378, 5.703044742000232}, {64., 
                1.2793046874999998`}], 
               
@@ -50883,6 +50955,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
              StyleBox[
               RotationBox["\"whatever::MXNet::64\"", BoxRotation -> 0.], {
                Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
             Offset[{-62., 4.898587196589413*^-16}, {64., 
              2.7498437499999997`}], {0, 0}]}], 
          GraphicsGroupBox[{{
@@ -51063,6 +51136,7 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
              StyleBox[
               RotationBox["\"whatever::MXNet::32\"", BoxRotation -> 0.], {
                Opacity[1]}, StripOnInput -> False], TraditionalForm], 
+            
             Offset[{60.494480483301835`, 9.00405965600031}, {32., 
              3.3297187499999996`}], {0, 0}]}], 
          GraphicsGroupBox[{{
@@ -52432,9 +52506,10 @@ Qc5b958VztdqF7t57jUzXL0KW+NU58VccP6GooyJb1144Oonvq2xNz3ACefX
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
+}, Closed]]
 },
 WindowSize->{1920, 1009},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowMargins->{{-568, Automatic}, {Automatic, -1330}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
 Magnification:>1.5 Inherited,
