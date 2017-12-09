@@ -16,7 +16,7 @@ $MonogoDBHosts = <|
   "Local" -> "localhost"
 |>;
 
-$MonogoDBHostName = "Minsky";
+$MonogoDBHostName = "Local";
 
 $MonogoDBHost = $MonogoDBHosts[$MonogoDBHostName];
 
