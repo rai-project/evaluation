@@ -7,6 +7,7 @@ import (
 	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/dlframework"
 	"gopkg.in/mgo.v2/bson"
+	"upper.io/db.v3"
 )
 
 type Evaluation struct {
@@ -46,6 +47,27 @@ func NewEvaluationCollection(db database.Database) (*EvaluationCollection, error
 	return &EvaluationCollection{
 		MongoTable: tbl.(*mongodb.MongoTable),
 	}, nil
+}
+
+func (c EvaluationCollection) Find(as ...interface{}) ([]Evaluation, error) {
+	evals := []Evaluation{}
+
+	collection := c.Session.Collection(c.Name())
+
+	err := collection.Find(as...).All(&evals)
+	if err != nil {
+		return nil, err
+	}
+	return evals, nil
+}
+
+func (c EvaluationCollection) FindByModel(model dlframework.ModelManifest) ([]Evaluation, error) {
+	return c.Find(
+		db.Cond{
+			"model.name":    model.Name,
+			"model.version": model.Version,
+		},
+	)
 }
 
 func (m *EvaluationCollection) Close() error {
