@@ -1,0 +1,3 @@
+[submodule "vendor/github.com/gonum/gonum"]
+	path = vendor/github.com/gonum/gonum
+	url = https://github.com/gonum/gonum
