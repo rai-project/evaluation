@@ -1,6 +1,8 @@
 package evaluation
 
 import (
+	"strings"
+
 	model "github.com/uber/jaeger/model/json"
 )
 
@@ -8,8 +10,9 @@ type Spans []model.Span
 
 func (spns Spans) FilterByOperationName(op string) Spans {
 	res := []model.Span{}
+	op = strings.ToLower(op)
 	for _, s := range spns {
-		if s.OperationName == op {
+		if strings.ToLower(s.OperationName) == op {
 			res = append(res, s)
 		}
 	}

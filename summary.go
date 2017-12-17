@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	"fmt"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -30,7 +31,7 @@ func (SummaryBase) Header() []string {
 
 func (s SummaryBase) Row() []string {
 	return []string{
-		s.ID.String(),
+		fmt.Sprintf(`%x`, string(s.ID)),
 		s.CreatedAt.String(),
 		s.UpdatedAt.String(),
 		s.ModelName,
