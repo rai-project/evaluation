@@ -2,17 +2,13 @@ package evaluation
 
 import (
 	"errors"
+	"time"
 
 	db "upper.io/db.v3"
 )
 
 type SummaryPredictDurationInformation struct {
-	ID                  string
-	ModelName           string
-	ModelVersion        string
-	FrameworkName       string
-	FrameworkVersion    string
-	FrameworkModel      string
+	SummaryBase
 	MachineArchitecture string
 	UsingGPU            bool
 	BatchSize           int
@@ -20,15 +16,19 @@ type SummaryPredictDurationInformation struct {
 	Durations           []uint64 // in nano seconds
 }
 
-func (p Performances) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
+func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
 	spans := p.Spans().FilterByOperationName("predict")
 
 	return &SummaryPredictDurationInformation{
-		ID:                  e.ID,
-		ModelName:           e.Model.Name,
-		ModelVersion:        e.Model.Version,
-		FrameworkName:       e.Framework.Name,
-		FrameworkVersion:    e.Framework.Version,
+		SummaryBase: SummaryBase{
+			ID:               e.ID,
+			CreatedAt:        e.CreatedAt,
+			UpdatedAt:        time.Now(),
+			ModelName:        e.Model.Name,
+			ModelVersion:     e.Model.Version,
+			FrameworkName:    e.Framework.Name,
+			FrameworkVersion: e.Framework.Version,
+		},
 		MachineArchitecture: e.MachineArchitecture,
 		UsingGPU:            e.UsingGPU,
 		BatchSize:           e.BatchSize,
@@ -37,8 +37,21 @@ func (p Performances) PredictDurationInformationSummary(e Evaluation) (*SummaryP
 	}, nil
 }
 
-func (e Evaluation) PredictDurationInformationSummary(prefCol *PerformanceCollection) (*SummaryPredictDurationInformation, error) {
-	perfs, err := prefCol.Find(db.Cond{"_id": e.PerformanceID})
+func (ps Performances) PredictDurationInformationSummary(e Evaluation) ([]*SummaryPredictDurationInformation, error) {
+	res := []*SummaryPredictDurationInformation{}
+	for _, p := range ps {
+		s, err := p.PredictDurationInformationSummary(e)
+		if err != nil {
+			log.WithError(err).Error("failed to get duration information summary")
+			continue
+		}
+		res = append(res, s)
+	}
+	return res, nil
+}
+
+func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollection) (*SummaryPredictDurationInformation, error) {
+	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +62,7 @@ func (e Evaluation) PredictDurationInformationSummary(prefCol *PerformanceCollec
 	return perf.PredictDurationInformationSummary(e)
 }
 
-func (es Evaluations) PredictDurationInformationSummary(prefCol *PerformanceCollection) ([]*SummaryPredictDurationInformation, error) {
+func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) ([]*SummaryPredictDurationInformation, error) {
 	res := []*SummaryPredictDurationInformation{}
 	for _, e := range es {
 		s, err := e.PredictDurationInformationSummary(perfCol)
@@ -59,5 +72,5 @@ func (es Evaluations) PredictDurationInformationSummary(prefCol *PerformanceColl
 		}
 		res = append(res, s)
 	}
-	return nil, res
+	return res, nil
 }

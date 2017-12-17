@@ -11,7 +11,7 @@ var (
 	DefaultTrimmedMeanFraction = 0.2
 )
 
-func trimmedMean(data []float64, frac float64) {
+func trimmedMean(data []float64, frac float64) float64 {
 	if frac == 0 {
 		frac = DefaultTrimmedMeanFraction
 	}
@@ -20,12 +20,12 @@ func trimmedMean(data []float64, frac float64) {
 
 	sort.Float64s(data)
 
-	start := maxInt(0, floor(cnt*frac))
-	end := minInt(cnt-1, cnt-floor(cnt*frac))
+	start := maxInt(0, floor(float64(cnt)*frac))
+	end := minInt(cnt-1, cnt-floor(float64(cnt)*frac))
 
 	trimmed := data[start:end]
 
-	return stat.Mean(trimmed)
+	return stat.Mean(trimmed, nil)
 }
 
 func floor(x float64) int {

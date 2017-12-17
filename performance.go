@@ -20,11 +20,11 @@ type TraceInformation struct {
 }
 
 func (info TraceInformation) Spans() Spans {
-  res := []model.Span{}
-  for _, tr := range info.Traces {
-    res = append(res, ...tr.Spans)
-  }
-  return res
+	res := []model.Span{}
+	for _, tr := range info.Traces {
+		res = append(res, tr.Spans...)
+	}
+	return Spans(res)
 }
 
 type structuredError struct {
@@ -44,7 +44,7 @@ func (Performance) TableName() string {
 	return "performance"
 }
 
-func (p Performance) Spans()  Spans {
+func (p Performance) Spans() Spans {
 	return p.Trace.Spans()
 }
 

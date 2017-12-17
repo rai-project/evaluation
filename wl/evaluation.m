@@ -48,7 +48,7 @@ evaluationCollection = GetCollection[db, "evaluation"];
 performanceCollection = GetCollection[db, "performance"];
 modelAccuracyCollection = GetCollection[db, "model_accuracy"];
 
-evaluationCount = CountDocuments[evaluationCollection];
+evaluationCount = 100; CountDocuments[evaluationCollection];
 PrintTemporary["begin evaluations"];
 
 DynamicModule[{progress = 0},
