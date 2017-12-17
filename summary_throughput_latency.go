@@ -1,6 +1,6 @@
 package evaluation
 
-type SummaryPredictDurationInformation struct {
+type SummaryThroughputLatency struct {
 	SummaryBase
 	MachineArchitecture string
 	UsingGPU            bool
