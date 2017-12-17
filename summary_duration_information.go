@@ -2,7 +2,9 @@ package evaluation
 
 import (
 	"errors"
+	"strings"
 
+	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
 
@@ -16,6 +18,28 @@ type SummaryPredictDurationInformation struct {
 }
 
 type SummaryPredictDurationInformations []SummaryPredictDurationInformation
+
+func (SummaryPredictDurationInformation) Header() []string {
+	extra := []string{
+		"machine_architecture",
+		"using_gpu",
+		"batch_size",
+		"hostname",
+		"durations",
+	}
+	return append(SummaryBase{}.Header(), extra...)
+}
+
+func (s SummaryPredictDurationInformation) Row() []string {
+	extra := []string{
+		s.MachineArchitecture,
+		cast.ToString(s.UsingGPU),
+		cast.ToString(s.BatchSize),
+		s.HostName,
+		strings.Join(cast.ToStringSlice(s.Durations), ";"),
+	}
+	return append(s.SummaryBase.Row(), extra...)
+}
 
 func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
 	spans := p.Spans().FilterByOperationName("predict")

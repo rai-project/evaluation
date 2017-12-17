@@ -14,7 +14,34 @@ type SummaryBase struct {
 	ModelVersion     string
 	FrameworkName    string
 	FrameworkVersion string
-	FrameworkModel   string
+}
+
+func (SummaryBase) Header() []string {
+	return []string{
+		"id",
+		"created_at",
+		"updated_at",
+		"model_name",
+		"model_version",
+		"framework_name",
+		"framework_version",
+	}
+}
+
+func (s SummaryBase) Row() []string {
+	return []string{
+		s.ID.String(),
+		s.CreatedAt.String(),
+		s.UpdatedAt.String(),
+		s.ModelName,
+		s.ModelVersion,
+		s.FrameworkName,
+		s.FrameworkVersion,
+	}
+}
+
+func (s SummaryBase) FrameworkModel() string {
+	return s.FrameworkName + "::" + s.FrameworkVersion + "/" + s.ModelName + "::" + s.ModelVersion
 }
 
 func (e Evaluation) summaryBase() SummaryBase {

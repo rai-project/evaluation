@@ -20,6 +20,32 @@ type SummaryThroughputLatency struct {
 
 type SummaryThroughputLatencies []SummaryThroughputLatency
 
+func (SummaryThroughputLatency) Header() []string {
+	extra := []string{
+		"machine_architecture",
+		"using_gpu",
+		"batch_size",
+		"hostname",
+		"duration",
+		"latency",
+		"throughput",
+	}
+	return append(SummaryBase{}.Header(), extra...)
+}
+
+func (s SummaryThroughputLatency) Row() []string {
+	extra := []string{
+		s.MachineArchitecture,
+		cast.ToString(s.UsingGPU),
+		cast.ToString(s.BatchSize),
+		s.HostName,
+		cast.ToString(s.Duration),
+		cast.ToString(s.Latency),
+		cast.ToString(s.Throughput),
+	}
+	return append(s.SummaryBase.Row(), extra...)
+}
+
 func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	duration := trimmedMean(toFloat64Slice(info.Durations), trimmedMeanFraction)
