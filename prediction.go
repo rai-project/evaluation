@@ -13,7 +13,7 @@ type InputPrediction struct {
 	ID            bson.ObjectId `json:"id" bson:"_id"`
 	CreatedAt     time.Time     `json:"created_at"  bson:"created_at"`
 	InputID       string
-	InputIndex       int
+	InputIndex    int
 	ExpectedLabel string
 	Features      dlframework.Features
 }
@@ -36,6 +36,18 @@ func NewInputPredictionCollection(db database.Database) (*InputPredictionCollect
 	return &InputPredictionCollection{
 		MongoTable: tbl.(*mongodb.MongoTable),
 	}, nil
+}
+
+func (c *InputPredictionCollection) Find(as ...interface{}) ([]InputPrediction, error) {
+	preds := []InputPrediction{}
+
+	collection := c.Session.Collection(c.Name())
+
+	err := collection.Find(as...).All(&preds)
+	if err != nil {
+		return nil, err
+	}
+	return preds, nil
 }
 
 func (m *InputPredictionCollection) Close() error {

@@ -49,7 +49,7 @@ func NewEvaluationCollection(db database.Database) (*EvaluationCollection, error
 	}, nil
 }
 
-func (c EvaluationCollection) Find(as ...interface{}) ([]Evaluation, error) {
+func (c *EvaluationCollection) Find(as ...interface{}) ([]Evaluation, error) {
 	evals := []Evaluation{}
 
 	collection := c.Session.Collection(c.Name())
@@ -61,7 +61,7 @@ func (c EvaluationCollection) Find(as ...interface{}) ([]Evaluation, error) {
 	return evals, nil
 }
 
-func (c EvaluationCollection) FindByModel(model dlframework.ModelManifest) ([]Evaluation, error) {
+func (c *EvaluationCollection) FindByModel(model dlframework.ModelManifest) ([]Evaluation, error) {
 	return c.Find(
 		db.Cond{
 			"model.name":    model.Name,

@@ -19,6 +19,14 @@ type TraceInformation struct {
 	Errors []structuredError `json:"errors"`
 }
 
+func (info TraceInformation) Spans() Spans {
+  res := []model.Span{}
+  for _, tr := range info.Traces {
+    res = append(res, ...tr.Spans)
+  }
+  return res
+}
+
 type structuredError struct {
 	Code    int           `json:"code,omitempty"`
 	Msg     string        `json:"msg"`
@@ -36,6 +44,10 @@ func (Performance) TableName() string {
 	return "performance"
 }
 
+func (p Performance) Spans()  Spans {
+	return p.Trace.Spans()
+}
+
 type PerformanceCollection struct {
 	*mongodb.MongoTable
 }
@@ -50,6 +62,18 @@ func NewPerformanceCollection(db database.Database) (*PerformanceCollection, err
 	return &PerformanceCollection{
 		MongoTable: tbl.(*mongodb.MongoTable),
 	}, nil
+}
+
+func (c *PerformanceCollection) Find(as ...interface{}) ([]Performance, error) {
+	pref := []Performance{}
+
+	collection := c.Session.Collection(c.Name())
+
+	err := collection.Find(as...).All(&pref)
+	if err != nil {
+		return nil, err
+	}
+	return pref, nil
 }
 
 func (m *PerformanceCollection) Close() error {

@@ -7,7 +7,15 @@ import (
 	"gonum.org/v1/gonum/stat"
 )
 
+var (
+	DefaultTrimmedMeanFraction = 0.2
+)
+
 func trimmedMean(data []float64, frac float64) {
+	if frac == 0 {
+		frac = DefaultTrimmedMeanFraction
+	}
+
 	cnt := len(data)
 
 	sort.Float64s(data)
