@@ -15,6 +15,8 @@ type SummaryPredictDurationInformation struct {
 	Durations           []uint64 // in nano seconds
 }
 
+type SummaryPredictDurationInformations []SummaryPredictDurationInformation
+
 func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
 	spans := p.Spans().FilterByOperationName("predict")
 
