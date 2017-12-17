@@ -46,3 +46,11 @@ func toFloat64SliceE(i interface{}) ([]float64, error) {
 		return []float64{}, fmt.Errorf("unable to cast %#v of type %T to []float64", i, i)
 	}
 }
+
+func uint64SliceToStringSlice(us []uint64) []string {
+	res := make([]string, len(us))
+	for ii, u := range us {
+		res[ii] = cast.ToString(u)
+	}
+	return res
+}

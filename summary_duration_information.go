@@ -36,7 +36,7 @@ func (s SummaryPredictDurationInformation) Row() []string {
 		cast.ToString(s.UsingGPU),
 		cast.ToString(s.BatchSize),
 		s.HostName,
-		strings.Join(cast.ToStringSlice(s.Durations), ";"),
+		strings.Join(uint64SliceToStringSlice(s.Durations), ";"),
 	}
 	return append(s.SummaryBase.Row(), extra...)
 }
@@ -91,15 +91,15 @@ func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollec
 	return perf.PredictDurationInformationSummary(e)
 }
 
-func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) ([]*SummaryPredictDurationInformation, error) {
-	res := []*SummaryPredictDurationInformation{}
+func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) (SummaryPredictDurationInformations, error) {
+	res := []SummaryPredictDurationInformation{}
 	for _, e := range es {
 		s, err := e.PredictDurationInformationSummary(perfCol)
 		if err != nil {
 			log.WithError(err).Error("failed to get duration information summary")
 			continue
 		}
-		res = append(res, s)
+		res = append(res, *s)
 	}
 	return res, nil
 }

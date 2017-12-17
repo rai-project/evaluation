@@ -130,4 +130,5 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
 	EvaluationCmd.AddCommand(durationCmd)
+	EvaluationCmd.AddCommand(latencyCmd)
 }
