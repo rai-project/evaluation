@@ -58,9 +58,34 @@ type SummaryMemoryInformation struct {
 	MemoryInformations  []MemoryInformation
 }
 
+func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {
+	spans := p.Spans().FilterByOperationName("predict")
+
+	return &SummaryMemoryInformation{
+		SummaryBase:         e.summaryBase(),
+		MachineArchitecture: e.MachineArchitecture,
+		UsingGPU:            e.UsingGPU,
+		BatchSize:           e.BatchSize,
+		HostName:            e.Hostname,
+		MemoryInformations:  spans.MemoryInformation(),
+	}, nil
+}
+
+func (spns Spans) MemoryInformation() []MemoryInformation {
+	res := []MemoryInformation{}
+	for _, s := range spns {
+		info := memoryInformationFromSpan(s)
+		if info == nil {
+			continue
+		}
+		res = append(res, *info)
+	}
+	return res
+}
+
 var gpuIdSelectorRe = regexp.MustCompile(`^start_gpu\[(\d+)\]_.*`)
 
-func MemoryInformationFromSpan(span model.Span) *MemoryInformation {
+func memoryInformationFromSpan(span model.Span) *MemoryInformation {
 	if len(span.Logs) == 0 {
 		return nil
 	}

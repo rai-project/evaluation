@@ -41,6 +41,18 @@ func (s SummaryPredictDurationInformation) Row() []string {
 	return append(s.SummaryBase.Row(), extra...)
 }
 
+func (SummaryPredictDurationInformations) Header() []string {
+	return SummaryPredictDurationInformation{}.Header()
+}
+
+func (s SummaryPredictDurationInformations) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
+}
+
 func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
 	spans := p.Spans().FilterByOperationName("predict")
 

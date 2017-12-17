@@ -46,6 +46,18 @@ func (s SummaryThroughputLatency) Row() []string {
 	return append(s.SummaryBase.Row(), extra...)
 }
 
+func (SummaryThroughputLatencies) Header() []string {
+	return SummaryThroughputLatency{}.Header()
+}
+
+func (s SummaryThroughputLatencies) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
+}
+
 func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	duration := trimmedMean(toFloat64Slice(info.Durations), trimmedMeanFraction)
