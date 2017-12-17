@@ -16,3 +16,15 @@ type SummaryBase struct {
 	FrameworkVersion string
 	FrameworkModel   string
 }
+
+func (e Evaluation) summaryBase() SummaryBase {
+	return SummaryBase{
+		ID:               e.ID,
+		CreatedAt:        e.CreatedAt,
+		UpdatedAt:        time.Now(),
+		ModelName:        e.Model.Name,
+		ModelVersion:     e.Model.Version,
+		FrameworkName:    e.Framework.Name,
+		FrameworkVersion: e.Framework.Version,
+	}
+}

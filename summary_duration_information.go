@@ -2,7 +2,6 @@ package evaluation
 
 import (
 	"errors"
-	"time"
 
 	db "upper.io/db.v3"
 )
@@ -20,15 +19,7 @@ func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPr
 	spans := p.Spans().FilterByOperationName("predict")
 
 	return &SummaryPredictDurationInformation{
-		SummaryBase: SummaryBase{
-			ID:               e.ID,
-			CreatedAt:        e.CreatedAt,
-			UpdatedAt:        time.Now(),
-			ModelName:        e.Model.Name,
-			ModelVersion:     e.Model.Version,
-			FrameworkName:    e.Framework.Name,
-			FrameworkVersion: e.Framework.Version,
-		},
+		SummaryBase:         e.summaryBase(),
 		MachineArchitecture: e.MachineArchitecture,
 		UsingGPU:            e.UsingGPU,
 		BatchSize:           e.BatchSize,
