@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/k0kubun/pp"
 	"github.com/rai-project/config"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
@@ -20,12 +19,8 @@ type LayerInformation struct {
 type LayerInformations []LayerInformation
 
 type SummaryLayerInformation struct {
-	SummaryBase         `json:",inline"`
-	MachineArchitecture string            `json:"machine_architecture,omitempty"`
-	UsingGPU            bool              `json:"using_gpu,omitempty"`
-	BatchSize           int               `json:"batch_size,omitempty"`
-	HostName            string            `json:"host_name,omitempty"`
-	LayerInformations   LayerInformations `json:"layer_informations,omitempty"`
+	SummaryBase       `json:",inline"`
+	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
 }
 
 type SummaryLayerInformations []SummaryLayerInformation
@@ -58,10 +53,6 @@ func (s LayerInformations) Rows() [][]string {
 
 func (SummaryLayerInformation) Header() []string {
 	extra := []string{
-		"machine_architecture",
-		"using_gpu",
-		"batch_size",
-		"hostname",
 		"layer_informations",
 	}
 	return append(SummaryBase{}.Header(), extra...)
@@ -73,10 +64,6 @@ func (s SummaryLayerInformation) Row() []string {
 		infos = append(infos, strings.Join(row, ":"))
 	}
 	extra := []string{
-		s.MachineArchitecture,
-		cast.ToString(s.UsingGPU),
-		cast.ToString(s.BatchSize),
-		s.HostName,
 		strings.Join(infos, ";"),
 	}
 	return append(s.SummaryBase.Row(), extra...)
@@ -101,12 +88,8 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 	numSSpans := len(sspans)
 
 	summary := &SummaryLayerInformation{
-		SummaryBase:         e.summaryBase(),
-		MachineArchitecture: e.MachineArchitecture,
-		UsingGPU:            e.UsingGPU,
-		BatchSize:           e.BatchSize,
-		HostName:            e.Hostname,
-		LayerInformations:   LayerInformations{},
+		SummaryBase:       e.summaryBase(),
+		LayerInformations: LayerInformations{},
 	}
 	if numSSpans == 0 {
 		return summary, nil
@@ -148,7 +131,13 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 		transposedDurations := transpose(allDurations)
 		durations := []float64{}
 		for _, tr := range transposedDurations {
-			durations = append(durations, trimmedMean(tr, DefaultTrimmedMeanFraction))
+			ts := []float64{}
+			for _, t := range tr {
+				if t != -1 {
+					ts = append(ts, t)
+				}
+			}
+			durations = append(durations, trimmedMean(ts, DefaultTrimmedMeanFraction))
 		}
 		info.Durations = durations
 		infoMap[opName] = info
@@ -223,7 +212,8 @@ func spanTagEquals(span model.Span, key string, value string) bool {
 	for _, tag := range span.Tags {
 		key0 := strings.ToLower(tag.Key)
 		if key0 == key {
-			return strings.ToLower(cast.ToString(tag.Value)) == value
+			e := strings.TrimSpace(strings.ToLower(cast.ToString(tag.Value)))
+			return e == value
 		}
 	}
 	return false
@@ -257,7 +247,7 @@ func selectTensorflowLayerSpans(spans Spans) Spans {
 		}
 		res = append(res, span)
 	}
-	return nil
+	return res
 }
 func selectMXNetLayerSpans(spans Spans) Spans {
 	res := []model.Span{}
@@ -274,13 +264,9 @@ func selectMXNetLayerSpans(spans Spans) Spans {
 		if !spanTagExists(span, "process_id") {
 			continue
 		}
-		if !spanTagEquals(span, "metadata", "") {
-			continue
-		}
-		pp.Println(span)
 		res = append(res, span)
 	}
-	return nil
+	return res
 }
 func selectCaffeLayerSpans(spans Spans) Spans {
 	return selectCaffe2LayerSpans(spans)
@@ -300,12 +286,12 @@ func selectCaffe2LayerSpans(spans Spans) Spans {
 		if !spanTagExists(span, "thread_id") {
 			continue
 		}
-		if spanTagEquals(span, "process_id", "0") {
-			res = append(res, span)
+		if !spanTagEquals(span, "process_id", "0") {
 			continue
 		}
+		res = append(res, span)
 	}
-	return nil
+	return res
 }
 func selectCNTKLayerSpans(spans Spans) Spans {
 	log.WithField("function", "selectCNTKLayerSpans").Error("layer information is not currently supported by cntk")
@@ -321,6 +307,11 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		for ii, predict := range predictSpans {
 			if span.ParentSpanID == predict.SpanID {
 				return ii
+			}
+			for _, ref := range span.References {
+				if ref.RefType == model.ChildOf && ref.SpanID == predict.SpanID {
+					return ii
+				}
 			}
 		}
 		return -1
@@ -348,7 +339,6 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		if !ok {
 			continue
 		}
-		pp.Println(traceLevel)
 		if traceLevel == "" {
 			continue
 		}

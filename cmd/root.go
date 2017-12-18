@@ -5,6 +5,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/k0kubun/pp"
+
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
 	"github.com/rai-project/evaluation"
@@ -16,6 +18,7 @@ import (
 )
 
 var (
+	limit                     int
 	hostName                  string
 	machineArchitecture       string
 	modelName                 string
@@ -132,6 +135,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVar(&databaseAddress, "database_address", "", "address of the database")
 	EvaluationCmd.PersistentFlags().StringVar(&databaseName, "database_name", "", "name of the database to query")
 
+	EvaluationCmd.PersistentFlags().IntVar(&limit, "limit", -1, "limit the evaluations")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFileName, "output", "o", "", "output file name")
 	EvaluationCmd.PersistentFlags().BoolVar(&noHeader, "no_header", false, "show header labels for output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
@@ -139,4 +143,6 @@ func init() {
 	EvaluationCmd.AddCommand(durationCmd)
 	EvaluationCmd.AddCommand(latencyCmd)
 	EvaluationCmd.AddCommand(layersCmd)
+
+	pp.WithLineInfo = true
 }

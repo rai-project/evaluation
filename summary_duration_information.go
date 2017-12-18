@@ -9,22 +9,14 @@ import (
 )
 
 type SummaryPredictDurationInformation struct {
-	SummaryBase         `json:",inline"`
-	MachineArchitecture string   `json:"machine_architecture,omitempty"`
-	UsingGPU            bool     `json:"using_gpu,omitempty"`
-	BatchSize           int      `json:"batch_size,omitempty"`
-	HostName            string   `json:"host_name,omitempty"`
-	Durations           []uint64 `json:"durations,omitempty"` // in nano seconds
+	SummaryBase `json:",inline"`
+	Durations   []uint64 `json:"durations,omitempty"` // in nano seconds
 }
 
 type SummaryPredictDurationInformations []SummaryPredictDurationInformation
 
 func (SummaryPredictDurationInformation) Header() []string {
 	extra := []string{
-		"machine_architecture",
-		"using_gpu",
-		"batch_size",
-		"hostname",
 		"durations",
 	}
 	return append(SummaryBase{}.Header(), extra...)
@@ -57,12 +49,8 @@ func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPr
 	spans := p.Spans().FilterByOperationName("predict")
 
 	return &SummaryPredictDurationInformation{
-		SummaryBase:         e.summaryBase(),
-		MachineArchitecture: e.MachineArchitecture,
-		UsingGPU:            e.UsingGPU,
-		BatchSize:           e.BatchSize,
-		HostName:            e.Hostname,
-		Durations:           spans.Duration(),
+		SummaryBase: e.summaryBase(),
+		Durations:   spans.Duration(),
 	}, nil
 }
 

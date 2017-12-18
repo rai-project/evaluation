@@ -50,24 +50,16 @@ type MemoryInformation struct {
 }
 
 type SummaryMemoryInformation struct {
-	SummaryBase         `json:",inline"`
-	MachineArchitecture string              `json:"machine_architecture,omitempty"`
-	UsingGPU            bool                `json:"using_gpu,omitempty"`
-	BatchSize           int                 `json:"batch_size,omitempty"`
-	HostName            string              `json:"host_name,omitempty"`
-	MemoryInformations  []MemoryInformation `json:"memory_informations,omitempty"`
+	SummaryBase        `json:",inline"`
+	MemoryInformations []MemoryInformation `json:"memory_informations,omitempty"`
 }
 
 func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {
 	spans := p.Spans().FilterByOperationName("predict")
 
 	return &SummaryMemoryInformation{
-		SummaryBase:         e.summaryBase(),
-		MachineArchitecture: e.MachineArchitecture,
-		UsingGPU:            e.UsingGPU,
-		BatchSize:           e.BatchSize,
-		HostName:            e.Hostname,
-		MemoryInformations:  spans.MemoryInformation(),
+		SummaryBase:        e.summaryBase(),
+		MemoryInformations: spans.MemoryInformation(),
 	}, nil
 }
 

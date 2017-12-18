@@ -31,5 +31,9 @@ func getEvaluations() (evaluation.Evaluations, error) {
 		return nil, err
 	}
 
+	if limit > 0 {
+		evals = evals[:minInt(len(evals)-1, limit)]
+	}
+
 	return evaluation.Evaluations(evals), nil
 }

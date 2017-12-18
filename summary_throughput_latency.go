@@ -1,31 +1,21 @@
 package evaluation
 
 import (
-	"strings"
-
 	"github.com/gonum/floats"
 	"github.com/spf13/cast"
 )
 
 type SummaryThroughputLatency struct {
-	SummaryBase         `json:",inline"`
-	MachineArchitecture string  `json:"machine_architecture,omitempty"`
-	UsingGPU            bool    `json:"using_gpu,omitempty"`
-	BatchSize           int     `json:"batch_size,omitempty"`
-	HostName            string  `json:"host_name,omitempty"`
-	Duration            float64 `json:"duration,omitempty"` // in nano seconds
-	Latency             float64 `json:"latency,omitempty"`  // in nano seconds
-	Throughput          float64 `json:"throughput,omitempty"`
+	SummaryBase `json:",inline"`
+	Duration    float64 `json:"duration,omitempty"` // in nano seconds
+	Latency     float64 `json:"latency,omitempty"`  // in nano seconds
+	Throughput  float64 `json:"throughput,omitempty"`
 }
 
 type SummaryThroughputLatencies []SummaryThroughputLatency
 
 func (SummaryThroughputLatency) Header() []string {
 	extra := []string{
-		"machine_architecture",
-		"using_gpu",
-		"batch_size",
-		"hostname",
 		"duration",
 		"latency",
 		"throughput",
@@ -35,10 +25,6 @@ func (SummaryThroughputLatency) Header() []string {
 
 func (s SummaryThroughputLatency) Row() []string {
 	extra := []string{
-		s.MachineArchitecture,
-		cast.ToString(s.UsingGPU),
-		cast.ToString(s.BatchSize),
-		s.HostName,
 		cast.ToString(s.Duration),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
@@ -62,14 +48,10 @@ func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (Summar
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	duration := trimmedMean(toFloat64Slice(info.Durations), trimmedMeanFraction)
 	return SummaryThroughputLatency{
-		SummaryBase:         info.SummaryBase,
-		MachineArchitecture: info.MachineArchitecture,
-		UsingGPU:            info.UsingGPU,
-		BatchSize:           info.BatchSize,
-		HostName:            info.HostName,
-		Duration:            duration,
-		Latency:             float64(info.BatchSize) / duration,
-		Throughput:          duration / float64(info.BatchSize),
+		SummaryBase: info.SummaryBase,
+		Duration:    duration,
+		Latency:     float64(info.BatchSize) / duration,
+		Throughput:  duration / float64(info.BatchSize),
 	}, nil
 }
 
@@ -79,24 +61,8 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 
 	groups := map[string]SummaryPredictDurationInformations{}
 
-	key := func(s SummaryPredictDurationInformation) string {
-		return strings.Join(
-			[]string{
-				s.ModelName,
-				s.ModelVersion,
-				s.FrameworkName,
-				s.FrameworkVersion,
-				s.HostName,
-				s.MachineArchitecture,
-				cast.ToString(s.BatchSize),
-				cast.ToString(s.UsingGPU),
-			},
-			",",
-		)
-	}
-
 	for _, info := range infos {
-		k := key(info)
+		k := info.key()
 		if _, ok := groups[k]; !ok {
 			groups[k] = SummaryPredictDurationInformations{}
 		}
@@ -129,14 +95,10 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 
 		duration := floats.Min(durations)
 		sum := SummaryThroughputLatency{
-			SummaryBase:         first.SummaryBase,
-			MachineArchitecture: first.MachineArchitecture,
-			UsingGPU:            first.UsingGPU,
-			BatchSize:           first.BatchSize,
-			HostName:            first.HostName,
-			Duration:            duration,
-			Latency:             float64(first.BatchSize) / duration,
-			Throughput:          duration / float64(first.BatchSize),
+			SummaryBase: first.SummaryBase,
+			Duration:    duration,
+			Latency:     float64(first.BatchSize) / duration,
+			Throughput:  duration / float64(first.BatchSize),
 		}
 
 		res = append(res, sum)

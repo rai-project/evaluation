@@ -82,12 +82,16 @@ func transpose0(a [][]float64) [][]float64 {
 }
 
 func transpose(a [][]float64) [][]float64 {
-	m := len(a)
-	n := len(a[0])
-
-	r := make([][]float64, n)
-	for x := range r {
-		r[x] = make([]float64, m)
+	maxCols := len(a[0])
+	for _, r := range a {
+		maxCols = maxInt(maxCols, len(r))
+	}
+	r := make([][]float64, maxCols)
+	for x, _ := range r {
+		r[x] = make([]float64, len(a))
+		for ii := range r[x] {
+			r[x][ii] = -1
+		}
 	}
 	for y, s := range a {
 		for x, e := range s {
