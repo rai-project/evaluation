@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
 
@@ -24,10 +23,6 @@ func (SummaryPredictDurationInformation) Header() []string {
 
 func (s SummaryPredictDurationInformation) Row() []string {
 	extra := []string{
-		s.MachineArchitecture,
-		cast.ToString(s.UsingGPU),
-		cast.ToString(s.BatchSize),
-		s.HostName,
 		strings.Join(uint64SliceToStringSlice(s.Durations), ";"),
 	}
 	return append(s.SummaryBase.Row(), extra...)

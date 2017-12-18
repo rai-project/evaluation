@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/rai-project/evaluation/eventflow"
 	db "upper.io/db.v3"
@@ -9,10 +10,38 @@ import (
 
 type SummaryEventFlow struct {
 	SummaryBase `json:",inline"`
-	EventFlow   eventflow.Event `json:"event_flow,omitempty"`
+	EventFlow   eventflow.Events `json:"event_flow,omitempty"`
 }
 
 type SummaryEventFlows []SummaryEventFlow
+
+func (SummaryEventFlow) Header() []string {
+	extra := eventflow.Event{}.Header()
+	return append(SummaryBase{}.Header(), extra...)
+}
+
+func (s SummaryEventFlow) Row() []string {
+	events := []string{}
+	for _, e := range s.EventFlow {
+		events = append(events, strings.Join(e.Row(), "\t"))
+	}
+	extra := []string{
+		strings.Join(events, ";"),
+	}
+	return append(s.SummaryBase.Row(), extra...)
+}
+
+func (SummaryEventFlows) Header() []string {
+	return SummaryEventFlow{}.Header()
+}
+
+func (s SummaryEventFlows) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
+}
 
 func spansToEventFlow(spans Spans) eventflow.Events {
 	return eventflow.SpansToEvenFlow(spans)
@@ -39,7 +68,7 @@ func (e Evaluation) EventFlowSummary(perfCol *PerformanceCollection) (*SummaryEv
 }
 
 func (es Evaluations) EventFlowSummary(perfCol *PerformanceCollection) (SummaryEventFlows, error) {
-	res := []SummaryLayerInformation{}
+	res := []SummaryEventFlow{}
 	for _, e := range es {
 		s, err := e.EventFlowSummary(perfCol)
 		if err != nil {

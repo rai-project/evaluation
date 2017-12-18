@@ -1,6 +1,7 @@
 package eventflow
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/spf13/cast"
@@ -14,10 +15,48 @@ type Event struct {
 	Name      string            `json:"EVENT_NAME"`
 	MetaData  map[string]string `json:"META,omitempty"`
 	TimeStamp time.Time         `json:"TS,omitempty"`
-	Duration  time.Duration     `json:"ELAPSED_MS,omitempty"`
+	Duration  uint64            `json:"ELAPSED_MS,omitempty"`
 }
 
 type Events []Event
+
+func (Event) Header() []string {
+	return []string{
+		"id",
+		"parent_id",
+		"name",
+		"metadata",
+		"timestamp",
+		"duration",
+	}
+}
+
+func (e Event) Row() []string {
+	metadata, err := json.Marshal(e.MetaData)
+	if err != nil {
+		metadata = []byte{}
+	}
+	return []string{
+		e.ID,
+		e.ParentID,
+		e.Name,
+		string(metadata),
+		e.TimeStamp.String(),
+		cast.ToString(e.Duration),
+	}
+}
+
+func (Events) Header() []string {
+	return Event{}.Header()
+}
+
+func (s Events) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
+}
 
 func tagsOf(span model.Span) map[string]string {
 	res := map[string]string{}
@@ -58,7 +97,7 @@ func spanToEvent(span model.Span) Event {
 		ParentID:  string(parentOf(span)),
 		Name:      span.OperationName,
 		MetaData:  tagsOf(span),
-		TimeStamp: startTime,
+		TimeStamp: toTime(span.StartTime),
 		Duration:  span.Duration,
 	}
 }

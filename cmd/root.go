@@ -143,6 +143,7 @@ func init() {
 	EvaluationCmd.AddCommand(durationCmd)
 	EvaluationCmd.AddCommand(latencyCmd)
 	EvaluationCmd.AddCommand(layersCmd)
+	EvaluationCmd.AddCommand(eventflowCmd)
 
 	pp.WithLineInfo = true
 }
