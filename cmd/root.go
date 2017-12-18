@@ -3,6 +3,7 @@ package cmd
 import (
 	"io"
 	"path"
+	"strings"
 
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
@@ -26,6 +27,7 @@ var (
 	databaseEndpoints         []string
 	outputFileName            string
 	outputFormat              string
+	noHeader                  bool
 	db                        database.Database
 	evaluationCollection      *evaluation.EvaluationCollection
 	performanceCollection     *evaluation.PerformanceCollection
@@ -89,6 +91,10 @@ var EvaluationCmd = &cobra.Command{
 
 		if outputFormat == "" && outputFileName != "" {
 			outputFormat = path.Ext(outputFileName)
+		}
+
+		if fm, ok := frameworkNames[strings.ToLower(frameworkName)]; ok {
+			frameworkName = fm
 		}
 
 		return nil
