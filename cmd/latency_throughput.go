@@ -19,11 +19,11 @@ var latencyCmd = &cobra.Command{
 
 		lats, err := durs.ThroughputLatencySummary()
 
-		writer := NewWriter(evaluation.SummaryThroughputLatency{}.Header())
+		writer := NewWriter(evaluation.SummaryThroughputLatency{})
 		defer writer.Close()
 
 		for _, lat := range lats {
-			writer.Row(lat.Row())
+			writer.Row(lat)
 		}
 
 		return nil

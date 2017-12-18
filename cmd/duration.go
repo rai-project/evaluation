@@ -19,11 +19,11 @@ var durationCmd = &cobra.Command{
 			return err
 		}
 
-		writer := NewWriter(evaluation.SummaryPredictDurationInformation{}.Header())
+		writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
 		defer writer.Close()
 
 		for _, dur := range durs {
-			writer.Row(dur.Row())
+			writer.Row(dur)
 		}
 
 		return nil
