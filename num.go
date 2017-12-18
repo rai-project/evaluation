@@ -15,6 +15,9 @@ func trimmedMean(data []float64, frac float64) float64 {
 	if frac == 0 {
 		frac = DefaultTrimmedMeanFraction
 	}
+	if len(data) == 0 {
+		return 0
+	}
 
 	cnt := len(data)
 
@@ -23,6 +26,7 @@ func trimmedMean(data []float64, frac float64) float64 {
 	start := maxInt(0, floor(float64(cnt)*frac))
 	end := minInt(cnt-1, cnt-floor(float64(cnt)*frac))
 
+	// pp.Println("start = ", start, "   end = ", end)
 	trimmed := data[start:end]
 
 	return stat.Mean(trimmed, nil)

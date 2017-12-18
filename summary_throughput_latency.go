@@ -50,8 +50,8 @@ func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (Summar
 	return SummaryThroughputLatency{
 		SummaryBase: info.SummaryBase,
 		Duration:    duration,
-		Latency:     float64(info.BatchSize) / duration,
-		Throughput:  duration / float64(info.BatchSize),
+		Throughput:  float64(info.BatchSize) / duration,
+		Latency:     duration / float64(info.BatchSize),
 	}, nil
 }
 
@@ -97,8 +97,8 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 		sum := SummaryThroughputLatency{
 			SummaryBase: first.SummaryBase,
 			Duration:    duration,
-			Latency:     float64(first.BatchSize) / duration,
-			Throughput:  duration / float64(first.BatchSize),
+			Throughput:  float64(first.BatchSize) / duration,
+			Latency:     duration / float64(first.BatchSize),
 		}
 
 		res = append(res, sum)
