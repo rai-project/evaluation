@@ -172,6 +172,9 @@ func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (S
 			log.WithError(err).Error("failed to get layer information summary")
 			continue
 		}
+		if s == nil {
+			continue
+		}
 		res = append(res, *s)
 	}
 	return res, nil

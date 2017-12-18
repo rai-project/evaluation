@@ -87,6 +87,9 @@ func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceColl
 			log.WithError(err).Error("failed to get duration information summary")
 			continue
 		}
+		if s == nil {
+			continue
+		}
 		res = append(res, *s)
 	}
 	return res, nil

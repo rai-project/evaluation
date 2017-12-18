@@ -58,7 +58,7 @@ func spanToEvent(span model.Span) Event {
 		ParentID:  string(parentOf(span)),
 		Name:      span.OperationName,
 		MetaData:  tagsOf(span),
-		TimeStamp: toTime(span.StartTime),
+		TimeStamp: startTime,
 		Duration:  span.Duration,
 	}
 }
