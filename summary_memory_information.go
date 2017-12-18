@@ -10,52 +10,52 @@ import (
 )
 
 type GPUMemInformation struct {
-	GPUID int
+	GPUID int `json:"gpuid,omitempty"`
 
-	StartUsed  int64
-	StartFree  int64
-	StartTotal int64
+	StartUsed  int64 `json:"start_used,omitempty"`
+	StartFree  int64 `json:"start_free,omitempty"`
+	StartTotal int64 `json:"start_total,omitempty"`
 
-	FinishUsed  int64
-	FinishFree  int64
-	FinishTotal int64
+	FinishUsed  int64 `json:"finish_used,omitempty"`
+	FinishFree  int64 `json:"finish_free,omitempty"`
+	FinishTotal int64 `json:"finish_total,omitempty"`
 }
 
 type SystemMemoryInformation struct {
-	StartAvailable int64
-	StartFree      int64
-	StartTotal     int64
+	StartAvailable int64 `json:"start_available,omitempty"`
+	StartFree      int64 `json:"start_free,omitempty"`
+	StartTotal     int64 `json:"start_total,omitempty"`
 
-	FinishAvailable int64
-	FinishFree      int64
-	FinishTotal     int64
+	FinishAvailable int64 `json:"finish_available,omitempty"`
+	FinishFree      int64 `json:"finish_free,omitempty"`
+	FinishTotal     int64 `json:"finish_total,omitempty"`
 }
 
 type RuntimeMemoryInformation struct {
-	StartAlloc      int64
-	StartHeapAlloc  int64
-	StartHeapSys    int64
-	StartTotalAlloc int64
+	StartAlloc      int64 `json:"start_alloc,omitempty"`
+	StartHeapAlloc  int64 `json:"start_heap_alloc,omitempty"`
+	StartHeapSys    int64 `json:"start_heap_sys,omitempty"`
+	StartTotalAlloc int64 `json:"start_total_alloc,omitempty"`
 
-	FinishAlloc      int64
-	FinishHeapAlloc  int64
-	FinishHeapSys    int64
-	FinishTotalAlloc int64
+	FinishAlloc      int64 `json:"finish_alloc,omitempty"`
+	FinishHeapAlloc  int64 `json:"finish_heap_alloc,omitempty"`
+	FinishHeapSys    int64 `json:"finish_heap_sys,omitempty"`
+	FinishTotalAlloc int64 `json:"finish_total_alloc,omitempty"`
 }
 
 type MemoryInformation struct {
-	GPU     []GPUMemInformation
-	Runtime RuntimeMemoryInformation
-	System  SystemMemoryInformation
+	GPU     []GPUMemInformation      `json:"gpu,omitempty"`
+	Runtime RuntimeMemoryInformation `json:"runtime,omitempty"`
+	System  SystemMemoryInformation  `json:"system,omitempty"`
 }
 
 type SummaryMemoryInformation struct {
-	SummaryBase
-	MachineArchitecture string
-	UsingGPU            bool
-	BatchSize           int
-	HostName            string
-	MemoryInformations  []MemoryInformation
+	SummaryBase         `json:",inline"`
+	MachineArchitecture string              `json:"machine_architecture,omitempty"`
+	UsingGPU            bool                `json:"using_gpu,omitempty"`
+	BatchSize           int                 `json:"batch_size,omitempty"`
+	HostName            string              `json:"host_name,omitempty"`
+	MemoryInformations  []MemoryInformation `json:"memory_informations,omitempty"`
 }
 
 func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {

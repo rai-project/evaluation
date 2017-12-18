@@ -9,12 +9,12 @@ import (
 )
 
 type SummaryPredictDurationInformation struct {
-	SummaryBase
-	MachineArchitecture string
-	UsingGPU            bool
-	BatchSize           int
-	HostName            string
-	Durations           []uint64 // in nano seconds
+	SummaryBase         `json:",inline"`
+	MachineArchitecture string   `json:"machine_architecture,omitempty"`
+	UsingGPU            bool     `json:"using_gpu,omitempty"`
+	BatchSize           int      `json:"batch_size,omitempty"`
+	HostName            string   `json:"host_name,omitempty"`
+	Durations           []uint64 `json:"durations,omitempty"` // in nano seconds
 }
 
 type SummaryPredictDurationInformations []SummaryPredictDurationInformation

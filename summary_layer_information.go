@@ -10,17 +10,85 @@ import (
 )
 
 type LayerInformation struct {
-	Name      string
-	Durations []float64
+	Name      string    `json:"name,omitempty"`
+	Durations []float64 `json:"durations,omitempty"`
 }
 
+type LayerInformations []LayerInformation
+
 type SummaryLayerInformation struct {
-	SummaryBase
-	MachineArchitecture string
-	UsingGPU            bool
-	BatchSize           int
-	HostName            string
-	LayerInformations   []LayerInformation
+	SummaryBase         `json:",inline"`
+	MachineArchitecture string            `json:"machine_architecture,omitempty"`
+	UsingGPU            bool              `json:"using_gpu,omitempty"`
+	BatchSize           int               `json:"batch_size,omitempty"`
+	HostName            string            `json:"host_name,omitempty"`
+	LayerInformations   LayerInformations `json:"layer_informations,omitempty"`
+}
+
+type SummaryLayerInformations []SummaryLayerInformation
+
+func (LayerInformation) Header() []string {
+	return []string{
+		"name",
+		"durations",
+	}
+}
+
+func (info LayerInformation) Row() []string {
+	return []string{
+		info.Name,
+		strings.Join(float64SliceToStringSlice(info.Durations), "\t"),
+	}
+}
+
+func (LayerInformations) Header() []string {
+	return LayerInformation{}.Header()
+}
+
+func (s LayerInformations) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
+}
+
+func (SummaryLayerInformation) Header() []string {
+	extra := []string{
+		"machine_architecture",
+		"using_gpu",
+		"batch_size",
+		"hostname",
+		"layer_informations",
+	}
+	return append(SummaryBase{}.Header(), extra...)
+}
+
+func (s SummaryLayerInformation) Row() []string {
+	infos := []string{}
+	for _, row := range s.LayerInformations.Rows() {
+		infos = append(infos, strings.Join(row, ":"))
+	}
+	extra := []string{
+		s.MachineArchitecture,
+		cast.ToString(s.UsingGPU),
+		cast.ToString(s.BatchSize),
+		s.HostName,
+		strings.Join(infos, ";"),
+	}
+	return append(s.SummaryBase.Row(), extra...)
+}
+
+func (SummaryLayerInformations) Header() []string {
+	return SummaryLayerInformation{}.Header()
+}
+
+func (s SummaryLayerInformations) Rows() [][]string {
+	rows := [][]string{}
+	for _, e := range s {
+		rows = append(rows, e.Row())
+	}
+	return rows
 }
 
 func spanIsCUPTI(span model.Span) bool {
@@ -51,7 +119,7 @@ func spanTagValue(span model.Span, key string) (interface{}, bool) {
 			return tag.Value, true
 		}
 	}
-	return nil, fale
+	return nil, false
 }
 
 func spanTagEquals(span model.Span, key string, value string) bool {
@@ -175,8 +243,15 @@ func getSpanLayersFromTrace(trace model.Trace) []Spans {
 			continue
 		}
 		predict := predictSpans[ii]
-		traceLevel, ok := spanTagValue(predict, "trace_level")
-		if !ok || traceLevel == "" {
+		traceLevel0, ok := spanTagValue(predict, "trace_level")
+		if !ok {
+			continue
+		}
+		traceLevel, ok := traceLevel0.(string)
+		if !ok {
+			continue
+		}
+		if traceLevel == "" {
 			continue
 		}
 		if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {

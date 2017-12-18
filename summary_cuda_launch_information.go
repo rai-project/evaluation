@@ -1,18 +1,18 @@
 package evaluation
 
 type KernelLaunchInformation struct {
-	Name       string
-	Parameters []string
-	Durations  []float64
+	Name       string    `json:"name,omitempty"`
+	Parameters []string  `json:"parameters,omitempty"`
+	Durations  []float64 `json:"durations,omitempty"`
 }
 
 type SummaryCUDALaunchInformation struct {
-	SummaryBase
-	MachineArchitecture      string
-	UsingGPU                 bool
-	BatchSize                int
-	HostName                 string
-	KernelLaunchInformations []KernelLaunchInformation
+	SummaryBase              `json:",inline"`
+	MachineArchitecture      string                    `json:"machine_architecture,omitempty"`
+	UsingGPU                 bool                      `json:"using_gpu,omitempty"`
+	BatchSize                int                       `json:"batch_size,omitempty"`
+	HostName                 string                    `json:"host_name,omitempty"`
+	KernelLaunchInformations []KernelLaunchInformation `json:"kernel_launch_information,omitempty"`
 }
 
 func (p Performance) CUDALaunchInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {

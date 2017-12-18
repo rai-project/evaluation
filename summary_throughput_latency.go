@@ -8,14 +8,14 @@ import (
 )
 
 type SummaryThroughputLatency struct {
-	SummaryBase
-	MachineArchitecture string
-	UsingGPU            bool
-	BatchSize           int
-	HostName            string
-	Duration            float64 // in nano seconds
-	Latency             float64 // in nano seconds
-	Throughput          float64
+	SummaryBase         `json:",inline"`
+	MachineArchitecture string  `json:"machine_architecture,omitempty"`
+	UsingGPU            bool    `json:"using_gpu,omitempty"`
+	BatchSize           int     `json:"batch_size,omitempty"`
+	HostName            string  `json:"host_name,omitempty"`
+	Duration            float64 `json:"duration,omitempty"` // in nano seconds
+	Latency             float64 `json:"latency,omitempty"`  // in nano seconds
+	Throughput          float64 `json:"throughput,omitempty"`
 }
 
 type SummaryThroughputLatencies []SummaryThroughputLatency

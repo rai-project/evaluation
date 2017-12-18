@@ -47,6 +47,14 @@ func toFloat64SliceE(i interface{}) ([]float64, error) {
 	}
 }
 
+func float64SliceToStringSlice(us []float64) []string {
+	res := make([]string, len(us))
+	for ii, u := range us {
+		res[ii] = cast.ToString(u)
+	}
+	return res
+}
+
 func uint64SliceToStringSlice(us []uint64) []string {
 	res := make([]string, len(us))
 	for ii, u := range us {
