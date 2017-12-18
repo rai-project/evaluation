@@ -1,12 +1,14 @@
 package evaluation
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/rai-project/config"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
+	db "upper.io/db.v3"
 )
 
 type LayerInformation struct {
@@ -89,6 +91,87 @@ func (s SummaryLayerInformations) Rows() [][]string {
 		rows = append(rows, e.Row())
 	}
 	return rows
+}
+
+type layerInformationMap map[string]LayerInformation
+
+func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInformation, error) {
+	sspans := getSpanLayersFromSpans(p.Spans())
+	numSSpans := len(sspans)
+
+	summary := &SummaryLayerInformation{
+		SummaryBase:         e.summaryBase(),
+		MachineArchitecture: e.MachineArchitecture,
+		UsingGPU:            e.UsingGPU,
+		BatchSize:           e.BatchSize,
+		HostName:            e.Hostname,
+		LayerInformations:   LayerInformations{},
+	}
+	if numSSpans == 0 {
+		return summary, nil
+	}
+
+	infosFullMap := make([]layerInformationMap, numSSpans)
+	for ii, spans := range sspans {
+		if infosFullMap[ii] == nil {
+			infosFullMap[ii] = layerInformationMap{}
+		}
+		for _, span := range spans {
+			opName := strings.ToLower(span.OperationName)
+			if _, ok := infosFullMap[ii][opName]; !ok {
+				infosFullMap[ii][opName] = LayerInformation{
+					Name:      span.OperationName,
+					Durations: []float64{},
+				}
+			}
+			info := infosFullMap[ii][opName]
+			info.Durations = append(info.Durations, cast.ToFloat64(span.Duration))
+			infosFullMap[ii][opName] = info
+		}
+	}
+
+	infoMap := layerInformationMap{}
+	for _, span := range sspans[0] {
+		opName := strings.ToLower(span.OperationName)
+		if _, ok := infoMap[opName]; !ok {
+			infoMap[opName] = LayerInformation{
+				Name:      span.OperationName,
+				Durations: []float64{},
+			}
+		}
+		info := infoMap[opName]
+		allDurations := [][]float64{}
+		for ii := range sspans {
+			allDurations = append(allDurations, infosFullMap[ii][opName].Durations)
+		}
+		transposedDurations := transpose(allDurations)
+		durations := []float64{}
+		for _, tr := range transposedDurations {
+			durations = append(durations, trimmedMean(tr, DefaultTrimmedMeanFraction))
+		}
+		info.Durations = durations
+		infoMap[opName] = info
+	}
+
+	infos := []LayerInformation{}
+	for _, v := range infoMap {
+		infos = append(infos, v)
+	}
+
+	summary.LayerInformations = infos
+	return summary, nil
+}
+
+func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (*SummaryLayerInformation, error) {
+	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
+	if err != nil {
+		return nil, err
+	}
+	if len(perfs) != 1 {
+		return nil, errors.New("expecting on performance output")
+	}
+	perf := perfs[0]
+	return perf.LayerInformationSummary(e)
 }
 
 func spanIsCUPTI(span model.Span) bool {
@@ -217,8 +300,7 @@ func selectTensorRTLayerSpans(spans Spans) Spans {
 	return selectCaffe2LayerSpans(spans)
 }
 
-func getSpanLayersFromTrace(trace model.Trace) []Spans {
-	spans := Spans(trace.Spans)
+func getSpanLayersFromSpans(spans Spans) []Spans {
 	predictSpans := spans.FilterByOperationName("Predict")
 	predictIndexOf := func(span model.Span) int {
 		for ii, predict := range predictSpans {

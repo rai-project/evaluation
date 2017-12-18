@@ -49,3 +49,34 @@ func minInt(x, y int) int {
 	}
 	return x
 }
+
+func uint64Transpose(a [][]uint64) [][]uint64 {
+	m := len(a)
+	n := len(a[0])
+	aNew := make([][]uint64, m)
+	for i := 0; i < m; i++ {
+		aNew[i] = make([]uint64, n)
+	}
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			aNew[j][i] = a[i][j]
+		}
+	}
+	return aNew
+}
+
+func transpose(a [][]float64) [][]float64 {
+	m := len(a)
+	n := len(a[0])
+
+	aNew := make([][]float64, m)
+	for i := 0; i < m; i++ {
+		aNew[i] = make([]float64, n)
+	}
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			aNew[j][i] = a[i][j]
+		}
+	}
+	return aNew
+}
