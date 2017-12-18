@@ -138,4 +138,5 @@ func init() {
 
 	EvaluationCmd.AddCommand(durationCmd)
 	EvaluationCmd.AddCommand(latencyCmd)
+	EvaluationCmd.AddCommand(layersCmd)
 }

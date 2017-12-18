@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/k0kubun/pp"
 	"github.com/rai-project/config"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
@@ -174,6 +175,19 @@ func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (*Su
 	return perf.LayerInformationSummary(e)
 }
 
+func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
+	res := []SummaryLayerInformation{}
+	for _, e := range es {
+		s, err := e.LayerInformationSummary(perfCol)
+		if err != nil {
+			log.WithError(err).Error("failed to get layer information summary")
+			continue
+		}
+		res = append(res, *s)
+	}
+	return res, nil
+}
+
 func spanIsCUPTI(span model.Span) bool {
 	for _, tag := range span.Tags {
 		key := strings.ToLower(tag.Key)
@@ -260,10 +274,11 @@ func selectMXNetLayerSpans(spans Spans) Spans {
 		if !spanTagExists(span, "process_id") {
 			continue
 		}
-		if spanTagEquals(span, "metadata", "") {
-			res = append(res, span)
+		if !spanTagEquals(span, "metadata", "") {
 			continue
 		}
+		pp.Println(span)
+		res = append(res, span)
 	}
 	return nil
 }
@@ -333,6 +348,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		if !ok {
 			continue
 		}
+		pp.Println(traceLevel)
 		if traceLevel == "" {
 			continue
 		}
