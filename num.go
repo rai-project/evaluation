@@ -53,9 +53,25 @@ func minInt(x, y int) int {
 func uint64Transpose(a [][]uint64) [][]uint64 {
 	m := len(a)
 	n := len(a[0])
-	aNew := make([][]uint64, m)
+	aNew := make([][]uint64, n)
+	for i := 0; i < n; i++ {
+		aNew[i] = make([]uint64, m)
+	}
 	for i := 0; i < m; i++ {
-		aNew[i] = make([]uint64, n)
+		for j := 0; j < n; j++ {
+			aNew[j][i] = a[i][j]
+		}
+	}
+	return aNew
+}
+
+func transpose0(a [][]float64) [][]float64 {
+	m := len(a)
+	n := len(a[0])
+
+	aNew := make([][]float64, n)
+	for i := 0; i < n; i++ {
+		aNew[i] = make([]float64, m)
 	}
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
@@ -69,14 +85,14 @@ func transpose(a [][]float64) [][]float64 {
 	m := len(a)
 	n := len(a[0])
 
-	aNew := make([][]float64, m)
-	for i := 0; i < m; i++ {
-		aNew[i] = make([]float64, n)
+	r := make([][]float64, n)
+	for x := range r {
+		r[x] = make([]float64, m)
 	}
-	for i := 0; i < m; i++ {
-		for j := 0; j < n; j++ {
-			aNew[j][i] = a[i][j]
+	for y, s := range a {
+		for x, e := range s {
+			r[x][y] = e
 		}
 	}
-	return aNew
+	return r
 }
