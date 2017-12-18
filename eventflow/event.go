@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/spf13/cast"
+	m "github.com/uber/jaeger/model"
 	model "github.com/uber/jaeger/model/json"
 )
 
@@ -44,11 +45,11 @@ func parentOf(span model.Span) model.SpanID {
 }
 
 func toTime(t uint64) time.Time {
-	return time.Unix(0, (time.Duration(t) * time.Millisecond).Nanoseconds())
+	return m.EpochMicrosecondsAsTime(t)
 }
 
 func toDuration(d uint64) time.Duration {
-	return time.Duration(d) * time.Millisecond
+	return m.MicrosecondsAsDuration(d)
 }
 
 func spanToEvent(span model.Span) Event {
@@ -58,7 +59,7 @@ func spanToEvent(span model.Span) Event {
 		Name:      span.OperationName,
 		MetaData:  tagsOf(span),
 		TimeStamp: toTime(span.StartTime),
-		Duration:  toDuration(span.Duration),
+		Duration:  span.Duration,
 	}
 }
 
