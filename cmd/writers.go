@@ -34,7 +34,7 @@ func NewWriter(header []string) *Writer {
 	case "csv":
 		wr.csv = csv.NewWriter(output)
 	}
-	if header != nil {
+	if header != nil && !noHeader {
 		wr.Header(header)
 	}
 	return wr

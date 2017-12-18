@@ -127,6 +127,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVar(&databaseName, "database_name", "", "name of the database to query")
 
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFileName, "output", "o", "", "output file name")
+	EvaluationCmd.PersistentFlags().BoolVar(&noHeader, "no_header", false, "show header labels for output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
 	EvaluationCmd.AddCommand(durationCmd)
