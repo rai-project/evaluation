@@ -1,10 +1,71 @@
 package eventflow
 
-import "time"
+import (
+	"time"
+
+	"github.com/spf13/cast"
+	model "github.com/uber/jaeger/model/json"
+)
 
 type Event struct {
-	ID        string    `json:"EVENT_ID"`
-	Name      time.Time `json:"EVENT_NAME"`
-	MetaData  string    `json:"META"`
-	TimeStamp time.Time `json:"TS"`
+	ID        string            `json:"EVENT_ID"`
+	ParentID  string            `json:"PARENT_ID"`
+	Name      string            `json:"EVENT_NAME"`
+	MetaData  map[string]string `json:"META,omitempty"`
+	TimeStamp time.Time         `json:"TS,omitempty"`
+	Duration  time.Duration     `json:"ELAPSED_MS,omitempty"`
+}
+
+type Events []Event
+
+func tagsOf(span model.Span) map[string]string {
+	res := map[string]string{}
+	for _, lg := range span.Logs {
+		for _, fld := range lg.Fields {
+			res[fld.Key] = cast.ToString(fld.Value)
+		}
+	}
+	for _, tag := range span.Tags {
+		res[tag.Key] = cast.ToString(tag.Value)
+	}
+	return res
+}
+
+func parentOf(span model.Span) model.SpanID {
+	if span.ParentSpanID != "" {
+		return span.ParentSpanID
+	}
+	for _, ref := range span.References {
+		if ref.RefType == model.ChildOf {
+			return ref.SpanID
+		}
+	}
+	return model.SpanID("")
+}
+
+func toTime(t uint64) time.Time {
+	return time.Unix(0, (time.Duration(t) * time.Millisecond).Nanoseconds())
+}
+
+func toDuration(d uint64) time.Duration {
+	return time.Duration(d) * time.Millisecond
+}
+
+func spanToEvent(span model.Span) Event {
+	return Event{
+		ID:        string(span.SpanID),
+		ParentID:  string(parentOf(span)),
+		Name:      span.OperationName,
+		MetaData:  tagsOf(span),
+		TimeStamp: toTime(span.StartTime),
+		Duration:  toDuration(span.Duration),
+	}
+}
+
+func SpansToEvenFlow(spans []model.Span) Events {
+	events := make([]Event, len(spans))
+	for ii, span := range spans {
+		events[ii] = spanToEvent(span)
+	}
+	return events
 }
