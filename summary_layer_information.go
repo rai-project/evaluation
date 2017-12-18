@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/rai-project/config"
+	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
 )
@@ -41,6 +42,16 @@ func spanTagExists(span model.Span, key string) bool {
 		}
 	}
 	return false
+}
+
+func spanTagValue(span model.Span, key string) (interface{}, bool) {
+	for _, tag := range span.Tags {
+		key0 := strings.ToLower(tag.Key)
+		if key0 == key {
+			return tag.Value, true
+		}
+	}
+	return nil, fale
 }
 
 func spanTagEquals(span model.Span, key string, value string) bool {
@@ -159,10 +170,18 @@ func getSpanLayersFromTrace(trace model.Trace) []Spans {
 	}
 	groupedLayerSpans := make([]Spans, len(predictSpans))
 	for ii, grp := range groupedSpans {
+		groupedLayerSpans[ii] = Spans{}
 		if len(grp) == 0 {
-			groupedLayerSpans[ii] = Spans{}
+			continue
 		}
 		predict := predictSpans[ii]
+		traceLevel, ok := spanTagValue(predict, "trace_level")
+		if !ok || traceLevel == "" {
+			continue
+		}
+		if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
+			continue
+		}
 		frameworkName := strings.ToLower(frameworkNameOfSpan(predict))
 		switch frameworkName {
 		case "tensorflow":
