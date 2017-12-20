@@ -1,21 +1,25 @@
 package evaluation
 
 import (
+	"strings"
+
 	"github.com/gonum/floats"
 	"github.com/spf13/cast"
 )
 
 type SummaryThroughputLatency struct {
 	SummaryBase `json:",inline"`
-	Duration    float64 `json:"duration,omitempty"` // in nano seconds
-	Latency     float64 `json:"latency,omitempty"`  // in nano seconds
-	Throughput  float64 `json:"throughput,omitempty"`
+	Durations   []float64 `json:"durations,omitempty"` // in nano seconds
+	Duration    float64   `json:"duration,omitempty"`  // in nano seconds
+	Latency     float64   `json:"latency,omitempty"`   // in nano seconds
+	Throughput  float64   `json:"throughput,omitempty"`
 }
 
 type SummaryThroughputLatencies []SummaryThroughputLatency
 
 func (SummaryThroughputLatency) Header() []string {
 	extra := []string{
+		"durations",
 		"duration",
 		"latency",
 		"throughput",
@@ -25,6 +29,7 @@ func (SummaryThroughputLatency) Header() []string {
 
 func (s SummaryThroughputLatency) Row() []string {
 	extra := []string{
+		strings.Join(cast.ToStringSlice(s.Durations), ";"),
 		cast.ToString(s.Duration),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
@@ -46,9 +51,11 @@ func (s SummaryThroughputLatencies) Rows() [][]string {
 
 func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
-	duration := trimmedMean(toFloat64Slice(info.Durations), trimmedMeanFraction)
+	durations := toFloat64Slice(info.Durations)
+	duration := trimmedMean(durations, trimmedMeanFraction)
 	return SummaryThroughputLatency{
 		SummaryBase: info.SummaryBase,
+		Durations:   durations,
 		Duration:    duration,
 		Throughput:  float64(info.BatchSize) / duration,
 		Latency:     duration / float64(info.BatchSize),
@@ -87,7 +94,13 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 
 		durations := []float64{}
 		for _, e := range v {
+			if len(e.Durations) == 0 {
+				continue
+			}
 			duration := trimmedMean(toFloat64Slice(e.Durations), trimmedMeanFraction)
+			if duration == 0 {
+				continue
+			}
 			durations = append(durations, duration)
 		}
 
@@ -96,6 +109,7 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 		duration := floats.Min(durations)
 		sum := SummaryThroughputLatency{
 			SummaryBase: first.SummaryBase,
+			Durations:   durations,
 			Duration:    duration,
 			Throughput:  float64(first.BatchSize) / duration,
 			Latency:     duration / float64(first.BatchSize),
