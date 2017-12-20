@@ -13,20 +13,23 @@ var eventflowCmd = &cobra.Command{
 	},
 	Short: "Get evaluation trace in event_flow format from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		evals, err := getEvaluations()
-		if err != nil {
-			return err
+		run := func() error {
+			evals, err := getEvaluations()
+			if err != nil {
+				return err
+			}
+
+			flows, err := evals.EventFlowSummary(performanceCollection)
+
+			writer := NewWriter(evaluation.SummaryEventFlow{})
+			defer writer.Close()
+
+			for _, flow := range flows {
+				writer.Row(flow)
+			}
+
+			return nil
 		}
-
-		flows, err := evals.EventFlowSummary(performanceCollection)
-
-		writer := NewWriter(evaluation.SummaryEventFlow{})
-		defer writer.Close()
-
-		for _, flow := range flows {
-			writer.Row(flow)
-		}
-
-		return nil
+		return forallmodels(run)
 	},
 }

@@ -13,19 +13,22 @@ var durationCmd = &cobra.Command{
 	},
 	Short: "Get evaluation duration summary from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		durs, err := predictDurationInformationSummary()
-		if err != nil {
-			return err
+		run := func() error {
+			durs, err := predictDurationInformationSummary()
+			if err != nil {
+				return err
+			}
+
+			writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
+			defer writer.Close()
+
+			for _, dur := range durs {
+				writer.Row(dur)
+			}
+
+			return nil
 		}
-
-		writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
-		defer writer.Close()
-
-		for _, dur := range durs {
-			writer.Row(dur)
-		}
-
-		return nil
+		return forallmodels(run)
 	},
 }
 

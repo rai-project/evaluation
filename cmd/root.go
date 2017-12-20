@@ -2,13 +2,14 @@ package cmd
 
 import (
 	"io"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/k0kubun/pp"
 
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
+	framework "github.com/rai-project/dlframework/framework/cmd"
 	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
 
@@ -19,6 +20,8 @@ import (
 
 var (
 	limit                     int
+	batchSize                 int
+	outputFileExtension       string
 	hostName                  string
 	machineArchitecture       string
 	modelName                 string
@@ -93,11 +96,17 @@ var EvaluationCmd = &cobra.Command{
 		}
 
 		if outputFormat == "" && outputFileName != "" {
-			outputFormat = path.Ext(outputFileName)
+			outputFormat = filepath.Ext(outputFileName)
 		}
 
-		if fm, ok := frameworkNames[strings.ToLower(frameworkName)]; ok {
+		if fm, ok := framework.FrameworkNames[strings.ToLower(frameworkName)]; ok {
 			frameworkName = fm
+		}
+
+		if modelName != "all" {
+			outputFileExtension = filepath.Ext(outputFileName)
+		} else {
+			outputFileExtension = outputFormat
 		}
 
 		return nil
@@ -127,6 +136,7 @@ var EvaluationCmd = &cobra.Command{
 func init() {
 	EvaluationCmd.PersistentFlags().StringVar(&hostName, "hostname", "", "hostname of machine to filter")
 	EvaluationCmd.PersistentFlags().StringVar(&machineArchitecture, "arch", "", "architecture of machine to filter")
+	EvaluationCmd.PersistentFlags().IntVar(&batchSize, "batch_size", 0, "the batch size to filter")
 
 	EvaluationCmd.PersistentFlags().StringVar(&modelName, "model_name", "BVLC-AlexNet", "modelName")
 	EvaluationCmd.PersistentFlags().StringVar(&modelVersion, "model_version", "1.0", "modelVersion")

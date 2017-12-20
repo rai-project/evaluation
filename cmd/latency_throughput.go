@@ -12,21 +12,25 @@ var latencyCmd = &cobra.Command{
 	},
 	Short: "Get evaluation latency or throughput information from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		durs, err := predictDurationInformationSummary()
-		if err != nil {
-			return err
+		run := func() error {
+			durs, err := predictDurationInformationSummary()
+			if err != nil {
+				return err
+			}
+
+			lats, err := durs.ThroughputLatencySummary()
+
+			writer := NewWriter(evaluation.SummaryThroughputLatency{})
+			defer writer.Close()
+
+			for _, lat := range lats {
+				writer.Row(lat)
+			}
+
+			return nil
 		}
 
-		lats, err := durs.ThroughputLatencySummary()
-
-		writer := NewWriter(evaluation.SummaryThroughputLatency{})
-		defer writer.Close()
-
-		for _, lat := range lats {
-			writer.Row(lat)
-		}
-
-		return nil
+		return forallmodels(run)
 	},
 }
 

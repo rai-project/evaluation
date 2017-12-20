@@ -12,20 +12,24 @@ var layersCmd = &cobra.Command{
 	},
 	Short: "Get evaluation layer  information from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		evals, err := getEvaluations()
-		if err != nil {
-			return err
+		run := func() error {
+			evals, err := getEvaluations()
+			if err != nil {
+				return err
+			}
+
+			lyrs, err := evals.LayerInformationSummary(performanceCollection)
+
+			writer := NewWriter(evaluation.SummaryLayerInformation{})
+			defer writer.Close()
+
+			for _, lyr := range lyrs {
+				writer.Row(lyr)
+			}
+
+			return nil
 		}
 
-		lyrs, err := evals.LayerInformationSummary(performanceCollection)
-
-		writer := NewWriter(evaluation.SummaryLayerInformation{})
-		defer writer.Close()
-
-		for _, lyr := range lyrs {
-			writer.Row(lyr)
-		}
-
-		return nil
+		return forallmodels(run)
 	},
 }
