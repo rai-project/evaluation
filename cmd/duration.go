@@ -16,7 +16,7 @@ var durationCmd = &cobra.Command{
 	Short: "Get evaluation duration summary from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets", "duration")
+			outputFileName = filepath.Join(mlArcAssetsPath, "duration")
 		}
 		return nil
 	},

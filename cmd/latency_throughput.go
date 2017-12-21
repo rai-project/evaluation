@@ -15,7 +15,7 @@ var latencyCmd = &cobra.Command{
 	Short: "Get evaluation latency or throughput information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets", "latency_throughput")
+			outputFileName = filepath.Join(mlArcAssetsPath, "latency_throughput")
 		}
 		return nil
 	},

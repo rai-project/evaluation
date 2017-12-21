@@ -7,15 +7,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layersCmd = &cobra.Command{
-	Use: "layers",
+var layersTreeCmd = &cobra.Command{
+	Use: "layer_tree",
 	Aliases: []string{
-		"layer",
+		"layertree",
+		"treemap",
 	},
-	Short: "Get evaluation layer  information from CarML",
+	Short: "Get evaluation layer tree information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(mlArcAssetsPath, "layers")
+			outputFileName = filepath.Join(mlArcAssetsPath, "layer_tree")
 		}
 		return nil
 	},
@@ -26,7 +27,7 @@ var layersCmd = &cobra.Command{
 				return err
 			}
 
-			lyrs, err := evals.LayerInformationSummary(performanceCollection)
+			lyrs, err := evals.LayerInformationTreeSummary(performanceCollection)
 
 			writer := NewWriter(evaluation.SummaryLayerInformation{})
 			defer writer.Close()

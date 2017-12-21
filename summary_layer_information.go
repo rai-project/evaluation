@@ -99,60 +99,37 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 		return summary, nil
 	}
 
-	infosFullMap := make([]layerInformationMap, numSSpans)
+	infosFull := make([][]LayerInformation, numSSpans)
 	for ii, spans := range sspans {
-		if infosFullMap[ii] == nil {
-			infosFullMap[ii] = layerInformationMap{}
+		if infosFull[ii] == nil {
+			infosFull[ii] = []LayerInformation{}
 		}
 		for _, span := range spans {
-			opName := strings.ToLower(span.OperationName)
-			if _, ok := infosFullMap[ii][opName]; !ok {
-
-				infosFullMap[ii][opName] = LayerInformation{
-					Name:      span.OperationName,
-					Durations: []float64{},
-				}
+			info := LayerInformation{
+				Name: span.OperationName,
+				Durations: []float64{
+					cast.ToFloat64(span.Duration),
+				},
 			}
-			info := infosFullMap[ii][opName]
-			info.Durations = append(info.Durations, cast.ToFloat64(span.Duration))
-			infosFullMap[ii][opName] = info
+			infosFull[ii] = append(infosFull[ii], info)
 		}
-	}
-
-	keyOrdering := []string{}
-	infoMap := layerInformationMap{}
-	for _, span := range sspans[0] {
-		opName := strings.ToLower(span.OperationName)
-		if _, ok := infoMap[opName]; !ok {
-			keyOrdering = append(keyOrdering, opName)
-			infoMap[opName] = LayerInformation{
-				Name:      span.OperationName,
-				Durations: []float64{},
-			}
-		}
-		info := infoMap[opName]
-		allDurations := [][]float64{}
-		for ii := range sspans {
-			allDurations = append(allDurations, infosFullMap[ii][opName].Durations)
-		}
-		transposedDurations := transpose(allDurations)
-		durations := []float64{}
-		for _, tr := range transposedDurations {
-			ts := []float64{}
-			for _, t := range tr {
-				if t != -1 {
-					ts = append(ts, t)
-				}
-			}
-			durations = append(durations, trimmedMean(ts, DefaultTrimmedMeanFraction))
-		}
-		info.Durations = durations
-		infoMap[opName] = info
 	}
 
 	infos := []LayerInformation{}
-	for _, v := range keyOrdering {
-		infos = append(infos, infoMap[v])
+	for ii, span := range sspans[0] {
+		durations := []float64{}
+		for _, info := range infosFull {
+			if len(info) <= ii {
+				continue
+			}
+			duration := info[ii].Durations
+			durations = append(durations, duration...)
+		}
+		info := LayerInformation{
+			Name:      span.OperationName,
+			Durations: durations,
+		}
+		infos = append(infos, info)
 	}
 
 	summary.LayerInformations = infos
