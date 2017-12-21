@@ -18,8 +18,12 @@ func trimmedMean(data []float64, frac float64) float64 {
 	if len(data) == 0 {
 		return 0
 	}
-	if len(data) <= 3 {
+	if len(data) < 3 {
 		return stat.Mean(data, nil)
+	}
+	if len(data) == 3 {
+		sort.Float64s(data)
+		return data[1]
 	}
 
 	cnt := len(data)
