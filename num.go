@@ -18,6 +18,9 @@ func trimmedMean(data []float64, frac float64) float64 {
 	if len(data) == 0 {
 		return 0
 	}
+	if len(data) <= 3 {
+		return stat.Mean(data, nil)
+	}
 
 	cnt := len(data)
 
@@ -29,7 +32,9 @@ func trimmedMean(data []float64, frac float64) float64 {
 	// pp.Println("start = ", start, "   end = ", end)
 	trimmed := data[start:end]
 
-	return stat.Mean(trimmed, nil)
+	mean := stat.Mean(trimmed, nil)
+
+	return mean
 }
 
 func floor(x float64) int {
