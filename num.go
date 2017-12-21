@@ -4,7 +4,7 @@ import (
 	"math"
 	"sort"
 
-	"github.com/gonum/gonum/stat"
+	"gonum.org/v1/gonum/stat"
 )
 
 var (
