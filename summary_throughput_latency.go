@@ -3,8 +3,8 @@ package evaluation
 import (
 	"strings"
 
-	"github.com/gonum/floats"
 	"github.com/spf13/cast"
+	"gonum.org/v1/gonum/floats"
 )
 
 type SummaryThroughputLatency struct {
