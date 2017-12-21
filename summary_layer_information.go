@@ -11,6 +11,10 @@ import (
 	db "upper.io/db.v3"
 )
 
+var (
+	cntkLogMessageShown = false
+)
+
 type LayerInformation struct {
 	Name      string    `json:"name,omitempty"`
 	Durations []float64 `json:"durations,omitempty"`
@@ -103,6 +107,7 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 		for _, span := range spans {
 			opName := strings.ToLower(span.OperationName)
 			if _, ok := infosFullMap[ii][opName]; !ok {
+
 				infosFullMap[ii][opName] = LayerInformation{
 					Name:      span.OperationName,
 					Durations: []float64{},
@@ -114,10 +119,12 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 		}
 	}
 
+	keyOrdering := []string{}
 	infoMap := layerInformationMap{}
 	for _, span := range sspans[0] {
 		opName := strings.ToLower(span.OperationName)
 		if _, ok := infoMap[opName]; !ok {
+			keyOrdering = append(keyOrdering, opName)
 			infoMap[opName] = LayerInformation{
 				Name:      span.OperationName,
 				Durations: []float64{},
@@ -144,8 +151,8 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 	}
 
 	infos := []LayerInformation{}
-	for _, v := range infoMap {
-		infos = append(infos, v)
+	for _, v := range keyOrdering {
+		infos = append(infos, infoMap[v])
 	}
 
 	summary.LayerInformations = infos
@@ -296,7 +303,12 @@ func selectCaffe2LayerSpans(spans Spans) Spans {
 	}
 	return res
 }
+
 func selectCNTKLayerSpans(spans Spans) Spans {
+	if cntkLogMessageShown {
+		return Spans{}
+	}
+	cntkLogMessageShown = true
 	log.WithField("function", "selectCNTKLayerSpans").Error("layer information is not currently supported by cntk")
 	return Spans{}
 }

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
 
 	"github.com/rai-project/config"
@@ -21,6 +22,8 @@ import (
 var (
 	limit                     int
 	batchSize                 int
+	goPath                    string
+	raiSrcPath                string
 	outputFileExtension       string
 	hostName                  string
 	machineArchitecture       string
@@ -34,6 +37,7 @@ var (
 	outputFileName            string
 	outputFormat              string
 	noHeader                  bool
+	appendOutput              bool
 	db                        database.Database
 	evaluationCollection      *evaluation.EvaluationCollection
 	performanceCollection     *evaluation.PerformanceCollection
@@ -148,6 +152,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().IntVar(&limit, "limit", -1, "limit the evaluations")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFileName, "output", "o", "", "output file name")
 	EvaluationCmd.PersistentFlags().BoolVar(&noHeader, "no_header", false, "show header labels for output")
+	EvaluationCmd.PersistentFlags().BoolVar(&appendOutput, "append", false, "append the output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
 	EvaluationCmd.AddCommand(durationCmd)
@@ -156,4 +161,9 @@ func init() {
 	EvaluationCmd.AddCommand(eventflowCmd)
 
 	pp.WithLineInfo = true
+}
+
+func init() {
+	goPath = com.GetGOPATHs()[0]
+	raiSrcPath = getSrcPath("github.com/rai-project")
 }

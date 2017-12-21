@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"path/filepath"
+
 	"github.com/spf13/cobra"
 
 	"github.com/rai-project/evaluation"
@@ -12,6 +14,12 @@ var durationCmd = &cobra.Command{
 		"durations",
 	},
 	Short: "Get evaluation duration summary from CarML",
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if modelName == "all" && outputFormat == "json" {
+			outputFileName = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets", "duration")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		run := func() error {
 			durs, err := predictDurationInformationSummary()

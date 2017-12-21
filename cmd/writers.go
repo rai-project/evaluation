@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -44,7 +45,7 @@ func NewWriter(rower Rower) *Writer {
 	case "json":
 		wr.json = []string{}
 	}
-	if rower != nil && !noHeader {
+	if rower != nil && (!noHeader || appendOutput) {
 		wr.Header(rower)
 	}
 	return wr
@@ -69,6 +70,7 @@ func (w *Writer) Row(rower Rower) error {
 	case "json":
 		buf, err := json.Marshal(rower)
 		if err != nil {
+			log.WithError(err).Error("failed to marshal json data...")
 			return err
 		}
 		w.json = append(w.json, string(buf))
@@ -83,7 +85,21 @@ func (w *Writer) Flush() {
 	case "csv":
 		w.csv.Flush()
 	case "json":
-		js := "[" + strings.Join(w.json, ",\n") + "]"
+		prevData := ""
+		if com.IsFile(w.outputFileName) && appendOutput {
+			buf, err := ioutil.ReadFile(w.outputFileName)
+			if err == nil {
+				prevData = string(buf)
+			}
+		}
+		prevData = strings.TrimSpace(prevData)
+		js := "["
+		if prevData != "" && prevData != "[]" {
+			js += strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "]")
+			js += ",\n"
+		}
+		js += strings.Join(w.json, ",\n")
+		js += "]"
 		w.output.Write([]byte(js))
 	}
 }
