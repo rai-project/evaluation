@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cast"
-	"gonum.org/v1/gonum/floats"
+	"github.com/gonum/gonum/floats"
 )
 
 type SummaryThroughputLatency struct {
