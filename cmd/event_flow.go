@@ -16,7 +16,7 @@ var eventflowCmd = &cobra.Command{
 	Short: "Get evaluation trace in event_flow format from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(mlArcAssetsPath, "event_flow")
+			outputFileName = filepath.Join(mlArcWebAssetsPath, "event_flow")
 		}
 		return nil
 	},

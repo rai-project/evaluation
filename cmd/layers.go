@@ -15,7 +15,7 @@ var layersCmd = &cobra.Command{
 	Short: "Get evaluation layer  information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(mlArcAssetsPath, "layers")
+			outputFileName = filepath.Join(mlArcWebAssetsPath, "layers")
 		}
 		return nil
 	},

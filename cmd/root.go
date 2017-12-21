@@ -22,8 +22,8 @@ import (
 var (
 	limit                     int
 	batchSize                 int
-  goPath                    string
-  mlArcWebAssetsPath string
+	goPath                    string
+	mlArcWebAssetsPath        string
 	raiSrcPath                string
 	outputFileExtension       string
 	hostName                  string
@@ -159,14 +159,14 @@ func init() {
 	EvaluationCmd.AddCommand(durationCmd)
 	EvaluationCmd.AddCommand(latencyCmd)
 	EvaluationCmd.AddCommand(layersCmd)
-  EvaluationCmd.AddCommand(eventflowCmd)
-  EvaluationCmd.AddCommand(layersTreeCmd)
+	EvaluationCmd.AddCommand(eventflowCmd)
+	EvaluationCmd.AddCommand(layersTreeCmd)
 
 	pp.WithLineInfo = true
 }
 
 func init() {
 	goPath = com.GetGOPATHs()[0]
-  raiSrcPath = getSrcPath("github.com/rai-project")
-  mlArcAssetsPath = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets"
+	raiSrcPath = getSrcPath("github.com/rai-project")
+	mlArcWebAssetsPath = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets")
 }
