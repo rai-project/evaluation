@@ -15,7 +15,7 @@ var cudaLaunchCmd = &cobra.Command{
 	},
 	Short: "Get evaluation kernel launch information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if modelName == "all" && outputFormat == "json" {
+		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "cuda_kernel_launch")
 		}
 		return nil

@@ -179,7 +179,10 @@ func (es Evaluations) CUDALaunchInformationSummary(perfCol *PerformanceCollectio
 	for _, e := range es {
 		s, err := e.CUDALaunchInformationSummary(perfCol)
 		if err != nil {
-			log.WithError(err).Error("failed to get layer information summary")
+			log.WithError(err).
+				WithField("framework_name", e.Framework.Name).
+				WithField("model_name", e.Model.Name).
+				Error("failed to get layer information summary")
 			continue
 		}
 		if s == nil {
