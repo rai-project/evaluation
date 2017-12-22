@@ -169,5 +169,5 @@ func init() {
 func init() {
 	goPath = com.GetGOPATHs()[0]
 	raiSrcPath = getSrcPath("github.com/rai-project")
-	mlArcWebAssetsPath = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets")
+	mlArcWebAssetsPath = filepath.Join(raiSrcPath, "ml-arc-web", "src", "assets", "data")
 }
