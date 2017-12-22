@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	"github.com/spf13/cast"
+	model "github.com/uber/jaeger/model/json"
 )
 
 func uptoIndex(arry []interface{}, idx int) int {
@@ -61,4 +62,18 @@ func uint64SliceToStringSlice(us []uint64) []string {
 		res[ii] = cast.ToString(u)
 	}
 	return res
+}
+
+func predictIndexOf(span model.Span, predictSpans Spans) int {
+	for ii, predict := range predictSpans {
+		if span.ParentSpanID == predict.SpanID {
+			return ii
+		}
+		for _, ref := range span.References {
+			if ref.RefType == model.ChildOf && ref.SpanID == predict.SpanID {
+				return ii
+			}
+		}
+	}
+	return -1
 }

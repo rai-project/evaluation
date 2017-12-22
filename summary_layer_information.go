@@ -295,22 +295,9 @@ func selectTensorRTLayerSpans(spans Spans) Spans {
 
 func getSpanLayersFromSpans(spans Spans) []Spans {
 	predictSpans := spans.FilterByOperationName("Predict")
-	predictIndexOf := func(span model.Span) int {
-		for ii, predict := range predictSpans {
-			if span.ParentSpanID == predict.SpanID {
-				return ii
-			}
-			for _, ref := range span.References {
-				if ref.RefType == model.ChildOf && ref.SpanID == predict.SpanID {
-					return ii
-				}
-			}
-		}
-		return -1
-	}
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
-		idx := predictIndexOf(span)
+		idx := predictIndexOf(span, predictSpans)
 		if idx == -1 {
 			continue
 		}
