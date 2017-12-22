@@ -16,7 +16,7 @@ var layersTreeCmd = &cobra.Command{
 	Short: "Get evaluation layer tree information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" {
-			outputFileName = filepath.Join(mlArcAssetsPath, "layer_tree")
+			outputFileName = filepath.Join(mlArcWebAssetsPath, "layer_tree")
 		}
 		return nil
 	},
