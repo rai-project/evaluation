@@ -22,18 +22,19 @@ var cudaLaunchCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		run := func() error {
-			durs, err := predictDurationInformationSummary()
+
+			evals, err := getEvaluations()
 			if err != nil {
 				return err
 			}
 
-			lats, err := durs.CUDALaunchInformationSummary()
+			lst, err := evals.CUDALaunchInformationSummary(performanceCollection)
 
 			writer := NewWriter(evaluation.SummaryCUDALaunchInformation{})
 			defer writer.Close()
 
-			for _, lat := range lats {
-				writer.Row(lat)
+			for _, elem := range lst {
+				writer.Row(elem)
 			}
 
 			return nil
