@@ -47,7 +47,7 @@ var (
 	modelAccuracyCollection   *evaluation.ModelAccuracyCollection
 	divergenceCollection      *evaluation.DivergenceCollection
 
-	allCmds = []cobra.Command{
+	allCmds = []*cobra.Command{
 		latencyCmd,
 		layersCmd,
 		layersTreeCmd,

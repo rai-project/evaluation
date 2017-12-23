@@ -22,6 +22,9 @@ var durationCmd = &cobra.Command{
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
 		}
+		if databaseName == "" {
+			databaseName = "carml_step_trace"
+		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
