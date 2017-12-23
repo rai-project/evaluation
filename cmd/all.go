@@ -11,26 +11,17 @@ var allCmd = &cobra.Command{
 	},
 	Short: "Get all evaluation information from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var err error
-
-		cmds := []cobra.Command{
-			latencyCmd,
-			layersCmd,
-			layersTreeCmd,
-			cudaLaunchCmd,
-			eventflowCmd,
-			durationCmd,
-		}
-
-		for _, cmd := range cmds {
-			log.WithField("command", cmd.Name()).Debug("running command")
+		for _, cmd := range allCmds {
 			argWoFlags := cmd.Flags().Args()
-			err = cmd.PreRunE(cmd, argWoFlags)
+			log.WithField("command", cmd.Name()).
+				WithField("args", argWoFlags).
+				Debug("running evaluation command")
+			err := cmd.PreRunE(cmd, argWoFlags)
 			if err != nil {
 				log.WithError(err).
 					WithField("command", cmd.Name()).
 					WithField("args", argWoFlags).
-					Error("failed to pre run command")
+					Error("failed to pre run evaluation command")
 				continue
 			}
 			err = cmd.RunE(cmd, argWoFlags)
@@ -38,7 +29,7 @@ var allCmd = &cobra.Command{
 				log.WithError(err).
 					WithField("command", cmd.Name()).
 					WithField("args", argWoFlags).
-					Error("failed to run command")
+					Error("failed to run evaluation command")
 				continue
 			}
 		}

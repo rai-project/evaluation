@@ -45,6 +45,15 @@ var (
 	inputPerdictionCollection *evaluation.InputPredictionCollection
 	modelAccuracyCollection   *evaluation.ModelAccuracyCollection
 	divergenceCollection      *evaluation.DivergenceCollection
+
+	allCmds = []cobra.Command{
+		latencyCmd,
+		layersCmd,
+		layersTreeCmd,
+		cudaLaunchCmd,
+		eventflowCmd,
+		durationCmd,
+	}
 )
 
 var EvaluationCmd = &cobra.Command{
@@ -156,12 +165,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().BoolVar(&appendOutput, "append", false, "append the output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
-	EvaluationCmd.AddCommand(durationCmd)
-	EvaluationCmd.AddCommand(latencyCmd)
-	EvaluationCmd.AddCommand(layersCmd)
-	EvaluationCmd.AddCommand(eventflowCmd)
-	EvaluationCmd.AddCommand(layersTreeCmd)
-	EvaluationCmd.AddCommand(cudaLaunchCmd)
+	EvaluationCmd.AddCommand(allCmds...)
 	EvaluationCmd.AddCommand(allCmd)
 
 	pp.WithLineInfo = true
