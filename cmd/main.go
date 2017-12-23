@@ -22,8 +22,12 @@ func main() {
 		log = logrus.New().WithField("pkg", "dlframework/framework/cmd/evaluate")
 	})
 
+	cmd.IsDebug = true
+	cmd.IsVerbose = true
 	cmd.Init()
 
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.DebugLevel)
 	if err := evalcmd.EvaluationCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
