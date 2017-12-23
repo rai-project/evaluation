@@ -13,9 +13,19 @@ var allCmd = &cobra.Command{
 	Short: "Get all evaluation information from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		rootFlags := cmd.Parent().Flags()
-		originalDatabaseName := databaseName
 		for _, pcmd := range allCmds {
-			databaseName = originalDatabaseName
+			if !rootFlags.Changed("database_name") {
+				switch cmd.Name() {
+				case latencyCmd.Name(),
+					durationCmd.Name():
+					databaseName = "carml_step_trace"
+				case layersCmd.Name(),
+					layersTreeCmd.Name(),
+					cudaLaunchCmd.Name(),
+					eventflowCmd.Name():
+					databaseName = "carml_full_trace"
+				}
+			}
 			pcmd.Flags().AddFlagSet(rootFlags)
 			log.WithField("command", pcmd.Name()).
 				WithField("args", args).

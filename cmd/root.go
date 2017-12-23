@@ -57,7 +57,7 @@ var (
 	}
 )
 
-func rootSetup() {
+func rootSetup() error {
 	if databaseName == "" {
 		databaseName = config.App.Name
 	}
@@ -120,14 +120,15 @@ func rootSetup() {
 	} else {
 		outputFileExtension = outputFormat
 	}
+
+	return nil
 }
 
 var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
 	Short: "Get evaluation information from CarML",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		rootSetup()
-		return nil
+		return rootSetup()
 	},
 	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
 		safeClose := func(cls ...io.Closer) {
