@@ -24,7 +24,7 @@ var allCmd = &cobra.Command{
 		}
 
 		argWoFlags = layersCmd.Flags().Args()
-		err = layersCmd.PreRunE(latencyCmd, argWoFlags)
+		err = layersCmd.PreRunE(layersCmd, argWoFlags)
 		if err != nil {
 			return nil
 		}
