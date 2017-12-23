@@ -15,19 +15,19 @@ var latencyCmd = &cobra.Command{
 	},
 	Short: "Get evaluation latency or throughput information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if databaseName == "" {
+			databaseName = "carml_step_trace"
+		}
+		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "latency_throughput")
 		}
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
 		}
-		if databaseName == "" {
-			databaseName = "carml_step_trace"
-		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cmd.DebugFlags()
 		run := func() error {
 			durs, err := predictDurationInformationSummary()
 			if err != nil {

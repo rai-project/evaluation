@@ -16,14 +16,15 @@ var durationCmd = &cobra.Command{
 	},
 	Short: "Get evaluation duration summary from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if databaseName == "" {
+			databaseName = "carml_step_trace"
+		}
+		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "duration")
 		}
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
-		}
-		if databaseName == "" {
-			databaseName = "carml_step_trace"
 		}
 		return nil
 	},

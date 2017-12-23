@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	"github.com/k0kubun/pp"
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +14,12 @@ var allCmd = &cobra.Command{
 	Short: "Get all evaluation information from CarML",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		rootFlags := cmd.Parent().Flags()
+		rootFlags.Parse(os.Args[2:])
+		originalDatabaseName := databaseName
 		for _, pcmd := range allCmds {
-			if !rootFlags.Changed("database_name") {
-				switch cmd.Name() {
+			//pcmd.SilenceUsage = true
+			if originalDatabaseName == "" {
+				switch pcmd.Name() {
 				case latencyCmd.Name(),
 					durationCmd.Name():
 					databaseName = "carml_step_trace"
@@ -26,26 +30,31 @@ var allCmd = &cobra.Command{
 					databaseName = "carml_full_trace"
 				}
 			}
+			pargs := append([]string{pcmd.Name()}, os.Args[2:]...)
+			pargs = append(pargs, "--database_name="+databaseName)
+			pcmd.SetArgs(pargs)
+
 			pcmd.Flags().AddFlagSet(rootFlags)
-			log.WithField("command", pcmd.Name()).
-				WithField("args", args).
-				Info("running evaluation command")
-			pp.Println("running evaluation command ", args, "  ", pcmd.Name())
-			pcmd.SilenceUsage = true
+			pcmd.Flags().Parse(pargs)
 			rootSetup()
-			err := pcmd.PreRunE(pcmd, args)
+
+			log.WithField("command", pcmd.Name()).
+				WithField("args", pargs).
+				Info("running evaluation command")
+			//pp.Println("running evaluation command ", pargs, "  ", pcmd.Name())
+			err := pcmd.PreRunE(pcmd, pargs)
 			if err != nil {
 				log.WithError(err).
 					WithField("command", pcmd.Name()).
-					WithField("args", args).
+					WithField("args", pargs).
 					Error("failed to pre run evaluation command")
 				continue
 			}
-			err = pcmd.RunE(pcmd, args)
+			err = pcmd.RunE(pcmd, pargs)
 			if err != nil {
 				log.WithError(err).
 					WithField("command", pcmd.Name()).
-					WithField("args", args).
+					WithField("args", pargs).
 					Error("failed to run evaluation command")
 				continue
 			}
