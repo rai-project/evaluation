@@ -67,7 +67,13 @@ var allCmd = &cobra.Command{
 	},
 	Short: "Get all evaluation information from CarML",
 	RunE: func(*cobra.Command, []string) error {
-		cmd := exec.Command("go", "build", filepath.Join(sourcePath, "main.go"))
+
+		buildFile, err := getBuildFile()
+		if err != nil {
+			return err
+		}
+
+		cmd := exec.Command("go", "build", buildFile)
 		if err := cmd.Run(); err != nil {
 			return err
 		}

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+	"go/build"
 	"path/filepath"
 
 	"github.com/Unknwon/com"
@@ -46,4 +48,18 @@ func getSrcPath(importPath string) (appPath string) {
 
 func isExists(s string) bool {
 	return com.IsExist(s)
+}
+
+func getBuildFile() (string, error) {
+	pkg, err := build.Default.ImportDir(sourcePath, build.ImportMode(0))
+	if err == nil && pkg.IsCommand() {
+		return pkg, nil
+	}
+
+	mainPath := filepath.Join(sourcePath, "main.go")
+	if com.IsFile(mainPath) {
+		return mainPath, nil
+	}
+
+	return "", errors.New("unable to figure out what file to build")
 }
