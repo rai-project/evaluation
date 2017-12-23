@@ -16,14 +16,15 @@ var layersTreeCmd = &cobra.Command{
 	},
 	Short: "Get evaluation layer tree information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if databaseName == "" {
+			databaseName = "carml_full_trace"
+		}
+		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "layer_tree")
 		}
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
-		}
-		if databaseName == "" {
-			databaseName = "carml_full_trace"
 		}
 		return nil
 	},

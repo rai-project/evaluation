@@ -32,6 +32,7 @@ var allCmd = &cobra.Command{
 			}
 			pargs := append([]string{pcmd.Name()}, os.Args[2:]...)
 			pargs = append(pargs, "--database_name="+databaseName)
+			cmd.Parent().SetArgs(pargs)
 			pcmd.SetArgs(pargs)
 
 			pcmd.Flags().AddFlagSet(rootFlags)

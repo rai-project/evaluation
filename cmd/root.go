@@ -127,6 +127,9 @@ func rootSetup() error {
 var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
 	Short: "Get evaluation information from CarML",
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		pp.Println("Running " + cmd.Name())
+	},
 	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
 		safeClose := func(cls ...io.Closer) {
 			for _, c := range cls {
