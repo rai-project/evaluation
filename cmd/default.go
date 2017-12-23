@@ -17,8 +17,8 @@ var (
 		latencyCmd,
 		layersCmd,
 		layersTreeCmd,
-		cudaLaunchCmd,
-		eventflowCmd,
+	//	cudaLaunchCmd,
+	//	eventflowCmd,
 		durationCmd,
 	}
 )
