@@ -174,7 +174,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
 	EvaluationCmd.AddCommand(allCmds...)
-	EvaluationCmd.AddCommand(allCmd)
+	//EvaluationCmd.AddCommand(allCmd)
 
 	pp.WithLineInfo = true
 }
