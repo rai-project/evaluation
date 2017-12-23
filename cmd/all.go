@@ -22,6 +22,7 @@ var allCmd = &cobra.Command{
 				Info("running evaluation command")
 			pp.Println("running evaluation command ", args, "  ", pcmd.Name())
 			pcmd.SilenceUsage = true
+			rootSetup()
 			err := pcmd.PreRunE(pcmd, args)
 			if err != nil {
 				log.WithError(err).

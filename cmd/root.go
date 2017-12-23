@@ -57,73 +57,76 @@ var (
 	}
 )
 
+func rootSetup() {
+	if databaseName == "" {
+		databaseName = config.App.Name
+	}
+	if databaseAddress != "" {
+		databaseEndpoints = []string{databaseAddress}
+	}
+
+	opts := []database.Option{}
+	if len(databaseEndpoints) != 0 {
+		opts = append(opts, database.Endpoints(databaseEndpoints))
+	}
+
+	var err error
+
+	db, err = mongodb.NewDatabase(databaseName, opts...)
+	if err != nil {
+		return err
+	}
+
+	evaluationCollection, err = evaluation.NewEvaluationCollection(db)
+	if err != nil {
+		return err
+	}
+
+	performanceCollection, err = evaluation.NewPerformanceCollection(db)
+	if err != nil {
+		return err
+	}
+
+	modelAccuracyCollection, err = evaluation.NewModelAccuracyCollection(db)
+	if err != nil {
+		return err
+	}
+
+	inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
+	if err != nil {
+		return err
+	}
+
+	divergenceCollection, err = evaluation.NewDivergenceCollection(db)
+	if err != nil {
+		return err
+	}
+
+	inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
+	if err != nil {
+		return err
+	}
+
+	if outputFormat == "" && outputFileName != "" {
+		outputFormat = filepath.Ext(outputFileName)
+	}
+
+	if fm, ok := framework.FrameworkNames[strings.ToLower(frameworkName)]; ok {
+		frameworkName = fm
+	}
+
+	if modelName != "all" {
+		outputFileExtension = filepath.Ext(outputFileName)
+	} else {
+		outputFileExtension = outputFormat
+	}
+}
+
 var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
 	Short: "Get evaluation information from CarML",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		if databaseName == "" {
-			databaseName = config.App.Name
-		}
-		if databaseAddress != "" {
-			databaseEndpoints = []string{databaseAddress}
-		}
-
-		opts := []database.Option{}
-		if len(databaseEndpoints) != 0 {
-			opts = append(opts, database.Endpoints(databaseEndpoints))
-		}
-
-		var err error
-
-		db, err = mongodb.NewDatabase(databaseName, opts...)
-		if err != nil {
-			return err
-		}
-
-		evaluationCollection, err = evaluation.NewEvaluationCollection(db)
-		if err != nil {
-			return err
-		}
-
-		performanceCollection, err = evaluation.NewPerformanceCollection(db)
-		if err != nil {
-			return err
-		}
-
-		modelAccuracyCollection, err = evaluation.NewModelAccuracyCollection(db)
-		if err != nil {
-			return err
-		}
-
-		inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
-		if err != nil {
-			return err
-		}
-
-		divergenceCollection, err = evaluation.NewDivergenceCollection(db)
-		if err != nil {
-			return err
-		}
-
-		inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
-		if err != nil {
-			return err
-		}
-
-		if outputFormat == "" && outputFileName != "" {
-			outputFormat = filepath.Ext(outputFileName)
-		}
-
-		if fm, ok := framework.FrameworkNames[strings.ToLower(frameworkName)]; ok {
-			frameworkName = fm
-		}
-
-		if modelName != "all" {
-			outputFileExtension = filepath.Ext(outputFileName)
-		} else {
-			outputFileExtension = outputFormat
-		}
-
+		rootSetup()
 		return nil
 	},
 	PersistentPostRunE: func(cmd *cobra.Command, args []string) error {
