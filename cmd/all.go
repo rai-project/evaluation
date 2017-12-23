@@ -16,6 +16,7 @@ var allCmd = &cobra.Command{
 			log.WithField("command", cmd.Name()).
 				WithField("args", argWoFlags).
 				Debug("running evaluation command")
+			cmd.SilenceUsage = true
 			err := cmd.PreRunE(cmd, argWoFlags)
 			if err != nil {
 				log.WithError(err).
