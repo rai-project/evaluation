@@ -51,6 +51,8 @@ var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
 	Short: "Get evaluation information from CarML",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		pp.Println("PersistentPreRunE in EvaluationCmd")
+
 		if databaseName == "" {
 			databaseName = config.App.Name
 		}
@@ -162,6 +164,7 @@ func init() {
 	EvaluationCmd.AddCommand(eventflowCmd)
 	EvaluationCmd.AddCommand(layersTreeCmd)
 	EvaluationCmd.AddCommand(cudaLaunchCmd)
+	EvaluationCmd.AddCommand(allCmd)
 
 	pp.WithLineInfo = true
 }
