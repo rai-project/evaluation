@@ -17,7 +17,7 @@ var durationCmd = &cobra.Command{
 	Short: "Get evaluation duration summary from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
-			databaseName = "carml_step_trace"
+			databaseName = defaultDatabaseName[cmd.Name()]
 		}
 		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {

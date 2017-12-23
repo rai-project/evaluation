@@ -16,7 +16,7 @@ var latencyCmd = &cobra.Command{
 	Short: "Get evaluation latency or throughput information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
-			databaseName = "carml_step_trace"
+			databaseName = defaultDatabaseName[cmd.Name()]
 		}
 		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {

@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"os"
+	"os/exec"
+	"path/filepath"
 
-	"github.com/k0kubun/pp"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ func runAll(cmd *cobra.Command, args []string) error {
 	rootFlags := cmd.Parent().Flags()
 	rootFlags.Parse(os.Args[2:])
 	originalDatabaseName := databaseName
-	for _, pcmd := range allCmds {
+	for _, pcmd := range AllCmds {
 		//pcmd.SilenceUsage = true
 		if originalDatabaseName == "" {
 			switch pcmd.Name() {
@@ -65,8 +66,29 @@ var allCmd = &cobra.Command{
 		"eval_all",
 	},
 	Short: "Get all evaluation information from CarML",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		pp.Println("use the run_all.sh script")
+	RunE: func(*cobra.Command, []string) error {
+		cmd := exec.Command("go", "build", filepath.Join(sourcePath, "main.go"))
+		if err := cmd.Run(); err != nil {
+			return err
+		}
+
+		exe := filepath.Join(sourcePath, "main")
+
+		args := os.Args[2:]
+		for _, pcmd := range AllCmds {
+			pargs := append([]string{pcmd.Name()}, args...)
+			log.WithField("command", pcmd.Name()).
+				WithField("args", pargs).
+				Info("running evaluation command")
+			cmd = exec.Command(exe, pargs...)
+			if err := cmd.Run(); err != nil {
+				log.WithError(err).
+					WithField("command", pcmd.Name()).
+					WithField("args", pargs).
+					Error("failed to pre run evaluation command")
+				continue
+			}
+		}
 
 		return nil
 	},

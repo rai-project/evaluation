@@ -16,7 +16,7 @@ var layersCmd = &cobra.Command{
 	Short: "Get evaluation layer  information from CarML",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
-			databaseName = "carml_full_trace"
+			databaseName = defaultDatabaseName[cmd.Name()]
 		}
 		rootSetup()
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {

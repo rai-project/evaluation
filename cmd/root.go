@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/GeertJohan/go-sourcepath"
+
 	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
 
@@ -48,14 +50,7 @@ var (
 	modelAccuracyCollection   *evaluation.ModelAccuracyCollection
 	divergenceCollection      *evaluation.DivergenceCollection
 
-	allCmds = []*cobra.Command{
-		latencyCmd,
-		layersCmd,
-		layersTreeCmd,
-		cudaLaunchCmd,
-		eventflowCmd,
-		durationCmd,
-	}
+	sourcePath = sourcepath.MustAbsoluteDir()
 )
 
 func rootSetup() error {
@@ -173,8 +168,8 @@ func init() {
 	EvaluationCmd.PersistentFlags().BoolVar(&appendOutput, "append", false, "append the output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
 
-	EvaluationCmd.AddCommand(allCmds...)
-	//EvaluationCmd.AddCommand(allCmd)
+	EvaluationCmd.AddCommand(AllCmds...)
+	EvaluationCmd.AddCommand(allCmd)
 
 	pp.WithLineInfo = true
 }
