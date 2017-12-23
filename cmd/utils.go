@@ -53,7 +53,7 @@ func isExists(s string) bool {
 func getBuildFile() (string, error) {
 	pkg, err := build.Default.ImportDir(sourcePath, build.ImportMode(0))
 	if err == nil && pkg.IsCommand() {
-		return pkg, nil
+		return pkg.SrcRoot, nil
 	}
 
 	mainPath := filepath.Join(sourcePath, "main.go")
