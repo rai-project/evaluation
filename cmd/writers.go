@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/Unknwon/com"
+	"github.com/k0kubun/pp"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -108,5 +109,6 @@ func (w *Writer) Close() {
 	w.Flush()
 	if w.outputFileName != "" {
 		com.WriteFile(w.outputFileName, w.output.(*bytes.Buffer).Bytes())
+		pp.Println("Finish writing = ", outputFileName)
 	}
 }
