@@ -37,6 +37,7 @@ var (
 	databaseEndpoints         []string
 	outputFileName            string
 	outputFormat              string
+	overwrite                 bool
 	noHeader                  bool
 	appendOutput              bool
 	db                        database.Database
@@ -160,6 +161,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVar(&databaseName, "database_name", "", "name of the database to query")
 
 	EvaluationCmd.PersistentFlags().IntVar(&limit, "limit", -1, "limit the evaluations")
+	EvaluationCmd.PersistentFlags().BoolVar(&overwrite, "overwrite", false, "if the file or directory exists, then they get deleted")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFileName, "output", "o", "", "output file name")
 	EvaluationCmd.PersistentFlags().BoolVar(&noHeader, "no_header", false, "show header labels for output")
 	EvaluationCmd.PersistentFlags().BoolVar(&appendOutput, "append", false, "append the output")

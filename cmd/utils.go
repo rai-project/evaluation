@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/Unknwon/com"
@@ -42,4 +43,9 @@ func getSrcPath(importPath string) (appPath string) {
 	}
 
 	return appPath
+}
+
+func isExists(s string) bool {
+	_, e := os.Stat(filePath)
+	return e == nil
 }

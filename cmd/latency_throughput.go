@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/rai-project/evaluation"
@@ -16,6 +17,9 @@ var latencyCmd = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "latency_throughput")
+		}
+		if overwrite && isExists(outputFileName) {
+			os.RemoveAll(outputFileName)
 		}
 		return nil
 	},

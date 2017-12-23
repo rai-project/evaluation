@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/rai-project/evaluation"
@@ -17,6 +18,9 @@ var layersTreeCmd = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "layer_tree")
+		}
+		if overwrite && isExists(outputFileName) {
+			os.RemoveAll(outputFileName)
 		}
 		return nil
 	},

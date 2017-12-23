@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -17,6 +18,9 @@ var durationCmd = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "duration")
+		}
+		if overwrite && isExists(outputFileName) {
+			os.RemoveAll(outputFileName)
 		}
 		return nil
 	},

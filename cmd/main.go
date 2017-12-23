@@ -17,9 +17,11 @@ var (
 )
 
 func main() {
+
 	config.AfterInit(func() {
 		log = logrus.New().WithField("pkg", "dlframework/framework/cmd/evaluate")
 	})
+
 	cmd.Init()
 
 	if err := evalcmd.EvaluationCmd.Execute(); err != nil {
