@@ -9,7 +9,7 @@ import (
 	"github.com/rai-project/evaluation"
 )
 
-var accuracymd = &cobra.Command{
+var accuracyCmd = &cobra.Command{
 	Use: "accuracy",
 	Aliases: []string{
 		"top_accuracy",
@@ -48,7 +48,7 @@ var accuracymd = &cobra.Command{
 	},
 }
 
-func predictAccuracyInformationSummary() (evaluation.SummaryPredictDurationInformations, error) {
+func predictAccuracyInformationSummary() (evaluation.SummaryPredictAccuracyInformations, error) {
 	evals, err := getEvaluations()
 	if err != nil {
 		return nil, err

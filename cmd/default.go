@@ -22,5 +22,6 @@ var (
 		//	cudaLaunchCmd,
 		//	eventflowCmd,
 		durationCmd,
+		accuracyCmd,
 	}
 )

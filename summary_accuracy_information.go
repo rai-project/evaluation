@@ -3,7 +3,6 @@ package evaluation
 import (
 	"errors"
 
-	"github.com/apex/log"
 	"github.com/spf13/cast"
 
 	db "upper.io/db.v3"
