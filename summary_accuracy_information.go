@@ -2,7 +2,9 @@ package evaluation
 
 import (
 	"errors"
+	"strings"
 
+	"github.com/apex/log"
 	"github.com/spf13/cast"
 
 	db "upper.io/db.v3"
@@ -32,6 +34,21 @@ func (s SummaryPredictAccuracyInformation) Row() []string {
 	return append(s.SummaryBase.Row(), extra...)
 }
 
+func (s SummaryPredictAccuracyInformation) key() string {
+	return strings.Join(
+		[]string{
+			s.ModelName,
+			s.ModelVersion,
+			s.FrameworkName,
+			s.FrameworkVersion,
+			s.HostName,
+			s.MachineArchitecture,
+			cast.ToString(s.UsingGPU),
+		},
+		",",
+	)
+}
+
 func (SummaryPredictAccuracyInformations) Header() []string {
 	return SummaryPredictAccuracyInformation{}.Header()
 }
@@ -42,6 +59,29 @@ func (s SummaryPredictAccuracyInformations) Rows() [][]string {
 		rows = append(rows, e.Row())
 	}
 	return rows
+}
+
+func (s SummaryPredictAccuracyInformations) Group() SummaryPredictAccuracyInformations {
+	groups := map[string]SummaryPredictAccuracyInformations{}
+
+	for _, v := range s {
+		k := v.key()
+		if _, ok := groups[k]; !ok {
+			groups[k] = SummaryPredictAccuracyInformations{}
+		}
+		groups[k] = append(groups[k], v)
+	}
+
+	res := []SummaryPredictAccuracyInformation{}
+	for _, v := range groups {
+		if len(v) == 0 {
+			log.Error("expecting more more than one input in SummaryPredictAccuracyInformations")
+			continue
+		}
+		res = append(res, v[0])
+	}
+
+	return res
 }
 
 func (a ModelAccuracy) PredictAccuracyInformationSummary(e Evaluation) (*SummaryPredictAccuracyInformation, error) {

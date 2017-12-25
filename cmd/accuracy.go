@@ -53,5 +53,11 @@ func predictAccuracyInformationSummary() (evaluation.SummaryPredictAccuracyInfor
 	if err != nil {
 		return nil, err
 	}
-	return evals.PredictAccuracyInformationSummary(modelAccuracyCollection)
+
+	accs, err := evals.PredictAccuracyInformationSummary(modelAccuracyCollection)
+	if err != nil {
+		return nil, err
+	}
+
+	return accs.Group()
 }
