@@ -30,12 +30,12 @@ var accuracymd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		run := func() error {
-			accs, err := predictDurationInformationSummary()
+			accs, err := predictAccuracyInformationSummary()
 			if err != nil {
 				return err
 			}
 
-			writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
+			writer := NewWriter(evaluation.SummaryPredictAccuracyInformation{})
 			defer writer.Close()
 
 			for _, acc := range accs {
@@ -53,5 +53,5 @@ func predictAccuracyInformationSummary() (evaluation.SummaryPredictDurationInfor
 	if err != nil {
 		return nil, err
 	}
-	return evals.PredictDurationInformationSummary(performanceCollection)
+	return evals.PredictAccuracyInformationSummary(modelAccuracyCollection)
 }
