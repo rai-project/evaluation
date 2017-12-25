@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/apex/log"
 	"github.com/spf13/cast"
 
 	db "upper.io/db.v3"
@@ -61,7 +60,7 @@ func (s SummaryPredictAccuracyInformations) Rows() [][]string {
 	return rows
 }
 
-func (s SummaryPredictAccuracyInformations) Group() SummaryPredictAccuracyInformations {
+func (s SummaryPredictAccuracyInformations) Group() (SummaryPredictAccuracyInformations, error) {
 	groups := map[string]SummaryPredictAccuracyInformations{}
 
 	for _, v := range s {
@@ -81,7 +80,7 @@ func (s SummaryPredictAccuracyInformations) Group() SummaryPredictAccuracyInform
 		res = append(res, v[0])
 	}
 
-	return res
+	return res, nil
 }
 
 func (a ModelAccuracy) PredictAccuracyInformationSummary(e Evaluation) (*SummaryPredictAccuracyInformation, error) {
