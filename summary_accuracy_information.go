@@ -77,7 +77,12 @@ func (s SummaryPredictAccuracyInformations) Group() (SummaryPredictAccuracyInfor
 			log.Error("expecting more more than one input in SummaryPredictAccuracyInformations")
 			continue
 		}
-		res = append(res, v[0])
+		for _, vv := range v {
+			if vv.Top1Accuracy != 0 && vv.Top5Accuracy != 0 {
+				res = append(res, vv)
+				break
+			}
+		}
 	}
 
 	return res, nil
