@@ -95,11 +95,13 @@ func (w *Writer) Flush() {
 		prevData = strings.TrimSpace(prevData)
 		js := "["
 		if prevData != "" && prevData != "[]" {
-			js += strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "]")
-			js += ",\n"
+			tmp := strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "]")
+			js += strings.TrimSuffix(tmp, ",")
 		}
 		toAdd := strings.TrimSpace(strings.Join(w.json, ","))
 		if toAdd != "" {
+			js += ",\n"
+			js += toAdd
 			js += "\n"
 		}
 		js += "]"
