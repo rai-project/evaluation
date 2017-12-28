@@ -98,7 +98,10 @@ func (w *Writer) Flush() {
 			js += strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "]")
 			js += ",\n"
 		}
-		js += strings.Join(w.json, ",\n")
+		w.json = strings.TrimSpace(w.json)
+		if w.json != "" {
+			js += strings.Join(w.json, ",\n")
+		}
 		js += "]"
 		w.output.Write([]byte(js))
 	}
