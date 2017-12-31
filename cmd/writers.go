@@ -92,17 +92,38 @@ func (w *Writer) Flush() {
 				prevData = string(buf)
 			}
 		}
-		prevData = strings.TrimSpace(prevData)
+
 		js := "["
+
+		prevData = strings.TrimSpace(prevData)
 		if prevData != "" && prevData != "[]" {
-			js += strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "],"))
+			prevData = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "],"))
+		} else {
+			prevData = ""
 		}
+		js += prevData
+
 		toAdd := strings.TrimSpace(strings.Join(w.json, ","))
 		if toAdd != "" {
-			js += ",\n" + toAdd + "\n"
+			if prevData != "" {
+				toAdd = ",\n" + toAdd
+			}
+			js += toAdd + "\n"
 		}
 		js += "]"
-		w.output.Write([]byte(js))
+
+		var dat []interface{}
+		if err := json.Unmarshal([]byte(js), &dat); err != nil {
+			log.WithError(err).Error("failed to unmarshal data")
+			return
+		}
+		b, err := json.MarshalIndent(dat, "", "  ")
+		if err != nil {
+			log.WithError(err).Error("failed to marshal indent data")
+			return
+		}
+
+		w.output.Write(b)
 	}
 }
 
