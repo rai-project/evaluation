@@ -96,7 +96,7 @@ func (w *Writer) Flush() {
 
 		data = append(data, w.jsonRows...)
 
-		b, err := json.MarshalIndent(data, "", "  ")
+		b, err := json.Marshal(data)
 		if err != nil {
 			log.WithError(err).Error("failed to marshal indent data")
 			return
