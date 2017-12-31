@@ -7,7 +7,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"strings"
 
 	"github.com/Unknwon/com"
 	"github.com/olekukonko/tablewriter"
@@ -19,7 +18,7 @@ type Writer struct {
 	outputFileName string
 	tbl            *tablewriter.Table
 	csv            *csv.Writer
-	json           []string
+	jsonRows       []interface{}
 }
 
 type Rower interface {
@@ -43,7 +42,7 @@ func NewWriter(rower Rower) *Writer {
 	case "csv":
 		wr.csv = csv.NewWriter(output)
 	case "json":
-		wr.json = []string{}
+		wr.jsonRows = []interface{}{}
 	}
 	if rower != nil && (!noHeader || appendOutput) {
 		wr.Header(rower)
@@ -68,12 +67,7 @@ func (w *Writer) Row(rower Rower) error {
 	case "csv":
 		w.csv.Write(rower.Row())
 	case "json":
-		buf, err := json.Marshal(rower)
-		if err != nil {
-			log.WithError(err).Error("failed to marshal json data...")
-			return err
-		}
-		w.json = append(w.json, string(buf))
+		w.jsonRows = append(w.jsonRows, rower)
 	}
 	return nil
 }
@@ -85,39 +79,24 @@ func (w *Writer) Flush() {
 	case "csv":
 		w.csv.Flush()
 	case "json":
-		prevData := ""
+		data := []interface{}{}
 		if com.IsFile(w.outputFileName) && appendOutput {
 			buf, err := ioutil.ReadFile(w.outputFileName)
-			if err == nil {
-				prevData = string(buf)
+			if err != nil {
+				log.WithError(err).
+					WithField("file", w.outputFileName).
+					Error("failed to read output file")
+				return
+			}
+			if err := json.Unmarshal(buf, &data); err != nil {
+				log.WithError(err).Error("failed to unmarshal data")
+				return
 			}
 		}
 
-		js := "["
+		data = append(data, w.jsonRows...)
 
-		prevData = strings.TrimSpace(prevData)
-		if prevData != "" && prevData != "[]" {
-			prevData = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(prevData, "["), "],"))
-		} else {
-			prevData = ""
-		}
-		js += prevData
-
-		toAdd := strings.TrimSpace(strings.Join(w.json, ","))
-		if toAdd != "" {
-			if prevData != "" {
-				toAdd = ",\n" + toAdd
-			}
-			js += toAdd + "\n"
-		}
-		js += "]"
-
-		var dat []interface{}
-		if err := json.Unmarshal([]byte(js), &dat); err != nil {
-			log.WithError(err).Error("failed to unmarshal data")
-			return
-		}
-		b, err := json.MarshalIndent(dat, "", "  ")
+		b, err := json.MarshalIndent(data, "", "  ")
 		if err != nil {
 			log.WithError(err).Error("failed to marshal indent data")
 			return
