@@ -122,8 +122,13 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 			if len(info) <= ii {
 				continue
 			}
-			duration := info[ii].Durations
-			durations = append(durations, duration...)
+			durationToAppend := []float64{}
+			for _, r := range info {
+				if r.Name == span.OperationName {
+					durationToAppend = append(durationToAppend, r.Durations...)
+				}
+			}
+			durations = append(durations, durationToAppend...)
 		}
 		info := LayerInformation{
 			Name:      span.OperationName,
