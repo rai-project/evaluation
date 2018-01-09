@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cast"
-	"gonum.org/v1/gonum/floats"
 )
 
 type SummaryThroughputLatency struct {
@@ -64,6 +63,26 @@ func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (Summar
 
 func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (SummaryThroughputLatencies, error) {
 
+	// MinIdx returns the index of the minimum value in the input slice. If several
+	// entries have the maximum value, the first such index is returned. If the slice
+	// is empty, MinIdx will panic.
+	minIdx := func(s []float64) int {
+		min := s[0]
+		var ind int
+		for i, v := range s {
+			if v < min {
+				min = v
+				ind = i
+			}
+		}
+		return ind
+	}
+
+	// Min returns the maximum value in the input slice. If the slice is empty, Min will panic.
+	min := func(s []float64) float64 {
+		return s[minIdx(s)]
+	}
+
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 
 	groups := map[string]SummaryPredictDurationInformations{}
@@ -106,7 +125,7 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 
 		first := v[0]
 
-		duration := floats.Min(durations)
+		duration := min(durations)
 		sum := SummaryThroughputLatency{
 			SummaryBase: first.SummaryBase,
 			Durations:   durations,
