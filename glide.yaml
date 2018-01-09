@@ -34,7 +34,7 @@ import:
   subpackages:
   - bson
 - package: upper.io/db.v3
-  version: ~3.5.1
+  version: ~3.0.0
 - package: github.com/stretchr/testify
   version: ~1.2.0
   subpackages:
