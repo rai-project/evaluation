@@ -66,9 +66,9 @@ func trimmedMean(data []float64, frac float64) float64 {
 	// pp.Println("start = ", start, "   end = ", end)
 	trimmed := data[start:end]
 
-	mean := mean(trimmed, nil)
+	ret := mean(trimmed, nil)
 
-	return mean
+	return ret
 }
 
 func floor(x float64) int {
