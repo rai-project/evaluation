@@ -11,6 +11,7 @@ import:
   subpackages:
   - mongodb
 - package: github.com/rai-project/dlframework
+  version: master
   subpackages:
   - framework/cmd
 - package: github.com/rai-project/logger
