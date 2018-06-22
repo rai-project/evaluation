@@ -25,7 +25,7 @@ import:
 - package: github.com/spf13/cast
   version: ^1.1.0
 - package: github.com/spf13/cobra
-  version: ^0.0.1
+  version: master
 - package: github.com/uber/jaeger
   version: ^1.1.0
   subpackages:

@@ -82,8 +82,8 @@
     "service/kinesis",
     "service/sts"
   ]
-  revision = "e4805606f5138247510183050abe642344275ebd"
-  version = "v1.14.10"
+  revision = "fde4ded7becdeae4d26bf1212916aabba79349b4"
+  version = "v1.14.12"
 
 [[projects]]
   name = "github.com/cenkalti/backoff"
@@ -461,13 +461,13 @@
   revision = "1fb72edae24039b283c1341ed855404136a30559"
 
 [[projects]]
-  branch = "master"
   name = "github.com/rai-project/dlframework"
   packages = [
     ".",
     "framework/cmd"
   ]
-  revision = "930c9f16fba55bc45d6e6f07a6216e2250bde1e7"
+  revision = "dd99a6c4653edf8f87b51c393e5c13324e47b400"
+  version = "v0.2.21"
 
 [[projects]]
   branch = "master"
@@ -479,7 +479,7 @@
   branch = "master"
   name = "github.com/rai-project/googlecloud"
   packages = ["."]
-  revision = "2e9c67044c5b0e884a6330792cd3c5a363c031bd"
+  revision = "222e3220bb9594a3df8395a39542322cf9152a3b"
 
 [[projects]]
   branch = "master"
@@ -495,19 +495,19 @@
   branch = "master"
   name = "github.com/rai-project/machine"
   packages = ["os"]
-  revision = "baf20771b9587236264893f780978fd97e5267fe"
+  revision = "83711e021afbeba064de8c56219d7ee1ebeaabd5"
 
 [[projects]]
   branch = "master"
   name = "github.com/rai-project/nvidia-smi"
   packages = ["."]
-  revision = "6ed0fc7dfd4e4f87ccc14ad7fd2c3f31fb5d8afd"
+  revision = "484ec7354c5b4045169aa6546fc0fbfc6417a434"
 
 [[projects]]
   branch = "master"
   name = "github.com/rai-project/nvml-go"
   packages = ["."]
-  revision = "0e9aca10dd005adf793355171158783ff8ad930f"
+  revision = "c5552548d351522a93d98d2510e600e293559d1f"
 
 [[projects]]
   branch = "master"
@@ -546,7 +546,7 @@
   branch = "master"
   name = "github.com/rai-project/vipertags"
   packages = ["."]
-  revision = "1b2055ebed224c84d28b34112454ba8b7cc4d491"
+  revision = "1ba1bde0b4ed99b017e484a31738af53d0b0c81d"
 
 [[projects]]
   branch = "master"
@@ -600,10 +600,10 @@
   version = "v1.2.0"
 
 [[projects]]
+  branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
-  revision = "ef82de70bb3f60c65fb8eebacbb2d122ef517385"
-  version = "v0.0.3"
+  revision = "1e58aa3361fd650121dceeedc399e7189c05674a"
 
 [[projects]]
   branch = "master"
@@ -676,8 +676,7 @@
 [[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
-  revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
-  version = "v1.1.1"
+  revision = "bdcc60b419d136a85cdf2e7cbcac34b3f1cd6e57"
 
 [[projects]]
   branch = "master"
@@ -811,7 +810,7 @@
     "googleapis/api/annotations",
     "googleapis/rpc/status"
   ]
-  revision = "32ee49c4dd805befd833990acba36cb75042378c"
+  revision = "80063a038e333bbe006c878e4c5ce4c74d055498"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -876,6 +875,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fe99f43181f0689ee2bcefef1969e2163bff2f8e8eb28c08a7d1469c663ac042"
+  inputs-digest = "8f1c10f0dabf173aa989a4e5fb989367b9debd512d1a0625368a36d071599c5e"
   solver-name = "gps-cdcl"
   solver-version = 1
