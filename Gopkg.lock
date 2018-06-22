@@ -461,13 +461,13 @@
   revision = "1fb72edae24039b283c1341ed855404136a30559"
 
 [[projects]]
+  branch = "master"
   name = "github.com/rai-project/dlframework"
   packages = [
     ".",
     "framework/cmd"
   ]
-  revision = "dd99a6c4653edf8f87b51c393e5c13324e47b400"
-  version = "v0.2.21"
+  revision = "0a3907f2d73c7003f6998d09090a019390f8567d"
 
 [[projects]]
   branch = "master"
@@ -875,6 +875,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8f1c10f0dabf173aa989a4e5fb989367b9debd512d1a0625368a36d071599c5e"
+  inputs-digest = "5ad5e45c2320c10f68d9e5646e5b66523a3eb4815509d9b6ed8feefbc5871d46"
   solver-name = "gps-cdcl"
   solver-version = 1
