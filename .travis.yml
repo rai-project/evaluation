@@ -10,13 +10,13 @@ sudo: false
 addons:
   apt:
     sources:
+    - sourceline: ppa:ubuntu-toolchain-r/test
     - sourceline: ppa:masterminds/glide
     - sourceline: deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64
         /
       key_url: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
     - sourceline: deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64
         /
-    - ubuntu-toolchain-r-test
     packages:
     - glide
     - gcc-6
@@ -34,11 +34,8 @@ addons:
     - libhwloc-dev
     - libnuma-dev
     - libnccl2
-    - cuda-drivers
-    - cuda-cudart-dev-9-2
-    - cuda-libraries-dev-9-2
-    - cuda-command-line-tools-9-2
-    - cuda-cublas-dev-9-2
+    - cuda-9-1
+    - cuda-driver-dev-9-1
     - libcudnn7
     - libcudnn7-dev
 before_install:
