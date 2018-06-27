@@ -38,6 +38,9 @@ addons:
     - cuda-libraries-dev-9-1
     - cuda-cublas-dev-9-1
     - cuda-driver-dev-9-1
+    - cuda-driver-9-1
+    - cuda-misc-headers-9-1
+    - cuda-nvml-dev-9-1
     - libcudnn7
     - libcudnn7-dev
 env:
