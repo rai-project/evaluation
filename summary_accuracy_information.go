@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/cevaris/ordered_map"
 	"github.com/spf13/cast"
 
 	db "upper.io/db.v3"
@@ -61,14 +62,14 @@ func (s SummaryPredictAccuracyInformations) Rows() [][]string {
 }
 
 func (s SummaryPredictAccuracyInformations) Group() (SummaryPredictAccuracyInformations, error) {
-	groups := map[string]SummaryPredictAccuracyInformations{}
+	groups := ordered_map.NewOrderedMap()
 
 	for _, v := range s {
 		k := v.key()
 		if _, ok := groups[k]; !ok {
 			groups[k] = SummaryPredictAccuracyInformations{}
 		}
-		groups[k] = append(groups[k], v)
+		groups.Set(k, append(groups[k], v))
 	}
 
 	res := []SummaryPredictAccuracyInformation{}
