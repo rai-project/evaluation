@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/iancoleman/orderedmap"
 	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
@@ -20,23 +21,30 @@ func (p Performance) LayerInformationTreeSummary(e Evaluation) (*SummaryLayerInf
 		return summary, nil
 	}
 
-	infosFullMap := make([]layerInformationMap, numSSpans)
+	infosFullMap := make([]*layerInformationMap, numSSpans)
 	for ii, spans := range sspans {
 		if infosFullMap[ii] == nil {
-			infosFullMap[ii] = layerInformationMap{}
+			infosFullMap[ii] = &layerInformationMap{
+				orderedmap.New(),
+			}
 		}
 		for _, span := range spans {
 			opName := strings.ToLower(span.OperationName)
-			if _, ok := infosFullMap[ii][opName]; !ok {
-
-				infosFullMap[ii][opName] = LayerInformation{
-					Name:      span.OperationName,
-					Durations: []float64{},
-				}
+			if _, ok := infosFullMap[ii].Get(opName); !ok {
+				infosFullMap[ii].Set(
+					opName,
+					LayerInformation{
+						Name:      span.OperationName,
+						Durations: []float64{},
+					},
+				)
 			}
-			info := infosFullMap[ii][opName]
+			info, ok := infosFullMap[ii].Get(opName)
+			if !ok {
+				log.Error("unable to get layer information")
+			}
 			info.Durations = append(info.Durations, cast.ToFloat64(span.Duration))
-			infosFullMap[ii][opName] = info
+			infosFullMap[ii].Set(opName, info)
 		}
 	}
 
@@ -44,17 +52,25 @@ func (p Performance) LayerInformationTreeSummary(e Evaluation) (*SummaryLayerInf
 	infoMap := layerInformationMap{}
 	for _, span := range sspans[0] {
 		opName := strings.ToLower(span.OperationName)
-		if _, ok := infoMap[opName]; !ok {
+		if _, ok := infoMap.Get(opName); !ok {
 			keyOrdering = append(keyOrdering, opName)
-			infoMap[opName] = LayerInformation{
-				Name:      span.OperationName,
-				Durations: []float64{},
-			}
+			infoMap.Set(
+				opName,
+				LayerInformation{
+					Name:      span.OperationName,
+					Durations: []float64{},
+				},
+			)
 		}
-		info := infoMap[opName]
+
+		info, ok := infoMap.Get(opName)
+		if !ok {
+			log.Error("unable to get layer information")
+		}
+
 		allDurations := [][]float64{}
 		for ii := range sspans {
-			allDurations = append(allDurations, infosFullMap[ii][opName].Durations)
+			allDurations = append(allDurations, infosFullMap[ii].MustGet(opName).Durations)
 		}
 		transposedDurations := transpose(allDurations)
 		durations := []float64{}
@@ -68,12 +84,12 @@ func (p Performance) LayerInformationTreeSummary(e Evaluation) (*SummaryLayerInf
 			durations = append(durations, trimmedMean(ts, DefaultTrimmedMeanFraction))
 		}
 		info.Durations = durations
-		infoMap[opName] = info
+		infoMap.Set(opName, info)
 	}
 
 	infos := []LayerInformation{}
 	for _, v := range keyOrdering {
-		infos = append(infos, infoMap[v])
+		infos = append(infos, infoMap.MustGet(v))
 	}
 
 	summary.LayerInformations = infos
