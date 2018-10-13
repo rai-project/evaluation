@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cast"
 )
 
+//easyjson:json
 type SummaryThroughputLatency struct {
 	SummaryBase `json:",inline"`
 	Durations   []float64 `json:"durations,omitempty"` // in nano seconds
@@ -14,6 +15,7 @@ type SummaryThroughputLatency struct {
 	Throughput  float64   `json:"throughput,omitempty"`
 }
 
+//easyjson:json
 type SummaryThroughputLatencies []SummaryThroughputLatency
 
 func (SummaryThroughputLatency) Header() []string {

@@ -7,6 +7,7 @@ import (
 	db "upper.io/db.v3"
 )
 
+//easyjson:json
 type SummaryPredictDurationInformation struct {
 	SummaryBase `json:",inline"`
 	Durations   []uint64 `json:"durations,omitempty"` // in nano seconds

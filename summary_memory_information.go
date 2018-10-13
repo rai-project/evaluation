@@ -9,6 +9,7 @@ import (
 	model "github.com/uber/jaeger/model/json"
 )
 
+//easyjson:json
 type GPUMemInformation struct {
 	GPUID int `json:"gpuid,omitempty"`
 
@@ -21,6 +22,7 @@ type GPUMemInformation struct {
 	FinishTotal int64 `json:"finish_total,omitempty"`
 }
 
+//easyjson:json
 type SystemMemoryInformation struct {
 	StartAvailable int64 `json:"start_available,omitempty"`
 	StartFree      int64 `json:"start_free,omitempty"`
@@ -31,6 +33,7 @@ type SystemMemoryInformation struct {
 	FinishTotal     int64 `json:"finish_total,omitempty"`
 }
 
+//easyjson:json
 type RuntimeMemoryInformation struct {
 	StartAlloc      int64 `json:"start_alloc,omitempty"`
 	StartHeapAlloc  int64 `json:"start_heap_alloc,omitempty"`
@@ -43,12 +46,14 @@ type RuntimeMemoryInformation struct {
 	FinishTotalAlloc int64 `json:"finish_total_alloc,omitempty"`
 }
 
+//easyjson:json
 type MemoryInformation struct {
 	GPU     []GPUMemInformation      `json:"gpu,omitempty"`
 	Runtime RuntimeMemoryInformation `json:"runtime,omitempty"`
 	System  SystemMemoryInformation  `json:"system,omitempty"`
 }
 
+//easyjson:json
 type SummaryMemoryInformation struct {
 	SummaryBase        `json:",inline"`
 	MemoryInformations []MemoryInformation `json:"memory_informations,omitempty"`

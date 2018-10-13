@@ -9,6 +9,7 @@ import (
 	db "upper.io/db.v3"
 )
 
+//easyjson:json
 type SummaryPredictAccuracyInformation struct {
 	SummaryBase  `json:",inline"`
 	Top1Accuracy float64 `json:"top1_accuracy,omitempty"`

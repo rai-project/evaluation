@@ -10,6 +10,7 @@ import (
 	"upper.io/db.v3"
 )
 
+//easyjson:json
 type ModelAccuracy struct {
 	ID        bson.ObjectId `json:"id" bson:"_id"`
 	CreatedAt time.Time     `json:"created_at"  bson:"created_at"`

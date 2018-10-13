@@ -8,6 +8,7 @@ import (
 	db "upper.io/db.v3"
 )
 
+//easyjson:json
 type SummaryEventFlow struct {
 	SummaryBase `json:",inline"`
 	EventFlow   eventflow.Events `json:"event_flow,omitempty"`

@@ -9,6 +9,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//easyjson:json
 type InputPrediction struct {
 	ID            bson.ObjectId `json:"id" bson:"_id"`
 	CreatedAt     time.Time     `json:"created_at"  bson:"created_at"`

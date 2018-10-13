@@ -11,6 +11,7 @@ import (
 	model "github.com/uber/jaeger/model/json"
 )
 
+//easyjson:json
 type TraceInformation struct {
 	Traces []model.Trace     `json:"data"`
 	Total  int               `json:"total"`
@@ -27,12 +28,14 @@ func (info TraceInformation) Spans() Spans {
 	return Spans(res)
 }
 
+//easyjson:json
 type structuredError struct {
 	Code    int           `json:"code,omitempty"`
 	Msg     string        `json:"msg"`
 	TraceID model.TraceID `json:"traceID,omitempty"`
 }
 
+//easyjson:json
 type Performance struct {
 	ID         bson.ObjectId `json:"id" bson:"_id"`
 	CreatedAt  time.Time     `json:"created_at"  bson:"created_at"`

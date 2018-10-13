@@ -9,6 +9,7 @@ import (
 	model "github.com/uber/jaeger/model/json"
 )
 
+//easyjson:json
 type Event struct {
 	ID        string            `json:"EVENT_ID"`
 	ParentID  string            `json:"PARENT_ID"`

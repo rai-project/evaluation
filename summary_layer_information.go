@@ -16,13 +16,16 @@ var (
 	cntkLogMessageShown = false
 )
 
+//easyjson:json
 type LayerInformation struct {
 	Name      string    `json:"name,omitempty"`
 	Durations []float64 `json:"durations,omitempty"`
 }
 
+//easyjson:json
 type LayerInformations []LayerInformation
 
+//easyjson:json
 type SummaryLayerInformation struct {
 	SummaryBase       `json:",inline"`
 	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
@@ -86,6 +89,7 @@ func (s SummaryLayerInformations) Rows() [][]string {
 	return rows
 }
 
+//easyjson:json
 type layerInformationMap struct {
 	*orderedmap.OrderedMap //map[string]LayerInformation
 }

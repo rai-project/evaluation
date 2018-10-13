@@ -10,11 +10,12 @@ import (
 	"upper.io/db.v3"
 )
 
+//easyjson:json
 type Evaluation struct {
 	ID                  bson.ObjectId `json:"id" bson:"_id"`
-	UserID							string
-	RunID								int
-	CreatedAt           time.Time     `json:"created_at"  bson:"created_at"`
+	UserID              string
+	RunID               int
+	CreatedAt           time.Time `json:"created_at"  bson:"created_at"`
 	Framework           dlframework.FrameworkManifest
 	Model               dlframework.ModelManifest
 	DatasetCategory     string

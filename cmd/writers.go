@@ -12,6 +12,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+//easyjson:json
 type Writer struct {
 	format         string
 	output         io.Writer

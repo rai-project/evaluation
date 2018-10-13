@@ -12,6 +12,7 @@ import (
 
 type Metadata map[string]interface{}
 
+//easyjson:json
 type KernelLaunchInformation struct {
 	Name      string     `json:"name,omitempty"`
 	Tags      []Metadata `json:"tags,omitempty"`
@@ -21,6 +22,7 @@ type KernelLaunchInformation struct {
 
 type KernelLaunchInformations []KernelLaunchInformation
 
+//easyjson:json
 type SummaryCUDALaunchInformation struct {
 	SummaryBase              `json:",inline"`
 	KernelLaunchInformations KernelLaunchInformations `json:"kernel_launch_information,omitempty"`
