@@ -11,16 +11,16 @@ import (
 
 //easyjson:json
 type Divergence struct {
-	ID                           bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt                    time.Time     `json:"created_at"  bson:"created_at"`
-	Method                       string
-	Value                        float64
-	SourcePredictionID           bson.ObjectId
-	TargetPredictionID           bson.ObjectId
-	SourceInputPredictionInputID string
-	TargetInputPredictionInputID string
-	SourceFeatures               dlframework.Features
-	TargetFeatures               dlframework.Features
+	ID                           bson.ObjectId        `json:"id,omitempty" bson:"_id"`
+	CreatedAt                    time.Time            `json:"created_at,omitempty" bson:"created_at"`
+	Method                       string               `json:"method,omitempty"`
+	Value                        float64              `json:"value,omitempty"`
+	SourcePredictionID           bson.ObjectId        `json:"source_prediction_id,omitempty"`
+	TargetPredictionID           bson.ObjectId        `json:"target_prediction_id,omitempty"`
+	SourceInputPredictionInputID string               `json:"source_input_prediction_input_id,omitempty"`
+	TargetInputPredictionInputID string               `json:"target_input_prediction_input_id,omitempty"`
+	SourceFeatures               dlframework.Features `json:"source_features,omitempty"`
+	TargetFeatures               dlframework.Features `json:"target_features,omitempty"`
 }
 
 func (Divergence) TableName() string {

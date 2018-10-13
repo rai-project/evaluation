@@ -600,7 +600,7 @@
   name = "github.com/rai-project/aws"
   packages = ["."]
   pruneopts = "UT"
-  revision = "4effddf4a7710e9953107ceb7d4a84fa0500d294"
+  revision = "648d87fdbecb675bbf68c01b794861c987f6f847"
 
 [[projects]]
   branch = "master"
@@ -630,7 +630,7 @@
     "framework/cmd",
   ]
   pruneopts = "UT"
-  revision = "8f47eb29209c6b2d795cd795fe1c643e934c8831"
+  revision = "f28190d63c6452763b753468dcdb873c99560d97"
 
 [[projects]]
   branch = "master"

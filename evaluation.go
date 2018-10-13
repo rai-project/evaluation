@@ -12,24 +12,24 @@ import (
 
 //easyjson:json
 type Evaluation struct {
-	ID                  bson.ObjectId `json:"id" bson:"_id"`
-	UserID              string
-	RunID               int
-	CreatedAt           time.Time `json:"created_at"  bson:"created_at"`
-	Framework           dlframework.FrameworkManifest
-	Model               dlframework.ModelManifest
-	DatasetCategory     string
-	DatasetName         string
-	MachineArchitecture string
-	UsingGPU            bool
-	BatchSize           int
-	Hostname            string
-	TraceLevel          string
-	ModelAccuracyID     bson.ObjectId
-	InputPredictionIDs  []bson.ObjectId
-	PerformanceID       bson.ObjectId
-	Public              bool
-	Metadata            map[string]string
+	ID                  bson.ObjectId                 `json:"id,omitempty" bson:"_id"`
+	UserID              string                        `json:"user_id,omitempty"`
+	RunID               int                           `json:"run_id,omitempty"`
+	CreatedAt           time.Time                     `json:"created_at,omitempty" bson:"created_at"`
+	Framework           dlframework.FrameworkManifest `json:"framework,omitempty"`
+	Model               dlframework.ModelManifest     `json:"model,omitempty"`
+	DatasetCategory     string                        `json:"dataset_category,omitempty"`
+	DatasetName         string                        `json:"dataset_name,omitempty"`
+	MachineArchitecture string                        `json:"machine_architecture,omitempty"`
+	UsingGPU            bool                          `json:"using_gpu,omitempty"`
+	BatchSize           int                           `json:"batch_size,omitempty"`
+	Hostname            string                        `json:"hostname,omitempty"`
+	TraceLevel          string                        `json:"trace_level,omitempty"`
+	ModelAccuracyID     bson.ObjectId                 `json:"model_accuracy_id,omitempty"`
+	InputPredictionIDs  []bson.ObjectId               `json:"input_prediction_i_ds,omitempty"`
+	PerformanceID       bson.ObjectId                 `json:"performance_id,omitempty"`
+	Public              bool                          `json:"public,omitempty"`
+	Metadata            map[string]string             `json:"metadata,omitempty"`
 }
 
 func (Evaluation) TableName() string {

@@ -76,7 +76,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation(out *jwriter.Writer, in
     }
     out.Int(int(in.Code))
   }
-  if in.Msg != "" {
+  {
     const prefix string = ",\"msg\":"
     if first {
       first = false
@@ -267,7 +267,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
   out.RawByte('{')
   first := true
   _ = first
-  if len(in.Traces) != 0 {
+  {
     const prefix string = ",\"data\":"
     if first {
       first = false
@@ -275,7 +275,9 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Traces == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v3, v4 := range in.Traces {
         if v3 > 0 {
@@ -286,7 +288,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
       out.RawByte(']')
     }
   }
-  if in.Total != 0 {
+  {
     const prefix string = ",\"total\":"
     if first {
       first = false
@@ -296,7 +298,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
     }
     out.Int(int(in.Total))
   }
-  if in.Limit != 0 {
+  {
     const prefix string = ",\"limit\":"
     if first {
       first = false
@@ -306,7 +308,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
     }
     out.Int(int(in.Limit))
   }
-  if in.Offset != 0 {
+  {
     const prefix string = ",\"offset\":"
     if first {
       first = false
@@ -316,7 +318,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
     }
     out.Int(int(in.Offset))
   }
-  if len(in.Errors) != 0 {
+  {
     const prefix string = ",\"errors\":"
     if first {
       first = false
@@ -324,7 +326,9 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Errors == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v5, v6 := range in.Errors {
         if v5 > 0 {
@@ -462,7 +466,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
   out.RawByte('{')
   first := true
   _ = first
-  if in.TraceID != "" {
+  {
     const prefix string = ",\"traceID\":"
     if first {
       first = false
@@ -472,7 +476,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
     }
     out.String(string(in.TraceID))
   }
-  if len(in.Spans) != 0 {
+  {
     const prefix string = ",\"spans\":"
     if first {
       first = false
@@ -480,7 +484,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Spans == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v10, v11 := range in.Spans {
         if v10 > 0 {
@@ -491,7 +497,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
       out.RawByte(']')
     }
   }
-  if len(in.Processes) != 0 {
+  {
     const prefix string = ",\"processes\":"
     if first {
       first = false
@@ -499,7 +505,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Processes == nil && (out.Flags & jwriter.NilMapAsEmpty) == 0 {
+      out.RawString(`null`)
+    } else {
       out.RawByte('{')
       v12First := true
       for v12Name, v12Value := range in.Processes {
@@ -511,7 +519,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
       out.RawByte('}')
     }
   }
-  if len(in.Warnings) != 0 {
+  {
     const prefix string = ",\"warnings\":"
     if first {
       first = false
@@ -519,7 +527,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Warnings == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v13, v14 := range in.Warnings {
         if v13 > 0 {
@@ -594,7 +604,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson2(out *jwriter.Writer, in
   out.RawByte('{')
   first := true
   _ = first
-  if in.ServiceName != "" {
+  {
     const prefix string = ",\"serviceName\":"
     if first {
       first = false
@@ -604,7 +614,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson2(out *jwriter.Writer, in
     }
     out.String(string(in.ServiceName))
   }
-  if len(in.Tags) != 0 {
+  {
     const prefix string = ",\"tags\":"
     if first {
       first = false
@@ -612,7 +622,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson2(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Tags == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v16, v17 := range in.Tags {
         if v16 > 0 {
@@ -674,7 +686,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson3(out *jwriter.Writer, in
   out.RawByte('{')
   first := true
   _ = first
-  if in.Key != "" {
+  {
     const prefix string = ",\"key\":"
     if first {
       first = false
@@ -694,7 +706,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson3(out *jwriter.Writer, in
     }
     out.String(string(in.Type))
   }
-  if in.Value != nil {
+  {
     const prefix string = ",\"value\":"
     if first {
       first = false
@@ -867,7 +879,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
   out.RawByte('{')
   first := true
   _ = first
-  if in.TraceID != "" {
+  {
     const prefix string = ",\"traceID\":"
     if first {
       first = false
@@ -877,7 +889,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
     out.String(string(in.TraceID))
   }
-  if in.SpanID != "" {
+  {
     const prefix string = ",\"spanID\":"
     if first {
       first = false
@@ -907,7 +919,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
     out.Uint32(uint32(in.Flags))
   }
-  if in.OperationName != "" {
+  {
     const prefix string = ",\"operationName\":"
     if first {
       first = false
@@ -917,7 +929,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
     out.String(string(in.OperationName))
   }
-  if len(in.References) != 0 {
+  {
     const prefix string = ",\"references\":"
     if first {
       first = false
@@ -925,7 +937,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.References == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v22, v23 := range in.References {
         if v22 > 0 {
@@ -936,7 +950,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
       out.RawByte(']')
     }
   }
-  if in.StartTime != 0 {
+  {
     const prefix string = ",\"startTime\":"
     if first {
       first = false
@@ -946,7 +960,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
     out.Uint64(uint64(in.StartTime))
   }
-  if in.Duration != 0 {
+  {
     const prefix string = ",\"duration\":"
     if first {
       first = false
@@ -956,7 +970,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
     out.Uint64(uint64(in.Duration))
   }
-  if len(in.Tags) != 0 {
+  {
     const prefix string = ",\"tags\":"
     if first {
       first = false
@@ -964,7 +978,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Tags == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v24, v25 := range in.Tags {
         if v24 > 0 {
@@ -975,7 +991,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
       out.RawByte(']')
     }
   }
-  if len(in.Logs) != 0 {
+  {
     const prefix string = ",\"logs\":"
     if first {
       first = false
@@ -983,7 +999,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Logs == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v26, v27 := range in.Logs {
         if v26 > 0 {
@@ -1014,7 +1032,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     }
       easyjson679db3deEncodeGithubComUberJaegerModelJson2(out, *in.Process)
   }
-  if len(in.Warnings) != 0 {
+  {
     const prefix string = ",\"warnings\":"
     if first {
       first = false
@@ -1022,7 +1040,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Warnings == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v28, v29 := range in.Warnings {
         if v28 > 0 {
@@ -1097,7 +1117,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson5(out *jwriter.Writer, in
   out.RawByte('{')
   first := true
   _ = first
-  if in.Timestamp != 0 {
+  {
     const prefix string = ",\"timestamp\":"
     if first {
       first = false
@@ -1107,7 +1127,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson5(out *jwriter.Writer, in
     }
     out.Uint64(uint64(in.Timestamp))
   }
-  if len(in.Fields) != 0 {
+  {
     const prefix string = ",\"fields\":"
     if first {
       first = false
@@ -1115,7 +1135,9 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson5(out *jwriter.Writer, in
     } else {
       out.RawString(prefix)
     }
-    {
+    if in.Fields == nil && (out.Flags & jwriter.NilSliceAsEmpty) == 0 {
+      out.RawString("null")
+    } else {
       out.RawByte('[')
       for v31, v32 := range in.Fields {
         if v31 > 0 {
@@ -1171,7 +1193,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson4(out *jwriter.Writer, in
   out.RawByte('{')
   first := true
   _ = first
-  if in.RefType != "" {
+  {
     const prefix string = ",\"refType\":"
     if first {
       first = false
@@ -1181,7 +1203,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson4(out *jwriter.Writer, in
     }
     out.String(string(in.RefType))
   }
-  if in.TraceID != "" {
+  {
     const prefix string = ",\"traceID\":"
     if first {
       first = false
@@ -1191,7 +1213,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson4(out *jwriter.Writer, in
     }
     out.String(string(in.TraceID))
   }
-  if in.SpanID != "" {
+  {
     const prefix string = ",\"spanID\":"
     if first {
       first = false
@@ -1477,7 +1499,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, i
     }
     out.Float64(float64(in.Throughput))
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -1487,7 +1509,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, i
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -1497,7 +1519,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, i
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -1778,7 +1800,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
       out.RawByte(']')
     }
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -1788,7 +1810,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -1798,7 +1820,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -1999,7 +2021,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation7(out *jwriter.Writer, i
     }
     out.Float64(float64(in.Top5Accuracy))
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -2009,7 +2031,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation7(out *jwriter.Writer, i
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -2019,7 +2041,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation7(out *jwriter.Writer, i
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -2238,7 +2260,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation8(out *jwriter.Writer, i
       out.RawByte(']')
     }
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -2248,7 +2270,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation8(out *jwriter.Writer, i
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -2258,7 +2280,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation8(out *jwriter.Writer, i
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -2447,7 +2469,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
     }
     (in.LayerInformations).MarshalEasyJSON(out)
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -2457,7 +2479,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -2467,7 +2489,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -2686,7 +2708,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
       out.RawByte(']')
     }
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -2696,7 +2718,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -2706,7 +2728,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -2887,7 +2909,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out *jwriter.W
   out.RawByte('{')
   first := true
   _ = first
-  if in.ID != "" {
+  {
     const prefix string = ",\"EVENT_ID\":"
     if first {
       first = false
@@ -2897,7 +2919,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out *jwriter.W
     }
     out.String(string(in.ID))
   }
-  if in.ParentID != "" {
+  {
     const prefix string = ",\"PARENT_ID\":"
     if first {
       first = false
@@ -2907,7 +2929,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out *jwriter.W
     }
     out.String(string(in.ParentID))
   }
-  if in.Name != "" {
+  {
     const prefix string = ",\"EVENT_NAME\":"
     if first {
       first = false
@@ -3066,7 +3088,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, 
       out.RawByte(']')
     }
   }
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -3076,7 +3098,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -3086,7 +3108,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -3263,7 +3285,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, 
   out.RawByte('{')
   first := true
   _ = first
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -3273,7 +3295,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -3283,7 +3305,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"updated_at\":"
     if first {
       first = false
@@ -3599,7 +3621,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, 
   out.RawByte('{')
   first := true
   _ = first
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -3609,7 +3631,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -3619,7 +3641,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"trace\":"
     if first {
       first = false
@@ -3629,7 +3651,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, 
     }
     (in.Trace).MarshalEasyJSON(out)
   }
-  if in.TraceLevel != 0 {
+  {
     const prefix string = ",\"trace_level\":"
     if first {
       first = false
@@ -3710,7 +3732,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
   out.RawByte('{')
   first := true
   _ = first
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -3720,7 +3742,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -3730,7 +3752,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if in.Top1 != 0 {
+  {
     const prefix string = ",\"top1\":"
     if first {
       first = false
@@ -3740,7 +3762,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
     }
     out.Float64(float64(in.Top1))
   }
-  if in.Top5 != 0 {
+  {
     const prefix string = ",\"top5\":"
     if first {
       first = false
@@ -4406,7 +4428,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
   out.RawByte('{')
   first := true
   _ = first
-  if in.ID != "" {
+  {
     const prefix string = ",\"id\":"
     if first {
       first = false
@@ -4416,7 +4438,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
     }
     out.Raw( (in.ID).MarshalJSON() )
   }
-  if true {
+  {
     const prefix string = ",\"created_at\":"
     if first {
       first = false
@@ -4426,7 +4448,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
     }
     out.Raw( (in.CreatedAt).MarshalJSON() )
   }
-  if in.InputID != "" {
+  {
     const prefix string = ",\"input_id\":"
     if first {
       first = false
@@ -4436,7 +4458,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
     }
     out.String(string(in.InputID))
   }
-  if in.InputIndex != 0 {
+  {
     const prefix string = ",\"input_index\":"
     if first {
       first = false
@@ -4446,7 +4468,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
     }
     out.Int(int(in.InputIndex))
   }
-  if in.ExpectedLabel != "" {
+  {
     const prefix string = ",\"expected_label\":"
     if first {
       first = false
@@ -4456,7 +4478,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, 
     }
     out.String(string(in.ExpectedLabel))
   }
-  if len(in.Features) != 0 {
+  {
     const prefix string = ",\"features\":"
     if first {
       first = false
