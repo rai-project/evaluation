@@ -12,10 +12,10 @@ import (
 
 //easyjson:json
 type ModelAccuracy struct {
-	ID        bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt time.Time     `json:"created_at"  bson:"created_at"`
-	Top1      float64
-	Top5      float64
+	ID        bson.ObjectId `json:"id,omitempty" bson:"_id"`
+	CreatedAt time.Time     `json:"created_at,omitempty" bson:"created_at"`
+	Top1      float64       `json:"top_1,omitempty"`
+	Top5      float64       `json:"top_5,omitempty"`
 }
 
 func (ModelAccuracy) TableName() string {
