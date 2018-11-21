@@ -48,8 +48,8 @@ before_install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 install:
   - dep ensure
-  - go build
+  - go build -tags=nogpu
 script:
   - echo "Skip tests..."
 after_script:
-  - go test -race -v .
+  - go test -tags=nogpu -race -v .
