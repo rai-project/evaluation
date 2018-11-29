@@ -196,7 +196,7 @@ func (es Evaluations) CUDALaunchInformationSummary(perfCol *PerformanceCollectio
 }
 
 func getSpanKernelLaunchesFromSpans(spans Spans) []Spans {
-	predictSpans := spans.FilterByOperationName("Predict")
+	predictSpans := spans.FilterByOperationName("c_predict")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
 		idx := predictIndexOf(span, predictSpans)
@@ -228,7 +228,7 @@ func getSpanKernelLaunchesFromSpans(spans Spans) []Spans {
 		}
 		r := groupededSpans[ii]
 		for _, span := range grp {
-			if strings.ToLower(span.OperationName) == "launch_kernel" {
+			if strings.ToLower(span.OperationName) == "gpu_kernel" {
 				r = append(r, span)
 			}
 		}

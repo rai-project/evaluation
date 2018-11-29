@@ -9,7 +9,7 @@ import (
 
 //easyjson:json
 type SummaryPredictDurationInformation struct {
-	SummaryBase `json:",inline"`
+	SummaryBase `json:",inline,omitempty"`
 	Durations   []uint64 `json:"durations,omitempty"` // in nano seconds
 }
 
@@ -42,7 +42,7 @@ func (s SummaryPredictDurationInformations) Rows() [][]string {
 }
 
 func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
-	spans := p.Spans().FilterByOperationName("predict")
+	spans := p.Spans().FilterByOperationName("c_predict")
 
 	return &SummaryPredictDurationInformation{
 		SummaryBase: e.summaryBase(),
