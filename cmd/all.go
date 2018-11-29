@@ -18,7 +18,7 @@ func runAll(cmd *cobra.Command, args []string) error {
 			switch pcmd.Name() {
 			case latencyCmd.Name(),
 				durationCmd.Name():
-				databaseName = "carml_step_trace"
+				databaseName = "carml_model_trace"
 			case layersCmd.Name(),
 				layersTreeCmd.Name(),
 				cudaLaunchCmd.Name(),
@@ -65,7 +65,7 @@ var allCmd = &cobra.Command{
 	Aliases: []string{
 		"eval_all",
 	},
-	Short: "Get all evaluation information from CarML",
+	Short: "Get all evaluation information from MLModelScope",
 	RunE: func(*cobra.Command, []string) error {
 
 		buildFile, err := getBuildFile()

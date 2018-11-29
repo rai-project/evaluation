@@ -7,17 +7,15 @@ import (
 	"strings"
 
 	"github.com/GeertJohan/go-sourcepath"
-
 	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
+	"github.com/spf13/cobra"
 
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
+	mongodb "github.com/rai-project/database/mongodb"
 	framework "github.com/rai-project/dlframework/framework/cmd"
 	"github.com/rai-project/evaluation"
-	"github.com/spf13/cobra"
-
-	mongodb "github.com/rai-project/database/mongodb"
 	_ "github.com/rai-project/logger/hooks"
 	_ "github.com/rai-project/tracer/all"
 )
@@ -46,7 +44,7 @@ var (
 	db                        database.Database
 	evaluationCollection      *evaluation.EvaluationCollection
 	performanceCollection     *evaluation.PerformanceCollection
-	inputPerdictionCollection *evaluation.InputPredictionCollection
+	inputPredictionCollection *evaluation.InputPredictionCollection
 	modelAccuracyCollection   *evaluation.ModelAccuracyCollection
 	divergenceCollection      *evaluation.DivergenceCollection
 
@@ -88,7 +86,7 @@ func rootSetup() error {
 		return err
 	}
 
-	inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
+	inputPredictionCollection, err = evaluation.NewInputPredictionCollection(db)
 	if err != nil {
 		return err
 	}
@@ -98,7 +96,7 @@ func rootSetup() error {
 		return err
 	}
 
-	inputPerdictionCollection, err = evaluation.NewInputPredictionCollection(db)
+	inputPredictionCollection, err = evaluation.NewInputPredictionCollection(db)
 	if err != nil {
 		return err
 	}
@@ -122,7 +120,7 @@ func rootSetup() error {
 
 var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
-	Short: "Get evaluation information from CarML",
+	Short: "Get evaluation information from MLModelScope",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Running " + cmd.Name())
 		return nil
@@ -139,7 +137,7 @@ var EvaluationCmd = &cobra.Command{
 		safeClose(
 			evaluationCollection,
 			performanceCollection,
-			inputPerdictionCollection,
+			inputPredictionCollection,
 			modelAccuracyCollection,
 			divergenceCollection,
 			db,

@@ -14,7 +14,7 @@ var eventflowCmd = &cobra.Command{
 		"flow",
 		"event_flow",
 	},
-	Short: "Get evaluation trace in event_flow format from CarML",
+	Short: "Get evaluation trace in event_flow format from MLModelScope",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

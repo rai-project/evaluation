@@ -14,7 +14,7 @@ var accuracyCmd = &cobra.Command{
 	Aliases: []string{
 		"top_accuracy",
 	},
-	Short: "Get accuracy summary from CarML",
+	Short: "Get accuracy summary from MLModelScope",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

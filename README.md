@@ -30,7 +30,7 @@ go run evaluate.go
 #### Example Usage
 
 ```{sh}
-./tensorflow_agent dataset --debug --verbose --publish=true --fail_on_error=true --gpu=true --batch_size=320 --model_name=BVLC-Reference-CaffeNet --model_version=1.0 --database_name=tx2_carml_step_trace --database_address=minsky1-1.csl.illinois.edu --publish_predictions=false --num_file_parts=8 --trace_level=FULL_TRACE
+./tensorflow_agent dataset --debug --verbose --publish=true --fail_on_error=true --gpu=true --batch_size=320 --model_name=BVLC-Reference-CaffeNet --model_version=1.0 --database_name=tx2_carml_model_trace --database_address=minsky1-1.csl.illinois.edu --publish_predictions=false --num_file_parts=8 --trace_level=FULL_TRACE
 ```
 
 ### Command line options

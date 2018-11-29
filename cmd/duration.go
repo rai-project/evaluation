@@ -14,7 +14,7 @@ var durationCmd = &cobra.Command{
 	Aliases: []string{
 		"durations",
 	},
-	Short: "Get evaluation duration summary from CarML",
+	Short: "Get evaluation duration summary from MLModelScope",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

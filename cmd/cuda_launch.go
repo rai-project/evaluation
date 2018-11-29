@@ -14,7 +14,7 @@ var cudaLaunchCmd = &cobra.Command{
 		"kernel_launch",
 		"kernels",
 	},
-	Short: "Get evaluation kernel launch information from CarML",
+	Short: "Get evaluation kernel launch information from MLModelScope",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

@@ -12,8 +12,8 @@ import (
 //easyjson:json
 type SummaryBase struct {
 	ID                  bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt           time.Time     `json:"created_at"  bson:"created_at"`
-	UpdatedAt           time.Time     `json:"updated_at"  bson:"updated_at"`
+	CreatedAt           time.Time     `json:"created_at" bson:"created_at"`
+	UpdatedAt           time.Time     `json:"updated_at" bson:"updated_at"`
 	ModelName           string        `json:"model_name,omitempty"`
 	ModelVersion        string        `json:"model_version,omitempty"`
 	FrameworkName       string        `json:"framework_name,omitempty"`

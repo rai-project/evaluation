@@ -14,7 +14,7 @@ var layersTreeCmd = &cobra.Command{
 		"layertree",
 		"treemap",
 	},
-	Short: "Get evaluation layer tree information from CarML",
+	Short: "Get evaluation layer tree information from MLModelScope",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

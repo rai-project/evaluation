@@ -3,12 +3,12 @@ package cmd
 import "github.com/spf13/cobra"
 
 var (
-	defaultStepTraceDatabaseName = "carml_step_trace"
-	defaultFullTraceDatabaseName = "carml_full_trace"
-	defaultAccuracyDatabaseName  = "carml_accuracy"
-	defaultDatabaseName          = map[string]string{
-		"duration":    defaultStepTraceDatabaseName,
-		"latency":     defaultStepTraceDatabaseName,
+	defaultModelTraceDatabaseName = "carml_model_trace"
+	defaultFullTraceDatabaseName  = "carml_full_trace"
+	defaultAccuracyDatabaseName   = "carml_accuracy"
+	defaultDatabaseName           = map[string]string{
+		"duration":    defaultModelTraceDatabaseName,
+		"latency":     defaultModelTraceDatabaseName,
 		"eventflow":   defaultFullTraceDatabaseName,
 		"layers":      defaultFullTraceDatabaseName,
 		"layer_tree":  defaultFullTraceDatabaseName,
@@ -19,8 +19,8 @@ var (
 		latencyCmd,
 		layersCmd,
 		layersTreeCmd,
-		//	cudaLaunchCmd,
-		//	eventflowCmd,
+		cudaLaunchCmd,
+		eventflowCmd,
 		durationCmd,
 		accuracyCmd,
 	}
