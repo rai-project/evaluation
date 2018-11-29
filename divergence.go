@@ -9,18 +9,18 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//easyjson:json
+//easybson:json
 type Divergence struct {
-	ID                           bson.ObjectId        `json:"id,omitempty" bson:"_id"`
-	CreatedAt                    time.Time            `json:"created_at,omitempty" bson:"created_at"`
-	Method                       string               `json:"method,omitempty"`
-	Value                        float64              `json:"value,omitempty"`
-	SourcePredictionID           bson.ObjectId        `json:"source_prediction_id,omitempty"`
-	TargetPredictionID           bson.ObjectId        `json:"target_prediction_id,omitempty"`
-	SourceInputPredictionInputID string               `json:"source_input_prediction_input_id,omitempty"`
-	TargetInputPredictionInputID string               `json:"target_input_prediction_input_id,omitempty"`
-	SourceFeatures               dlframework.Features `json:"source_features,omitempty"`
-	TargetFeatures               dlframework.Features `json:"target_features,omitempty"`
+	ID                           bson.ObjectId        `bson:"id,omitempty" json:"id,omitempty"`
+	CreatedAt                    time.Time            `bson:"created_at,omitempty" bson:"created_at" json:"created_at,omitempty"`
+	Method                       string               `bson:"method,omitempty" json:"method,omitempty"`
+	Value                        float64              `bson:"value,omitempty" json:"value,omitempty"`
+	SourcePredictionID           bson.ObjectId        `bson:"source_prediction_id,omitempty" json:"source_prediction_id,omitempty"`
+	TargetPredictionID           bson.ObjectId        `bson:"target_prediction_id,omitempty" json:"target_prediction_id,omitempty"`
+	SourceInputPredictionInputID string               `bson:"source_input_prediction_input_id,omitempty" json:"source_input_prediction_input_id,omitempty"`
+	TargetInputPredictionInputID string               `bson:"target_input_prediction_input_id,omitempty" json:"target_input_prediction_input_id,omitempty"`
+	SourceFeatures               dlframework.Features `bson:"source_features,omitempty" json:"source_features,omitempty"`
+	TargetFeatures               dlframework.Features `bson:"target_features,omitempty" json:"target_features,omitempty"`
 }
 
 func (Divergence) TableName() string {

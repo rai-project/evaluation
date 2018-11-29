@@ -13,11 +13,11 @@ import (
 
 //easyjson:json
 type TraceInformation struct {
-	Traces []model.Trace     `json:"data"`
-	Total  int               `json:"total"`
-	Limit  int               `json:"limit"`
-	Offset int               `json:"offset"`
-	Errors []structuredError `json:"errors"`
+	Traces []model.Trace     `bson:"data,omitempty" json:"traces,omitempty"`
+	Total  int               `bson:"total,omitempty" json:"total,omitempty"`
+	Limit  int               `bson:"limit,omitempty" json:"limit,omitempty"`
+	Offset int               `bson:"offset,omitempty" json:"offset,omitempty"`
+	Errors []structuredError `bson:"errors,omitempty" json:"errors,omitempty"`
 }
 
 func (info TraceInformation) Spans() Spans {
@@ -30,17 +30,17 @@ func (info TraceInformation) Spans() Spans {
 
 //easyjson:json
 type structuredError struct {
-	Code    int           `json:"code,omitempty"`
-	Msg     string        `json:"msg,omitempty"`
-	TraceID model.TraceID `json:"traceID,omitempty"`
+	Code    int           `json:"code,omitempty" bson:"code,omitempty"`
+	Msg     string        `json:"msg,omitempty" bson:"msg,omitempty"`
+	TraceID model.TraceID `json:"traceID,omitempty" bson:"traceID,omitempty"`
 }
 
 //easyjson:json
 type Performance struct {
-	ID         bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
-	CreatedAt  time.Time     `json:"created_at"`
-	Trace      TraceInformation
-	TraceLevel tracer.Level
+	ID         bson.ObjectId    `json:"id,omitempty"  bson:"_id,omitempty"`
+	CreatedAt  time.Time        `json:"created_at" bson:"created_at,omitempty"`
+	Trace      TraceInformation `json:"trace" bson:"trace,omitempty"`
+	TraceLevel tracer.Level     `json:"trace_level" bson:"trace_level,omitempty"`
 }
 
 func (Performance) TableName() string {

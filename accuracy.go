@@ -11,12 +11,12 @@ import (
 	"upper.io/db.v3"
 )
 
-//easyjson:json
+//easybson:json
 type ModelAccuracy struct {
-	ID        bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
-	CreatedAt time.Time     `json:"created_at,omitempty"`
-	Top1      float64       `json:"top_1,omitempty"`
-	Top5      float64       `json:"top_5,omitempty"`
+	ID        bson.ObjectId `bson:"id,omitempty" json:"id,omitempty"`
+	CreatedAt time.Time     `bson:"created_at,omitempty" json:"created_at,omitempty"`
+	Top1      float64       `bson:"top_1,omitempty" json:"top_1,omitempty"`
+	Top5      float64       `bson:"top_5,omitempty" json:"top_5,omitempty"`
 }
 
 func (ModelAccuracy) TableName() string {
