@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/rai-project/database"
@@ -12,8 +13,8 @@ import (
 
 //easyjson:json
 type ModelAccuracy struct {
-	ID        bson.ObjectId `json:"id,omitempty" bson:"_id"`
-	CreatedAt time.Time     `json:"created_at,omitempty" bson:"created_at"`
+	ID        bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
+	CreatedAt time.Time     `json:"created_at,omitempty"`
 	Top1      float64       `json:"top_1,omitempty"`
 	Top5      float64       `json:"top_5,omitempty"`
 }
@@ -29,6 +30,7 @@ type ModelAccuracyCollection struct {
 func NewModelAccuracyCollection(db database.Database) (*ModelAccuracyCollection, error) {
 	tbl, err := mongodb.NewTable(db, ModelAccuracy{}.TableName())
 	if err != nil {
+		fmt.Print("here")
 		return nil, err
 	}
 	tbl.Create(nil)

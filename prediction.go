@@ -11,8 +11,8 @@ import (
 
 //easyjson:json
 type InputPrediction struct {
-	ID            bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt     time.Time     `json:"created_at"  bson:"created_at"`
+	ID            bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
+	CreatedAt     time.Time     `json:"created_at,omitempty"`
 	InputID       string
 	InputIndex    int
 	ExpectedLabel string

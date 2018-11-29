@@ -31,14 +31,14 @@ func (info TraceInformation) Spans() Spans {
 //easyjson:json
 type structuredError struct {
 	Code    int           `json:"code,omitempty"`
-	Msg     string        `json:"msg"`
+	Msg     string        `json:"msg,omitempty"`
 	TraceID model.TraceID `json:"traceID,omitempty"`
 }
 
 //easyjson:json
 type Performance struct {
-	ID         bson.ObjectId `json:"id" bson:"_id"`
-	CreatedAt  time.Time     `json:"created_at"  bson:"created_at"`
+	ID         bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
+	CreatedAt  time.Time     `json:"created_at"`
 	Trace      TraceInformation
 	TraceLevel tracer.Level
 }

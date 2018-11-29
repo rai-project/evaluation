@@ -12,10 +12,10 @@ import (
 
 //easyjson:json
 type Evaluation struct {
-	ID                  bson.ObjectId                 `json:"id,omitempty" bson:"_id"`
+	ID                  bson.ObjectId                 `json:"id,omitempty" bson:"_id,omitempty"`
 	UserID              string                        `json:"user_id,omitempty"`
 	RunID               int                           `json:"run_id,omitempty"`
-	CreatedAt           time.Time                     `json:"created_at,omitempty" bson:"created_at"`
+	CreatedAt           time.Time                     `json:"created_at,omitempty"`
 	Framework           dlframework.FrameworkManifest `json:"framework,omitempty"`
 	Model               dlframework.ModelManifest     `json:"model,omitempty"`
 	DatasetCategory     string                        `json:"dataset_category,omitempty"`
@@ -25,9 +25,9 @@ type Evaluation struct {
 	BatchSize           int                           `json:"batch_size,omitempty"`
 	Hostname            string                        `json:"hostname,omitempty"`
 	TraceLevel          string                        `json:"trace_level,omitempty"`
-	ModelAccuracyID     bson.ObjectId                 `json:"model_accuracy_id,omitempty"`
+	ModelAccuracyID     bson.ObjectId                 `json:"model_accuracy_id,omitempty" bson:"model_accuracy_id,omitempty"`
 	InputPredictionIDs  []bson.ObjectId               `json:"input_prediction_i_ds,omitempty"`
-	PerformanceID       bson.ObjectId                 `json:"performance_id,omitempty"`
+	PerformanceID       bson.ObjectId                 `json:"performance_id,omitempty" bson:"performance_id,omitempty"`
 	Public              bool                          `json:"public,omitempty"`
 	Metadata            map[string]string             `json:"metadata,omitempty"`
 }
@@ -69,6 +69,14 @@ func (c *EvaluationCollection) FindByModel(model dlframework.ModelManifest) ([]E
 		db.Cond{
 			"model.name":    model.Name,
 			"model.version": model.Version,
+		},
+	)
+}
+
+func (c *EvaluationCollection) FindByUserID(UserID string) ([]Evaluation, error) {
+	return c.Find(
+		db.Cond{
+			"userid": UserID,
 		},
 	)
 }
