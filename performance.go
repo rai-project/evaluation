@@ -13,7 +13,7 @@ import (
 
 //easyjson:json
 type TraceInformation struct {
-	Traces []model.Trace     `bson:"data,omitempty" json:"traces,omitempty"`
+	Traces []model.Trace     `bson:"data,omitempty" json:"data,omitempty"`
 	Total  int               `bson:"total,omitempty" json:"total,omitempty"`
 	Limit  int               `bson:"limit,omitempty" json:"limit,omitempty"`
 	Offset int               `bson:"offset,omitempty" json:"offset,omitempty"`
