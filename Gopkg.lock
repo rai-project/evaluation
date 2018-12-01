@@ -612,7 +612,7 @@
     "mongodb",
   ]
   pruneopts = "UT"
-  revision = "460c9cf6ee9ff85b91220358648023379ccd7bf7"
+  revision = "a090a0038fa3615f1e7c806854320e55e3fd9bbd"
 
 [[projects]]
   branch = "master"
@@ -623,7 +623,7 @@
     "framework/cmd",
   ]
   pruneopts = "UT"
-  revision = "c362b2ef35629eca6433d43100d2aa7769f75d37"
+  revision = "b8d851c8bb8ceac5008e880287a4c29ba1cb39f3"
 
 [[projects]]
   branch = "master"
@@ -945,7 +945,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "fae4c4e3ad76c295c3d6d259f898136b4bf833a8"
+  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
 
 [[projects]]
   branch = "master"
