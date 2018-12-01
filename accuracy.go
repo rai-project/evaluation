@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"time"
 
+	"gopkg.in/mgo.v2/bson"
+	"upper.io/db.v3"
+
 	"github.com/rai-project/database"
 	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/dlframework"
-	"gopkg.in/mgo.v2/bson"
-	"upper.io/db.v3"
 )
 
 //easybson:json
 type ModelAccuracy struct {
-	ID        bson.ObjectId `bson:"id,omitempty" json:"id,omitempty"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	CreatedAt time.Time     `bson:"created_at,omitempty" json:"created_at,omitempty"`
 	Top1      float64       `bson:"top_1,omitempty" json:"top_1,omitempty"`
 	Top5      float64       `bson:"top_5,omitempty" json:"top_5,omitempty"`
