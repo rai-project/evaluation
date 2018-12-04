@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"errors"
+	"sort"
 	"strings"
 
 	"github.com/iancoleman/orderedmap"
@@ -326,6 +327,21 @@ func selectTensorRTLayerSpans(spans Spans) Spans {
 	return selectCaffe2LayerSpans(spans)
 }
 
+func sortByLayerIndex(spans Spans) {
+	sort.Slice(spans, func(ii, jj int) bool {
+		li, foundI := spanTagValue(spans[ii], "layer_sequence_index")
+		if !foundI {
+			return false
+		}
+		lj, foundJ := spanTagValue(spans[jj], "layer_sequence_index")
+		if !foundJ {
+			return true
+		}
+
+		return cast.ToInt64(li) < cast.ToInt64(lj)
+	})
+}
+
 func getSpanLayersFromSpans(spans Spans) []Spans {
 	predictSpans := spans.FilterByOperationName("PredictImage")
 	groupedSpans := make([]Spans, len(predictSpans))
@@ -373,6 +389,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		case "tensorrt":
 			groupedLayerSpans[ii] = selectTensorRTLayerSpans(grp)
 		}
+		sortByLayerIndex(groupedLayerSpans[ii])
 	}
 	return groupedLayerSpans
 }
