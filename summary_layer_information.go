@@ -6,7 +6,6 @@ import (
 
 	"github.com/iancoleman/orderedmap"
 	"github.com/rai-project/config"
-	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
 	db "upper.io/db.v3"
@@ -328,7 +327,7 @@ func selectTensorRTLayerSpans(spans Spans) Spans {
 }
 
 func getSpanLayersFromSpans(spans Spans) []Spans {
-	predictSpans := spans.FilterByOperationName("Predict")
+	predictSpans := spans.FilterByOperationName("PredictImage")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
 		idx := predictIndexOf(span, predictSpans)
@@ -355,9 +354,10 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		if traceLevel == "" {
 			continue
 		}
-		if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
-			continue
-		}
+		// TODO: FIX this once we change the code to use c_predict rather than PredictImage
+		// if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
+		// 	continue
+		// }
 		frameworkName := strings.ToLower(frameworkNameOfSpan(predict))
 		switch frameworkName {
 		case "tensorflow":

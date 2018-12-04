@@ -77,3 +77,28 @@ func predictIndexOf(span model.Span, predictSpans Spans) int {
 	}
 	return -1
 }
+
+func tagsOf(span model.Span) map[string]string {
+	res := map[string]string{}
+	for _, lg := range span.Logs {
+		for _, fld := range lg.Fields {
+			res[fld.Key] = cast.ToString(fld.Value)
+		}
+	}
+	for _, tag := range span.Tags {
+		res[tag.Key] = cast.ToString(tag.Value)
+	}
+	return res
+}
+
+func parentOf(span model.Span) model.SpanID {
+	if span.ParentSpanID != "" {
+		return span.ParentSpanID
+	}
+	for _, ref := range span.References {
+		if ref.RefType == model.ChildOf {
+			return ref.SpanID
+		}
+	}
+	return model.SpanID("")
+}
