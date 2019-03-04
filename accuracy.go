@@ -16,8 +16,8 @@ import (
 type ModelAccuracy struct {
 	ID        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 	CreatedAt time.Time     `bson:"created_at,omitempty" json:"created_at,omitempty"`
-	Top1      float64       `bson:"top_1,omitempty" json:"top_1,omitempty"`
-	Top5      float64       `bson:"top_5,omitempty" json:"top_5,omitempty"`
+	Top1      float64       `bson:"top_1" json:"top_1"`
+	Top5      float64       `bson:"top_5" json:"top_5"`
 }
 
 func (ModelAccuracy) TableName() string {
