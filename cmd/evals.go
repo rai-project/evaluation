@@ -27,7 +27,7 @@ func getEvaluations() (evaluation.Evaluations, error) {
 		filter["hostname"] = hostName
 	}
 	if batchSize != 0 {
-		filter["batchsize"] = batchSize
+		filter["batch_size"] = batchSize
 	}
 	evals, err := evaluationCollection.Find(filter)
 	if err != nil {
