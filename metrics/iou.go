@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"github.com/chewxy/math32"
+	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
 )
 
@@ -42,4 +43,10 @@ func IntersectionOverUnion(featA, featB *dlframework.Feature) float64 {
 		panic("unable to convert second feature to boundingbox")
 	}
 	return BoundingBoxIntersectionOverUnion(boxA.BoundingBox, boxB.BoundingBox)
+}
+
+func init() {
+	config.AfterInit(func() {
+		RegisterFeatureCompareFunction("IntersectionOverUnion", IntersectionOverUnion)
+	})
 }

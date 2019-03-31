@@ -1,6 +1,9 @@
 package metrics
 
-import "github.com/rai-project/dlframework"
+import (
+	"github.com/rai-project/config"
+	"github.com/rai-project/dlframework"
+)
 
 /*
 Compute the jaccard overlap of two sets of boxes.  The jaccard overlap
@@ -33,4 +36,10 @@ func Jaccard(featA, featB *dlframework.Feature) float64 {
 		panic("unable to convert second feature to boundingbox")
 	}
 	return BoundingBoxJaccard(boxA.BoundingBox, boxB.BoundingBox)
+}
+
+func init() {
+	config.AfterInit(func() {
+		RegisterFeatureCompareFunction("Jaccard", Jaccard)
+	})
 }
