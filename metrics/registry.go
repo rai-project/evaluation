@@ -10,7 +10,7 @@ type FeatureCompareFunction func(actual *dlframework.Features, expected interfac
 
 type featureCompareRegistryMap struct {
 	fs map[string]FeatureCompareFunction
-	sync.Mutex
+	sync.RWMutex
 }
 
 var featureCompareRegistry = featureCompareRegistryMap{
@@ -21,4 +21,14 @@ func RegisterFeatureCompareFunction(name string, f FeatureCompareFunction) {
 	featureCompareRegistry.Lock()
 	featureCompareRegistry.fs[name] = f
 	featureCompareRegistry.Unlock()
+}
+
+func GetFeatureCompareFunction(name string) FeatureCompareFunction {
+	featureCompareRegistry.RLock()
+	f, ok := featureCompareRegistry.fs[name]
+	featureCompareRegistry.RUnlock()
+	if !ok {
+		return nil
+	}
+	return f
 }
