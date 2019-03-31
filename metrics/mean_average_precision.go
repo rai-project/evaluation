@@ -1,6 +1,7 @@
 package metrics
 
 // https://github.com/alonewithyou/GoPredictor/blob/master/Measurement/metrics.go#L127
+// https://github.com/ariaaan/mean-average-precision-calculation/blob/master/measure_map.py#L9
 
 // func ClassificationTop1(features *dlframework.Features, expectedLabelIndex int) bool {
 // 	for _, feature := range []*dlframework.Feature(*features) {
