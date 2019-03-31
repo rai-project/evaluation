@@ -47,6 +47,16 @@ func IntersectionOverUnion(featA, featB *dlframework.Feature) float64 {
 
 func init() {
 	config.AfterInit(func() {
-		RegisterFeatureCompareFunction("IntersectionOverUnion", IntersectionOverUnion)
+		RegisterFeatureCompareFunction("IntersectionOverUnion",
+			func(actual *dlframework.Features, expected interface{}) float64 {
+				if actual == nil || len(*actual) != 1 {
+					panic("expecting one feature for argument")
+				}
+				expectedFeature, ok := expected.(*dlframework.Feature)
+				if !ok {
+					panic("expecting a feature for second argument")
+				}
+				return IntersectionOverUnion((*actual)[0], expectedFeature)
+			})
 	})
 }

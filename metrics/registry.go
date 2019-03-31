@@ -6,7 +6,7 @@ import (
 	"github.com/rai-project/dlframework"
 )
 
-type FeatureCompareFunction func(featA, featB *dlframework.Feature) float64
+type FeatureCompareFunction func(actual *dlframework.Features, expected interface{}) float64
 
 type featureCompareRegistryMap struct {
 	fs map[string]FeatureCompareFunction
