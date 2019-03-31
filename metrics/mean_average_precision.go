@@ -1,6 +1,6 @@
 package metrics
 
-import "github.com/rai-project/dlframework"
+// https://github.com/alonewithyou/GoPredictor/blob/master/Measurement/metrics.go#L127
 
 // func ClassificationTop1(features *dlframework.Features, expectedLabelIndex int) bool {
 // 	for _, feature := range []*dlframework.Feature(*features) {
@@ -16,6 +16,6 @@ import "github.com/rai-project/dlframework"
 // 	return actualLabelIndex == expectedLabelIndex
 // }
 
-func MeanAveragePrecision(features *dlframework.Features, expectedLabelIndex int) bool {
-	return ClassificationTop1(features, expectedLabelIndex)
-}
+// func MeanAveragePrecision(features *dlframework.Features, expectedLabelIndex int) bool {
+// 	return ClassificationTop1(features, expectedLabelIndex)
+// }
