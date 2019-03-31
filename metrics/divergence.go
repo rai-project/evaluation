@@ -63,19 +63,19 @@ func KullbackLeibler(p, q []float64) float64 {
 }
 
 // Covariance returns the weighted covariance between the samples of x and y.
-//  sum_i {w_i (x_i - meanX) * (y_i - meanY)} / (sum_j {w_j} - 1)
+//  sum_i {w_i (x_i - WeightedMeanX) * (y_i - WeightedMeanY)} / (sum_j {w_j} - 1)
 // The lengths of x and y must be equal. If weights is nil then all of the
 // weights are 1. If weights is not nil, then len(x) must equal len(weights).
 func Covariance(x, y, weights []float64) float64 {
 	// This is a two-pass corrected implementation.  It is an adaptation of the
-	// algorithm used in the MeanVariance function, which applies a correction
+	// algorithm used in the WeightedMeanVariance function, which applies a correction
 	// to the typical two pass approach.
 
 	if len(x) != len(y) {
 		panic("stat: slice length mismatch")
 	}
-	xu := Mean(x, weights)
-	yu := Mean(y, weights)
+	xu := WeightedMean(x, weights)
+	yu := WeightedMean(y, weights)
 	var (
 		ss            float64
 		xcompensation float64
@@ -91,7 +91,7 @@ func Covariance(x, y, weights []float64) float64 {
 			ycompensation += yd
 		}
 		// xcompensation and ycompensation are from Chan, et. al.
-		// referenced in the MeanVariance function.  They are analogous
+		// referenced in the WeightedMeanVariance function.  They are analogous
 		// to the second term in (1.7) in that paper.
 		return (ss - xcompensation*ycompensation/float64(len(x))) / float64(len(x)-1)
 	}
@@ -109,17 +109,23 @@ func Covariance(x, y, weights []float64) float64 {
 		sumWeights += w
 	}
 	// xcompensation and ycompensation are from Chan, et. al.
-	// referenced in the MeanVariance function.  They are analogous
+	// referenced in the WeightedMeanVariance function.  They are analogous
 	// to the second term in (1.7) in that paper, except they use
 	// the sumWeights instead of the sample count.
 	return (ss - xcompensation*ycompensation/sumWeights) / (sumWeights - 1)
 }
 
-// Mean computes the weighted mean of the data set.
+// Mean computes the weighted Mean of the data set.
+//  sum_i {x_i} / sum_i
+func Mean(x []float64) float64 {
+	return Sum(x) / float64(len(x))
+}
+
+// WeightedMean computes the weighted WeightedMean of the data set.
 //  sum_i {w_i * x_i} / sum_i {w_i}
 // If weights is nil then all of the weights are 1. If weights is not nil, then
 // len(x) must equal len(weights).
-func Mean(x, weights []float64) float64 {
+func WeightedMean(x, weights []float64) float64 {
 	if weights == nil {
 		return Sum(x) / float64(len(x))
 	}
@@ -174,20 +180,20 @@ func Hellinger(p, q []float64) float64 {
 }
 
 // Correlation returns the weighted correlation between the samples of x and y
-// with the given means.
-//  sum_i {w_i (x_i - meanX) * (y_i - meanY)} / (stdX * stdY)
+// with the given WeightedMeans.
+//  sum_i {w_i (x_i - WeightedMeanX) * (y_i - WeightedMeanY)} / (stdX * stdY)
 // The lengths of x and y must be equal. If weights is nil then all of the
 // weights are 1. If weights is not nil, then len(x) must equal len(weights).
 func Correlation(x, y, weights []float64) float64 {
 	// This is a two-pass corrected implementation.  It is an adaptation of the
-	// algorithm used in the MeanVariance function, which applies a correction
+	// algorithm used in the WeightedMeanVariance function, which applies a correction
 	// to the typical two pass approach.
 
 	if len(x) != len(y) {
 		panic("stat: slice length mismatch")
 	}
-	xu := Mean(x, weights)
-	yu := Mean(y, weights)
+	xu := WeightedMean(x, weights)
+	yu := WeightedMean(y, weights)
 	var (
 		sxx           float64
 		syy           float64
@@ -207,7 +213,7 @@ func Correlation(x, y, weights []float64) float64 {
 			ycompensation += yd
 		}
 		// xcompensation and ycompensation are from Chan, et. al.
-		// referenced in the MeanVariance function.  They are analogous
+		// referenced in the WeightedMeanVariance function.  They are analogous
 		// to the second term in (1.7) in that paper.
 		sxx -= xcompensation * xcompensation / float64(len(x))
 		syy -= ycompensation * ycompensation / float64(len(x))
@@ -232,7 +238,7 @@ func Correlation(x, y, weights []float64) float64 {
 		sumWeights += w
 	}
 	// xcompensation and ycompensation are from Chan, et. al.
-	// referenced in the MeanVariance function.  They are analogous
+	// referenced in the WeightedMeanVariance function.  They are analogous
 	// to the second term in (1.7) in that paper, except they use
 	// the sumWeights instead of the sample count.
 	sxx -= xcompensation * xcompensation / sumWeights

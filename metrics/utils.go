@@ -104,3 +104,11 @@ func find(x float64, edges []float64) int {
 	}
 	return lower
 }
+
+func Broadcast(a float64, len int) []float64 {
+	res := make([]float64, len)
+	for ii := range res {
+		res[ii] = a
+	}
+	return res
+}

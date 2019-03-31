@@ -53,3 +53,51 @@ func RootMeanSquaredError(y, yhat []float64) float64 {
 func RootMeanSquaredPercentageError(y, yhat []float64) float64 {
 	return math.Sqrt(MeanSquaredPercentageError(y, yhat))
 }
+
+func RelativeAbsoluteError(a, b []float64) float64 {
+	return Sum(AbsoluteError(a, b)) / Sum(AbsoluteError(a, Broadcast(Mean(a), len(a))))
+}
+
+// Compute the squared error
+// This function computes the elementwise squared error for a vector
+func SquaredError(a, b []float64) []float64 {
+	n := len(a)
+	if n != len(b) {
+		panic("length not equal")
+	}
+	res := make([]float64, n)
+	for ii := 0; ii < n; ii++ {
+		diff := a[ii] - b[ii]
+		res[ii] = diff * diff
+	}
+	return res
+}
+
+// Compute the squared log error
+// This function computes the elementwise squared log error for a vector
+func SquaredLogError(a, b []float64) []float64 {
+	n := len(a)
+	if n != len(b) {
+		panic("length not equal")
+	}
+	res := make([]float64, n)
+	for ii := 0; ii < n; ii++ {
+		e := (math.Log(1+a[ii]) - math.Log(1+b[ii]))
+		res[ii] = e * e
+	}
+	return res
+}
+
+// Compute the absolute error
+// This function computes the elementwise absolute error for a vector
+func AbsoluteError(a, b []float64) []float64 {
+	n := len(a)
+	if n != len(b) {
+		panic("length not equal")
+	}
+	res := make([]float64, n)
+	for ii := 0; ii < n; ii++ {
+		res[ii] = math.Abs(a[ii] - b[ii])
+	}
+	return res
+}
