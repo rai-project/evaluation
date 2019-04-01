@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cast"
 )
 
+// ClassificationTop1 ...
 func ClassificationTop1(features *dlframework.Features, expectedLabelIndex int) bool {
 	for _, feature := range []*dlframework.Feature(*features) {
 		_, ok := feature.Feature.(*dlframework.Feature_Classification)
