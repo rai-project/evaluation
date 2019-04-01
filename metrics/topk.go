@@ -45,6 +45,7 @@ func ClassificationTop5(features *dlframework.Features, expectedLabelIndex int) 
 	return false
 }
 
+// Top5 ...
 func Top5(features *dlframework.Features, expectedLabelIndex int) bool {
 	return ClassificationTop5(features, expectedLabelIndex)
 }
