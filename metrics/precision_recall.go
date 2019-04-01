@@ -54,7 +54,7 @@ func Fpr(data []metrics) float64 {
 	return p / float64(len(data))
 }
 
-// f1 = 2 * [(precision*recall) / (precision + recall)]
+// F1Score = 2 * [(precision*recall) / (precision + recall)]
 func F1Score(data []metrics) float64 {
 	var p float64
 	for i := 0; i < len(data); i++ {
