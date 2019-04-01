@@ -27,6 +27,7 @@ func Top1(features *dlframework.Features, expectedLabelIndex int) bool {
 	return ClassificationTop1(features, expectedLabelIndex)
 }
 
+// ClassificationTop5 ...
 func ClassificationTop5(features *dlframework.Features, expectedLabelIndex int) bool {
 	for _, feature := range []*dlframework.Feature(*features) {
 		_, ok := feature.Feature.(*dlframework.Feature_Classification)
