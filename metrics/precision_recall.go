@@ -67,7 +67,7 @@ func F1Score(data []metrics) float64 {
 	return p / float64(len(data))
 }
 
-// accuracy = (TP + TN) / (everything)
+// Accuracy = (TP + TN) / (everything)
 func Accuracy(data []metrics) float64 {
 	var p float64
 	for i := 0; i < len(data); i++ {
