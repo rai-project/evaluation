@@ -168,6 +168,7 @@ func init() {
 
 	EvaluationCmd.AddCommand(AllCmds...)
 	EvaluationCmd.AddCommand(allCmd)
+	EvaluationCmd.AddCommand(databaseCmd)
 
 	pp.WithLineInfo = true
 }
