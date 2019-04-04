@@ -57,7 +57,7 @@
   branch = "master"
   name = "github.com/rai-project/logger"
 
-[[constraint]]
+[[override]]
   branch = "master"
   name = "github.com/rai-project/tracer"
 

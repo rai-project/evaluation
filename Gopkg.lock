@@ -545,7 +545,7 @@
   name = "github.com/rai-project/config"
   packages = ["."]
   pruneopts = "UT"
-  revision = "78b9f26ebde96fac771c9751bf18049989fe3401"
+  revision = "2658bcafbb672a298ede028b76ec09bba9c63fe9"
 
 [[projects]]
   branch = "master"
@@ -645,7 +645,7 @@
     "zipkin",
   ]
   pruneopts = "UT"
-  revision = "7c77181df967ca54b6db7568b2c49eaccf4f773b"
+  revision = "2cfe1d3b0118203593f867dd14cf28ea363da21a"
 
 [[projects]]
   branch = "master"
