@@ -9,14 +9,13 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//easyjson:json
 type InputPrediction struct {
-	ID            bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
-	CreatedAt     time.Time     `json:"created_at,omitempty"`
-	InputID       string
-	InputIndex    int
-	ExpectedLabel string
-	Features      dlframework.Features
+	ID            bson.ObjectId        `json:"id,omitempty" bson:"_id,omitempty"`
+	CreatedAt     time.Time            `json:"created_at,omitempty"`
+	InputID       string               `json:"input_id,omitempty"`
+	InputIndex    int                  `json:"input_index,omitempty"`
+	ExpectedLabel string               `json:"expected_label,omitempty"`
+	Features      dlframework.Features `json:"features,omitempty"`
 }
 
 func (InputPrediction) TableName() string {

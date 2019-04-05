@@ -14,7 +14,7 @@ import (
 type Evaluation struct {
 	ID                  bson.ObjectId                 `json:"id,omitempty" bson:"_id,omitempty"`
 	UserID              string                        `json:"user_id,omitempty" bson:"user_id,omitempty"`
-	RunID               int                           `json:"run_id,omitempty"  bson:"run_id,omitempty"`
+	RunID               string                        `json:"run_id,omitempty"  bson:"run_id,omitempty"`
 	CreatedAt           time.Time                     `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	Framework           dlframework.FrameworkManifest `json:"framework,omitempty"  bson:"framework,omitempty"`
 	Model               dlframework.ModelManifest     `json:"model,omitempty"  bson:"model,omitempty"`
