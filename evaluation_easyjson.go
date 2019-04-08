@@ -847,7 +847,7 @@ func easyjson679db3deDecodeGithubComUberJaegerModelJson1(in *jlexer.Lexer, out *
 				if out.Process == nil {
 					out.Process = new(json1.Process)
 				}
-				easyjson679db3deDecodeGithubComUberJaegerModelJson2(in, &*out.Process)
+				easyjson679db3deDecodeGithubComUberJaegerModelJson2(in, out.Process)
 			}
 		case "warnings":
 			if in.IsNull() {
@@ -4882,7 +4882,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 				if out.Framework == nil {
 					out.Framework = new(dlframework.FrameworkManifest)
 				}
-				easyjson679db3deDecodeGithubComRaiProjectDlframework(in, &*out.Framework)
+				easyjson679db3deDecodeGithubComRaiProjectDlframework(in, out.Framework)
 			}
 		case "container":
 			if in.IsNull() {
@@ -4905,7 +4905,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 						if v80 == nil {
 							v80 = new(dlframework.ContainerHardware)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, &*v80)
+						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v80)
 					}
 					(out.Container)[key] = v80
 					in.WantComma()
@@ -4963,7 +4963,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 						if v82 == nil {
 							v82 = new(dlframework.ModelManifest_Type)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, &*v82)
+						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, v82)
 					}
 					out.Inputs = append(out.Inputs, v82)
 					in.WantComma()
@@ -4978,7 +4978,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 				if out.Output == nil {
 					out.Output = new(dlframework.ModelManifest_Type)
 				}
-				easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, &*out.Output)
+				easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, out.Output)
 			}
 		case "before_preprocess":
 			out.BeforePreprocess = string(in.String())
@@ -5000,7 +5000,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 				if out.Model == nil {
 					out.Model = new(dlframework.ModelManifest_Model)
 				}
-				easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest1(in, &*out.Model)
+				easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest1(in, out.Model)
 			}
 		case "attributes":
 			if in.IsNull() {
@@ -5433,7 +5433,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in *jlexe
 						if v90 == nil {
 							v90 = new(dlframework.ModelManifest_Type_Parameter)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifestType(in, &*v90)
+						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifestType(in, v90)
 					}
 					(out.Parameters)[key] = v90
 					in.WantComma()
@@ -5666,7 +5666,7 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework(in *jlexer.Lexer, out 
 						if v92 == nil {
 							v92 = new(dlframework.ContainerHardware)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, &*v92)
+						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v92)
 					}
 					(out.Container)[key] = v92
 					in.WantComma()
