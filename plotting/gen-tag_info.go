@@ -10,10 +10,33 @@ import (
 	"errors"
 
 	"github.com/spf13/cast"
-	"github.com/uber/jaeger/model"
+	"github.com/uber/jaeger/model/json"
 )
 
-func getTagValueAsUint8(span *model.Span, key string) (uint8, error) {
+func getTagValueAsUint(span *json.Span, key string) (uint, error) {
+	var res uint
+	if span == nil {
+		return res, errors.New("nil span")
+	}
+	for _, tag := range span.Tags {
+		if tag.Key == key {
+			return cast.ToUintE(tag.Value)
+		}
+	}
+	return res, errors.New("tag not found")
+}
+
+func mustGetTagValueAsUint(span *json.Span, key string) uint {
+	val, err := getTagValueAsUint(span, key)
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+//go:generate go get github.com/cheekybits/genny
+
+func getTagValueAsUint8(span *json.Span, key string) (uint8, error) {
 	var res uint8
 	if span == nil {
 		return res, errors.New("nil span")
@@ -26,7 +49,7 @@ func getTagValueAsUint8(span *model.Span, key string) (uint8, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsUint8(span *model.Span, key string) uint8 {
+func mustGetTagValueAsUint8(span *json.Span, key string) uint8 {
 	val, err := getTagValueAsUint8(span, key)
 	if err != nil {
 		panic(err)
@@ -36,7 +59,7 @@ func mustGetTagValueAsUint8(span *model.Span, key string) uint8 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsUint16(span *model.Span, key string) (uint16, error) {
+func getTagValueAsUint16(span *json.Span, key string) (uint16, error) {
 	var res uint16
 	if span == nil {
 		return res, errors.New("nil span")
@@ -49,7 +72,7 @@ func getTagValueAsUint16(span *model.Span, key string) (uint16, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsUint16(span *model.Span, key string) uint16 {
+func mustGetTagValueAsUint16(span *json.Span, key string) uint16 {
 	val, err := getTagValueAsUint16(span, key)
 	if err != nil {
 		panic(err)
@@ -59,7 +82,7 @@ func mustGetTagValueAsUint16(span *model.Span, key string) uint16 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsUint32(span *model.Span, key string) (uint32, error) {
+func getTagValueAsUint32(span *json.Span, key string) (uint32, error) {
 	var res uint32
 	if span == nil {
 		return res, errors.New("nil span")
@@ -72,7 +95,7 @@ func getTagValueAsUint32(span *model.Span, key string) (uint32, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsUint32(span *model.Span, key string) uint32 {
+func mustGetTagValueAsUint32(span *json.Span, key string) uint32 {
 	val, err := getTagValueAsUint32(span, key)
 	if err != nil {
 		panic(err)
@@ -82,7 +105,7 @@ func mustGetTagValueAsUint32(span *model.Span, key string) uint32 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsUint64(span *model.Span, key string) (uint64, error) {
+func getTagValueAsUint64(span *json.Span, key string) (uint64, error) {
 	var res uint64
 	if span == nil {
 		return res, errors.New("nil span")
@@ -95,7 +118,7 @@ func getTagValueAsUint64(span *model.Span, key string) (uint64, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsUint64(span *model.Span, key string) uint64 {
+func mustGetTagValueAsUint64(span *json.Span, key string) uint64 {
 	val, err := getTagValueAsUint64(span, key)
 	if err != nil {
 		panic(err)
@@ -105,7 +128,30 @@ func mustGetTagValueAsUint64(span *model.Span, key string) uint64 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsInt8(span *model.Span, key string) (int8, error) {
+func getTagValueAsInt(span *json.Span, key string) (int, error) {
+	var res int
+	if span == nil {
+		return res, errors.New("nil span")
+	}
+	for _, tag := range span.Tags {
+		if tag.Key == key {
+			return cast.ToIntE(tag.Value)
+		}
+	}
+	return res, errors.New("tag not found")
+}
+
+func mustGetTagValueAsInt(span *json.Span, key string) int {
+	val, err := getTagValueAsInt(span, key)
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+//go:generate go get github.com/cheekybits/genny
+
+func getTagValueAsInt8(span *json.Span, key string) (int8, error) {
 	var res int8
 	if span == nil {
 		return res, errors.New("nil span")
@@ -118,7 +164,7 @@ func getTagValueAsInt8(span *model.Span, key string) (int8, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsInt8(span *model.Span, key string) int8 {
+func mustGetTagValueAsInt8(span *json.Span, key string) int8 {
 	val, err := getTagValueAsInt8(span, key)
 	if err != nil {
 		panic(err)
@@ -128,7 +174,7 @@ func mustGetTagValueAsInt8(span *model.Span, key string) int8 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsInt16(span *model.Span, key string) (int16, error) {
+func getTagValueAsInt16(span *json.Span, key string) (int16, error) {
 	var res int16
 	if span == nil {
 		return res, errors.New("nil span")
@@ -141,7 +187,7 @@ func getTagValueAsInt16(span *model.Span, key string) (int16, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsInt16(span *model.Span, key string) int16 {
+func mustGetTagValueAsInt16(span *json.Span, key string) int16 {
 	val, err := getTagValueAsInt16(span, key)
 	if err != nil {
 		panic(err)
@@ -151,7 +197,7 @@ func mustGetTagValueAsInt16(span *model.Span, key string) int16 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsInt32(span *model.Span, key string) (int32, error) {
+func getTagValueAsInt32(span *json.Span, key string) (int32, error) {
 	var res int32
 	if span == nil {
 		return res, errors.New("nil span")
@@ -164,7 +210,7 @@ func getTagValueAsInt32(span *model.Span, key string) (int32, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsInt32(span *model.Span, key string) int32 {
+func mustGetTagValueAsInt32(span *json.Span, key string) int32 {
 	val, err := getTagValueAsInt32(span, key)
 	if err != nil {
 		panic(err)
@@ -174,7 +220,7 @@ func mustGetTagValueAsInt32(span *model.Span, key string) int32 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsInt64(span *model.Span, key string) (int64, error) {
+func getTagValueAsInt64(span *json.Span, key string) (int64, error) {
 	var res int64
 	if span == nil {
 		return res, errors.New("nil span")
@@ -187,7 +233,7 @@ func getTagValueAsInt64(span *model.Span, key string) (int64, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsInt64(span *model.Span, key string) int64 {
+func mustGetTagValueAsInt64(span *json.Span, key string) int64 {
 	val, err := getTagValueAsInt64(span, key)
 	if err != nil {
 		panic(err)
@@ -197,7 +243,7 @@ func mustGetTagValueAsInt64(span *model.Span, key string) int64 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsFloat32(span *model.Span, key string) (float32, error) {
+func getTagValueAsFloat32(span *json.Span, key string) (float32, error) {
 	var res float32
 	if span == nil {
 		return res, errors.New("nil span")
@@ -210,7 +256,7 @@ func getTagValueAsFloat32(span *model.Span, key string) (float32, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsFloat32(span *model.Span, key string) float32 {
+func mustGetTagValueAsFloat32(span *json.Span, key string) float32 {
 	val, err := getTagValueAsFloat32(span, key)
 	if err != nil {
 		panic(err)
@@ -220,7 +266,7 @@ func mustGetTagValueAsFloat32(span *model.Span, key string) float32 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsFloat64(span *model.Span, key string) (float64, error) {
+func getTagValueAsFloat64(span *json.Span, key string) (float64, error) {
 	var res float64
 	if span == nil {
 		return res, errors.New("nil span")
@@ -233,7 +279,7 @@ func getTagValueAsFloat64(span *model.Span, key string) (float64, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsFloat64(span *model.Span, key string) float64 {
+func mustGetTagValueAsFloat64(span *json.Span, key string) float64 {
 	val, err := getTagValueAsFloat64(span, key)
 	if err != nil {
 		panic(err)
@@ -243,7 +289,7 @@ func mustGetTagValueAsFloat64(span *model.Span, key string) float64 {
 
 //go:generate go get github.com/cheekybits/genny
 
-func getTagValueAsString(span *model.Span, key string) (string, error) {
+func getTagValueAsString(span *json.Span, key string) (string, error) {
 	var res string
 	if span == nil {
 		return res, errors.New("nil span")
@@ -256,7 +302,7 @@ func getTagValueAsString(span *model.Span, key string) (string, error) {
 	return res, errors.New("tag not found")
 }
 
-func mustGetTagValueAsString(span *model.Span, key string) string {
+func mustGetTagValueAsString(span *json.Span, key string) string {
 	val, err := getTagValueAsString(span, key)
 	if err != nil {
 		panic(err)
