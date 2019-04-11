@@ -1,21 +1,28 @@
 package plotting
 
 import (
+	"net/http"
+	"os"
+
+	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/fatih/structs"
+	"github.com/pkg/errors"
+	"github.com/rai-project/evaluation/plotting/browser"
 	"github.com/spf13/cast"
 )
 
 type batchPlot struct {
+	Name      string
 	Durations []batchDurationSummary
 	Options   *Options
 }
 
 type batchDurationSummary struct {
 	BatchSize int
-	Duration  uint64
+	Duration  int64
 }
 
-func NewBatchPlot(os ...OptionModifier) (*batchPlot, error) {
+func NewBatchPlot(name string, os ...OptionModifier) (*batchPlot, error) {
 	os = append(os, Option.BatchSize(0))
 	opts := NewOptions(os...)
 
@@ -44,14 +51,69 @@ func NewBatchPlot(os ...OptionModifier) (*batchPlot, error) {
 		durations = append(durations,
 			batchDurationSummary{
 				BatchSize: batchSize,
-				Duration:  cPredictSpan.Duration,
+				Duration:  int64(cPredictSpan.Duration),
 			},
 		)
 	}
 	return &batchPlot{
+		Name:      name,
 		Durations: durations,
 		Options:   opts,
 	}, nil
+}
+
+func (o batchPlot) BarPlot() *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: "xxx"},
+		charts.ToolboxOpts{Show: true},
+	)
+	labels := make([]string, len(o.Durations))
+	for ii, elem := range o.Durations {
+		labels[ii] = cast.ToString(elem.BatchSize)
+	}
+	durations := make([]int64, len(o.Durations))
+	for ii, elem := range o.Durations {
+		durations[ii] = elem.Duration
+	}
+	bar.AddXAxis(labels).AddYAxis(o.Name, durations)
+	return bar
+}
+
+func (o batchPlot) Write(path string) error {
+	bar := o.BarPlot()
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	err = bar.Render(f)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (o batchPlot) Open() error {
+	path := tempFile("", "batchPlot_*.html")
+	if path == "" {
+		return errors.New("failed to create temporary file")
+	}
+	err := o.Write(path)
+	if err != nil {
+		return err
+	}
+	// defer os.Remove(path)
+	if ok := browser.Open(path); !ok {
+		return errors.New("failed to open browser path")
+	}
+
+	return nil
+}
+
+func (o batchPlot) Handler(w http.ResponseWriter, _ *http.Request) {
+	bar := o.BarPlot()
+	bar.Render(w)
 }
 
 func (o batchPlot) Header() []string {
