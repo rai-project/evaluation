@@ -62,12 +62,7 @@ func NewBatchPlot(name string, os ...OptionModifier) (*batchPlot, error) {
 	}, nil
 }
 
-func (o batchPlot) BarPlot() *charts.Bar {
-	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: "xxx"},
-		charts.ToolboxOpts{Show: true},
-	)
+func (o batchPlot) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	labels := make([]string, len(o.Durations))
 	for ii, elem := range o.Durations {
 		labels[ii] = cast.ToString(elem.BatchSize)
@@ -80,8 +75,18 @@ func (o batchPlot) BarPlot() *charts.Bar {
 	return bar
 }
 
+func (o batchPlot) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
 func (o batchPlot) Write(path string) error {
-	bar := o.BarPlot()
+	bar := o.BarPlot(o.Name)
 	f, err := os.Create(path)
 	if err != nil {
 		return err
@@ -112,7 +117,7 @@ func (o batchPlot) Open() error {
 }
 
 func (o batchPlot) Handler(w http.ResponseWriter, _ *http.Request) {
-	bar := o.BarPlot()
+	bar := o.BarPlot(o.Name)
 	bar.Render(w)
 }
 
