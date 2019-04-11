@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -15,7 +16,7 @@ import (
 	"github.com/thoas/go-funk"
 )
 
-func contains(lst []interface{}, elem interface{}) bool {
+func contains(lst interface{}, elem interface{}) bool {
 	return funk.Contains(lst, elem)
 }
 
@@ -106,7 +107,13 @@ func evaluationTraceDirs(o *Options) ([]string, error) {
 		orGlobBool(o.useGPU),
 		orGlob(o.machineHostName),
 	)
-	return zglob.Glob(path)
+	paths, err := zglob.Glob(path)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Sort(sort.StringSlice(paths))
+	return paths, nil
 }
 
 func evaluationDirs(o *Options) ([]string, error) {
@@ -123,7 +130,13 @@ func evaluationDirs(o *Options) ([]string, error) {
 		orGlob(o.modelName),
 		orGlob(o.modelVersion),
 	)
-	return zglob.Glob(path)
+	paths, err := zglob.Glob(path)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Sort(sort.StringSlice(paths))
+	return paths, nil
 }
 
 // Random number state.

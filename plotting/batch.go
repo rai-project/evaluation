@@ -3,6 +3,7 @@ package plotting
 import (
 	"net/http"
 	"os"
+	"sort"
 
 	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/fatih/structs"
@@ -19,8 +20,15 @@ type batchPlot struct {
 
 type batchDurationSummary struct {
 	BatchSize int
+	ModelName string
 	Duration  int64
 }
+
+type batchDurationSummaries []batchDurationSummary
+
+func (p batchDurationSummaries) Len() int           { return len(p) }
+func (p batchDurationSummaries) Less(i, j int) bool { return p[i].BatchSize < p[j].BatchSize }
+func (p batchDurationSummaries) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
 func NewBatchPlot(name string, os ...OptionModifier) (*batchPlot, error) {
 	os = append(os, Option.BatchSize(0))
@@ -48,9 +56,14 @@ func NewBatchPlot(name string, os ...OptionModifier) (*batchPlot, error) {
 		if err != nil {
 			return nil, err
 		}
+		modelName, err := findModelName(tr)
+		if err != nil {
+			return nil, err
+		}
 		durations = append(durations,
 			batchDurationSummary{
 				BatchSize: batchSize,
+				ModelName: modelName,
 				Duration:  int64(cPredictSpan.Duration),
 			},
 		)
@@ -63,15 +76,61 @@ func NewBatchPlot(name string, os ...OptionModifier) (*batchPlot, error) {
 }
 
 func (o batchPlot) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	labels := make([]string, len(o.Durations))
-	for ii, elem := range o.Durations {
-		labels[ii] = cast.ToString(elem.BatchSize)
+	labels := []int{}
+	for _, elem := range o.Durations {
+		// batchSize := int(math.Log2(float64(elem.BatchSize)))
+		batchSize := elem.BatchSize
+		if contains(labels, batchSize) {
+			continue
+		}
+		labels = append(labels, batchSize)
 	}
-	durations := make([]int64, len(o.Durations))
-	for ii, elem := range o.Durations {
-		durations[ii] = elem.Duration
+
+	sort.Sort(sort.IntSlice(labels))
+
+	// modelDurations := orderedmap.New()
+	// for _, elem := range o.Durations {
+	// 	var val []int64
+	// 	if e, ok := modelDurations.Get(elem.ModelName); ok {
+	// 		val = e.([]int64)
+	// 	} else {
+	// 		val = []int64{}
+	// 	}
+	// 	val = append(val, elem.Duration)
+	// 	modelDurations.Set(elem.ModelName, val)
+	// }
+
+	modelDurations := map[string]batchDurationSummaries{}
+	for _, elem := range o.Durations {
+		var val []batchDurationSummary
+		if e, ok := modelDurations[elem.ModelName]; ok {
+			val = e
+		} else {
+			val = []batchDurationSummary{}
+		}
+		val = append(val, elem)
+		modelDurations[elem.ModelName] = batchDurationSummaries(val)
 	}
-	bar.AddXAxis(labels).AddYAxis(o.Name, durations)
+	strLabels := make([]string, len(labels))
+	for ii, label := range labels {
+		strLabels[ii] = cast.ToString(label)
+	}
+	bar.AddXAxis(strLabels)
+	for key, durations := range modelDurations {
+		vals := make([]int64, len(labels))
+		for ii, label := range labels {
+			for _, duration := range durations {
+				if duration.BatchSize == label {
+					vals[ii] = duration.Duration / 1000
+					break
+				}
+			}
+		}
+		// pp.Println(key, " --", vals)
+		bar.AddYAxis(key, vals)
+	}
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: true})
+	bar.SetGlobalOptions(charts.XAxisOpts{Name: "BatchSize"}, charts.YAxisOpts{Name: "Latency(ms)"})
 	return bar
 }
 

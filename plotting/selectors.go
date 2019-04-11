@@ -13,6 +13,14 @@ func findCPredict(spans []model.Span) (*model.Span, error) {
 	return findSpanByOperationName(spans, "c_predict")
 }
 
+func findModelName(spans []model.Span) (string, error) {
+	predictSpan, err := findPredictStep(spans)
+	if err != nil {
+		return "", err
+	}
+	return getTagValueAsString(predictSpan, "model_name")
+}
+
 func findBatchSize(spans []model.Span) (int, error) {
 	predictSpan, err := findPredictStep(spans)
 	if err != nil {
