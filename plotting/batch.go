@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cast"
 )
 
+//go:generate collections -file $GOFILE
+
 type batchPlot struct {
 	Name      string
 	Durations []batchDurationSummary
