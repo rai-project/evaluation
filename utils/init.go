@@ -1,4 +1,4 @@
-package metrics
+package utils
 
 import (
 	"github.com/rai-project/config"
@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	log *logrus.Entry = logger.New().WithField("pkg", "evaluation/metrics")
+	log *logrus.Entry = logger.New().WithField("pkg", "evaluation/utils")
 )
 
 func init() {
 	config.AfterInit(func() {
-		log = logger.New().WithField("pkg", "evaluation/metrics")
+		log = logger.New().WithField("pkg", "evaluation/utils")
 	})
 }
