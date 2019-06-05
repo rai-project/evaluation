@@ -8,7 +8,7 @@ import (
 	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/fatih/structs"
 	"github.com/pkg/errors"
-	"github.com/rai-project/evaluation/plotting/browser"
+	"github.com/rai-project/utils/browser"
 	"github.com/spf13/cast"
 )
 
