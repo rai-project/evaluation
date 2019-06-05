@@ -17,7 +17,7 @@ func TestBatch(t *testing.T) {
 	// pp.Println(batch)
 }
 
-func TestResnetBatches(t *testing.T) {
+func TestResnetBatchesGPU(t *testing.T) {
 	batch, err := NewBatchPlot("ResNet GPU",
 		Option.UseGPU(true),
 		Option.ModelName("ResNet*"),
@@ -32,7 +32,7 @@ func TestResnetBatches(t *testing.T) {
 	// pp.Println(batch)
 }
 
-func TestResnetBatches(t *testing.T) {
+func TestResnetBatchesCPU(t *testing.T) {
 	batch, err := NewBatchPlot("ResNet CPU",
 		Option.UseGPU(false),
 		Option.ModelName("ResNet*"),
