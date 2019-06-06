@@ -14,7 +14,7 @@ import (
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
 	mongodb "github.com/rai-project/database/mongodb"
-	framework "github.com/rai-project/dlframework/framework/cmd"
+	frameworkCmd "github.com/rai-project/dlframework/framework/cmd"
 	"github.com/rai-project/evaluation"
 	_ "github.com/rai-project/logger/hooks"
 	_ "github.com/rai-project/tracer/all"
@@ -105,7 +105,7 @@ func rootSetup() error {
 		outputFormat = filepath.Ext(outputFileName)
 	}
 
-	if fm, ok := framework.FrameworkNames[strings.ToLower(frameworkName)]; ok {
+	if fm, ok := frameworkCmd.FrameworkNames[strings.ToLower(frameworkName)]; ok {
 		frameworkName = fm
 	}
 
@@ -120,7 +120,7 @@ func rootSetup() error {
 
 var EvaluationCmd = &cobra.Command{
 	Use:   "evaluation",
-	Short: "Get evaluation information from MLModelScope",
+	Short: "Get various information about the evaluation",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Running " + cmd.Name())
 		return nil

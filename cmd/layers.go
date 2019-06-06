@@ -13,7 +13,7 @@ var layersCmd = &cobra.Command{
 	Aliases: []string{
 		"layer",
 	},
-	Short: "Get evaluation layer information from MLModelScope",
+	Short: "Get evaluation layer information from database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

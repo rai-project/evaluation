@@ -9,7 +9,6 @@ import (
 )
 
 func forallmodels(run func() error) error {
-
 	if modelName != "all" {
 		return run()
 	}
