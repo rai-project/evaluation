@@ -102,3 +102,19 @@ func parentOf(span model.Span) model.SpanID {
 	}
 	return model.SpanID("")
 }
+
+func sliceToString(args []interface{}) []string {
+	res := make([]string, len(args))
+	for ii, arg := range args {
+		res[ii] = cast.ToString(arg)
+	}
+	return res
+}
+
+func float64SliceToString(args []float64) []string {
+	res := make([]string, len(args))
+	for ii, arg := range args {
+		res[ii] = cast.ToString(arg)
+	}
+	return res
+}

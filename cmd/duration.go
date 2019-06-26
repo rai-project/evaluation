@@ -33,7 +33,7 @@ var durationCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
+			writer := NewWriter(evaluation.SummaryModelInformation{})
 			defer writer.Close()
 
 			for _, dur := range durs {
@@ -46,12 +46,10 @@ var durationCmd = &cobra.Command{
 	},
 }
 
-func predictDurationInformationSummary() (evaluation.SummaryPredictDurationInformations, error) {
+func predictDurationInformationSummary() (evaluation.SummaryModelInformations, error) {
 	evals, err := getEvaluations()
 	if err != nil {
 		return nil, err
 	}
-	// pp.Println(evals)
-
 	return evals.PredictDurationInformationSummary(performanceCollection)
 }

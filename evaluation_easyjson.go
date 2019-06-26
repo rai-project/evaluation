@@ -1716,7 +1716,7 @@ func (v *SummaryThroughputLatencies) UnmarshalJSON(data []byte) error {
 func (v *SummaryThroughputLatencies) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation5(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation6(in *jlexer.Lexer, out *SummaryPredictDurationInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation6(in *jlexer.Lexer, out *SummaryModelInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -1800,7 +1800,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation6(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, in SummaryPredictDurationInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, in SummaryModelInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -1937,26 +1937,26 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryPredictDurationInformation) MarshalJSON() ([]byte, error) {
+func (v SummaryModelInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation6(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryPredictDurationInformation) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryModelInformation) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation6(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryPredictDurationInformation) UnmarshalJSON(data []byte) error {
+func (v *SummaryModelInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation6(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryPredictDurationInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryModelInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation6(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluation7(in *jlexer.Lexer, out *SummaryPredictAccuracyInformation) {

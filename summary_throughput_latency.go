@@ -30,7 +30,7 @@ func (SummaryThroughputLatency) Header() []string {
 
 func (s SummaryThroughputLatency) Row() []string {
 	extra := []string{
-		strings.Join(cast.ToStringSlice(s.Durations), ";"),
+		strings.Join(float64SliceToString(s.Durations), ";"),
 		cast.ToString(s.Duration),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
@@ -50,7 +50,7 @@ func (s SummaryThroughputLatencies) Rows() [][]string {
 	return rows
 }
 
-func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
+func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	durations := toFloat64Slice(info.Durations)
 	duration := trimmedMean(durations, trimmedMeanFraction)
@@ -63,7 +63,7 @@ func (info SummaryPredictDurationInformation) ThroughputLatencySummary() (Summar
 	}, nil
 }
 
-func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (SummaryThroughputLatencies, error) {
+func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThroughputLatencies, error) {
 
 	// MinIdx returns the index of the minimum value in the input slice. If several
 	// entries have the maximum value, the first such index is returned. If the slice
@@ -87,12 +87,12 @@ func (infos SummaryPredictDurationInformations) ThroughputLatencySummary() (Summ
 
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 
-	groups := map[string]SummaryPredictDurationInformations{}
+	groups := map[string]SummaryModelInformations{}
 
 	for _, info := range infos {
 		k := info.key()
 		if _, ok := groups[k]; !ok {
-			groups[k] = SummaryPredictDurationInformations{}
+			groups[k] = SummaryModelInformations{}
 		}
 		groups[k] = append(groups[k], info)
 	}

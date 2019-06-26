@@ -8,32 +8,32 @@ import (
 )
 
 //easyjson:json
-type SummaryPredictDurationInformation struct {
+type SummaryModelInformation struct {
 	SummaryBase `json:",inline,omitempty"`
 	Durations   []uint64 `json:"durations,omitempty"` // in nano seconds
 }
 
-type SummaryPredictDurationInformations []SummaryPredictDurationInformation
+type SummaryModelInformations []SummaryModelInformation
 
-func (SummaryPredictDurationInformation) Header() []string {
+func (SummaryModelInformation) Header() []string {
 	extra := []string{
 		"durations",
 	}
 	return append(SummaryBase{}.Header(), extra...)
 }
 
-func (s SummaryPredictDurationInformation) Row() []string {
+func (s SummaryModelInformation) Row() []string {
 	extra := []string{
 		strings.Join(uint64SliceToStringSlice(s.Durations), ";"),
 	}
 	return append(s.SummaryBase.Row(), extra...)
 }
 
-func (SummaryPredictDurationInformations) Header() []string {
-	return SummaryPredictDurationInformation{}.Header()
+func (SummaryModelInformations) Header() []string {
+	return SummaryModelInformation{}.Header()
 }
 
-func (s SummaryPredictDurationInformations) Rows() [][]string {
+func (s SummaryModelInformations) Rows() [][]string {
 	rows := [][]string{}
 	for _, e := range s {
 		rows = append(rows, e.Row())
@@ -41,17 +41,17 @@ func (s SummaryPredictDurationInformations) Rows() [][]string {
 	return rows
 }
 
-func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryPredictDurationInformation, error) {
+func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryModelInformation, error) {
 	spans := p.Spans().FilterByOperationName("c_predict")
 
-	return &SummaryPredictDurationInformation{
+	return &SummaryModelInformation{
 		SummaryBase: e.summaryBase(),
 		Durations:   spans.Duration(),
 	}, nil
 }
 
-func (ps Performances) PredictDurationInformationSummary(e Evaluation) ([]*SummaryPredictDurationInformation, error) {
-	res := []*SummaryPredictDurationInformation{}
+func (ps Performances) PredictDurationInformationSummary(e Evaluation) ([]*SummaryModelInformation, error) {
+	res := []*SummaryModelInformation{}
 	for _, p := range ps {
 		s, err := p.PredictDurationInformationSummary(e)
 		if err != nil {
@@ -63,7 +63,7 @@ func (ps Performances) PredictDurationInformationSummary(e Evaluation) ([]*Summa
 	return res, nil
 }
 
-func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollection) (*SummaryPredictDurationInformation, error) {
+func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollection) (*SummaryModelInformation, error) {
 	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 	if err != nil {
 		return nil, err
@@ -75,8 +75,8 @@ func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollec
 	return perf.PredictDurationInformationSummary(e)
 }
 
-func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) (SummaryPredictDurationInformations, error) {
-	res := []SummaryPredictDurationInformation{}
+func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) (SummaryModelInformations, error) {
+	res := []SummaryModelInformation{}
 	for _, e := range es {
 		s, err := e.PredictDurationInformationSummary(perfCol)
 		if err != nil {
