@@ -54,13 +54,13 @@ func NewEvaluationCollection(db database.Database) (*EvaluationCollection, error
 
 func (c *EvaluationCollection) Find(as ...interface{}) ([]Evaluation, error) {
 	evals := []Evaluation{}
-
 	collection := c.Session.Collection(c.Name())
 
 	err := collection.Find(as...).All(&evals)
 	if err != nil {
 		return nil, err
 	}
+
 	return evals, nil
 }
 

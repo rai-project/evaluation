@@ -4,9 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
-
 	"github.com/rai-project/evaluation"
+	"github.com/spf13/cobra"
 )
 
 var durationCmd = &cobra.Command{
@@ -34,7 +33,6 @@ var durationCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-
 			writer := NewWriter(evaluation.SummaryPredictDurationInformation{})
 			defer writer.Close()
 
@@ -53,5 +51,7 @@ func predictDurationInformationSummary() (evaluation.SummaryPredictDurationInfor
 	if err != nil {
 		return nil, err
 	}
+	// pp.Println(evals)
+
 	return evals.PredictDurationInformationSummary(performanceCollection)
 }

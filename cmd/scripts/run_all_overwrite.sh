@@ -1,5 +1,5 @@
 #!/bin/sh
-
+cd ..
 go build main.go
 ./main latency --model_name all --overwrite -f json --database_name carml_model_trace &
 ./main layers --model_name all --overwrite -f json --database_name carml_full_trace &

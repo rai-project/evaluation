@@ -9,8 +9,6 @@ import (
 	"github.com/GeertJohan/go-sourcepath"
 	"github.com/Unknwon/com"
 	"github.com/k0kubun/pp"
-	"github.com/spf13/cobra"
-
 	"github.com/rai-project/config"
 	"github.com/rai-project/database"
 	mongodb "github.com/rai-project/database/mongodb"
@@ -18,6 +16,7 @@ import (
 	"github.com/rai-project/evaluation"
 	_ "github.com/rai-project/logger/hooks"
 	_ "github.com/rai-project/tracer/all"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -152,12 +151,12 @@ func init() {
 	EvaluationCmd.PersistentFlags().StringVar(&machineArchitecture, "arch", "", "architecture of machine to filter")
 	EvaluationCmd.PersistentFlags().IntVar(&batchSize, "batch_size", 0, "the batch size to filter")
 
-	EvaluationCmd.PersistentFlags().StringVar(&modelName, "model_name", "BVLC-AlexNet", "modelName")
-	EvaluationCmd.PersistentFlags().StringVar(&modelVersion, "model_version", "1.0", "modelVersion")
-	EvaluationCmd.PersistentFlags().StringVar(&frameworkName, "framework_name", "", "frameworkName")
-	EvaluationCmd.PersistentFlags().StringVar(&frameworkVersion, "framework_version", "", "frameworkVersion")
-	EvaluationCmd.PersistentFlags().StringVar(&databaseAddress, "database_address", "", "address of the database")
-	EvaluationCmd.PersistentFlags().StringVar(&databaseName, "database_name", "", "name of the database to query")
+	EvaluationCmd.PersistentFlags().StringVar(&modelName, "model_name", "MobileNet_v1_1.0_224", "the name of the model to use for analysis")
+	EvaluationCmd.PersistentFlags().StringVar(&modelVersion, "model_version", "1.0", "the version of the model to use for analysis")
+	EvaluationCmd.PersistentFlags().StringVar(&frameworkName, "framework_name", "", "the name of the framework to use for analysis")
+	EvaluationCmd.PersistentFlags().StringVar(&frameworkVersion, "framework_version", "", "the version of the framework to use for analysis")
+	EvaluationCmd.PersistentFlags().StringVar(&databaseAddress, "database_address", "", "the address of the database")
+	EvaluationCmd.PersistentFlags().StringVar(&databaseName, "database_name", "", "the name of the database to query")
 
 	EvaluationCmd.PersistentFlags().IntVar(&limit, "limit", -1, "limit the evaluations")
 	EvaluationCmd.PersistentFlags().BoolVar(&overwrite, "overwrite", false, "if the file or directory exists, then they get deleted")

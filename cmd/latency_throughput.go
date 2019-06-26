@@ -35,6 +35,9 @@ var latencyCmd = &cobra.Command{
 			}
 
 			lats, err := durs.ThroughputLatencySummary()
+			if err != nil {
+				return err
+			}
 
 			writer := NewWriter(evaluation.SummaryThroughputLatency{})
 			defer writer.Close()
@@ -48,7 +51,4 @@ var latencyCmd = &cobra.Command{
 
 		return forallmodels(run)
 	},
-}
-
-func init() {
 }

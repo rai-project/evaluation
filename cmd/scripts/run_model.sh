@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd ..
 go build main.go
 # ./main latency --model_name ResNet50 --model_version=1.0 --database_address=52.91.209.88 --database_name resnet50_1_0
 ./main latency --model_name ShuffleNet_Caffe2 --model_version=1.0 --database_address=192.17.100.10 --database_name shufflenet_model_trace

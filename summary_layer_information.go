@@ -7,6 +7,7 @@ import (
 
 	"github.com/iancoleman/orderedmap"
 	"github.com/rai-project/config"
+	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
 	db "upper.io/db.v3"
@@ -270,6 +271,7 @@ func selectTensorflowLayerSpans(spans Spans) Spans {
 	}
 	return res
 }
+
 func selectMXNetLayerSpans(spans Spans) Spans {
 	res := []model.Span{}
 	for _, span := range spans {
@@ -343,7 +345,7 @@ func sortByLayerIndex(spans Spans) {
 }
 
 func getSpanLayersFromSpans(spans Spans) []Spans {
-	predictSpans := spans.FilterByOperationName("PredictImage")
+	predictSpans := spans.FilterByOperationName("c_predict")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
 		idx := predictIndexOf(span, predictSpans)
@@ -353,44 +355,31 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		groupedSpans[idx] = append(groupedSpans[idx], span)
 	}
 	groupedLayerSpans := make([]Spans, len(predictSpans))
-	for ii, grp := range groupedSpans {
+	for ii, grsp := range groupedSpans {
 		groupedLayerSpans[ii] = Spans{}
-		if len(grp) == 0 {
+		if len(grsp) == 0 {
 			continue
 		}
-		predict := predictSpans[ii]
-		traceLevel0, ok := spanTagValue(predict, "trace_level")
-		if !ok {
-			continue
-		}
-		traceLevel, ok := traceLevel0.(string)
-		if !ok {
-			continue
-		}
-		if traceLevel == "" {
-			continue
-		}
-		// TODO: FIX this once we change the code to use c_predict rather than PredictImage
-		// if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
-		// 	continue
-		// }
-		frameworkName := strings.ToLower(frameworkNameOfSpan(predict))
-		switch frameworkName {
-		case "tensorflow":
-			groupedLayerSpans[ii] = selectTensorflowLayerSpans(grp)
-		case "mxnet":
-			groupedLayerSpans[ii] = selectMXNetLayerSpans(grp)
-		case "caffe":
-			groupedLayerSpans[ii] = selectCaffeLayerSpans(grp)
-		case "caffe2":
-			groupedLayerSpans[ii] = selectCaffe2LayerSpans(grp)
-		case "cntk":
-			groupedLayerSpans[ii] = selectCNTKLayerSpans(grp)
-		case "tensorrt":
-			groupedLayerSpans[ii] = selectTensorRTLayerSpans(grp)
+		for _, sp := range grsp {
+			traceLevel0, ok := spanTagValue(sp, "trace_level")
+			if !ok {
+				continue
+			}
+			traceLevel, ok := traceLevel0.(string)
+			if !ok {
+				continue
+			}
+			if traceLevel == "" {
+				continue
+			}
+			if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
+				continue
+			}
+			groupedLayerSpans[ii] = append(groupedLayerSpans[ii], sp)
 		}
 		sortByLayerIndex(groupedLayerSpans[ii])
 	}
+
 	return groupedLayerSpans
 }
 
