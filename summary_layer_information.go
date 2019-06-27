@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/getlantern/deepcopy"
 	"github.com/iancoleman/orderedmap"
 	"github.com/rai-project/config"
 	"github.com/rai-project/tracer"
@@ -19,8 +20,13 @@ var (
 
 //easyjson:json
 type LayerInformation struct {
+	Index     int       `json:"index,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	Durations []float64 `json:"durations,omitempty"`
+}
+
+type MeanLayerInformation struct {
+	LayerInformation
 }
 
 //easyjson:json
@@ -36,6 +42,7 @@ type SummaryLayerInformations []SummaryLayerInformation
 
 func (LayerInformation) Header() []string {
 	return []string{
+		"index",
 		"name",
 		"durations",
 	}
@@ -43,8 +50,17 @@ func (LayerInformation) Header() []string {
 
 func (info LayerInformation) Row() []string {
 	return []string{
+		cast.ToString(info.Index),
 		info.Name,
-		strings.Join(float64SliceToStringSlice(info.Durations), "\t"),
+		strings.Join(float64SliceToStringSlice(info.Durations), ","),
+	}
+}
+
+func (info MeanLayerInformation) Row() []string {
+	return []string{
+		cast.ToString(info.Index),
+		info.Name,
+		cast.ToString(trimmedMean(info.Durations, 0)),
 	}
 }
 
@@ -117,12 +133,20 @@ func (l *layerInformationMap) MustGet(key string) LayerInformation {
 	return e
 }
 
-func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInformation, error) {
-	sspans := getSpanLayersFromSpans(p.Spans())
+func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformation, error) {
+	layerIndexIds := map[string]int{}
+	for _, span := range spans {
+		li, foundI := spanTagValue(span, "layer_sequence_index")
+		if foundI {
+			layerIndexIds[span.OperationName] = cast.ToInt(li)
+		}
+	}
+
+	sspans := getSpanLayersFromSpans(spans)
 	numSSpans := len(sspans)
 
 	summary := &SummaryLayerInformation{
-		SummaryBase:       e.summaryBase(),
+		SummaryBase:       es[0].summaryBase(),
 		LayerInformations: LayerInformations{},
 	}
 	if numSSpans == 0 {
@@ -136,7 +160,8 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 		}
 		for _, span := range spans {
 			info := LayerInformation{
-				Name: span.OperationName,
+				Index: layerIndexIds[span.OperationName],
+				Name:  span.OperationName,
 				Durations: []float64{
 					cast.ToFloat64(span.Duration),
 				},
@@ -161,6 +186,7 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 			durations = append(durations, durationToAppend...)
 		}
 		info := LayerInformation{
+			Index:     layerIndexIds[span.OperationName],
 			Name:      span.OperationName,
 			Durations: durations,
 		}
@@ -169,6 +195,10 @@ func (p Performance) LayerInformationSummary(e Evaluation) (*SummaryLayerInforma
 
 	summary.LayerInformations = infos
 	return summary, nil
+}
+
+func (p Performance) LayerInformationSummary(es Evaluations) (*SummaryLayerInformation, error) {
+	return layerInformationSummary(es, p.Spans())
 }
 
 func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (*SummaryLayerInformation, error) {
@@ -180,7 +210,32 @@ func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (*Su
 		return nil, errors.New("expecting on performance output")
 	}
 	perf := perfs[0]
-	return perf.LayerInformationSummary(e)
+	return perf.LayerInformationSummary([]Evaluation{e})
+}
+
+func (es Evaluations) AcrossEvaluationLayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
+	spans := []model.Span{}
+	for _, e := range es {
+		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
+		if err != nil {
+			return nil, err
+		}
+		if len(foundPerfs) != 1 {
+			return nil, errors.New("expecting on performance output")
+		}
+		perf := foundPerfs[0]
+		spans = append(spans, perf.Spans()...)
+	}
+
+	s, err := layerInformationSummary(es, spans)
+	if err != nil {
+		log.WithError(err).Error("failed to get layer information summary")
+		return nil, err
+	}
+	if s == nil {
+		return nil, errors.New("nil layer information summary")
+	}
+	return []SummaryLayerInformation{*s}, nil
 }
 
 func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
@@ -352,7 +407,9 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		if idx == -1 {
 			continue
 		}
-		groupedSpans[idx] = append(groupedSpans[idx], span)
+		var spanCopy model.Span
+		deepcopy.Copy(&spanCopy, span)
+		groupedSpans[idx] = append(groupedSpans[idx], spanCopy)
 	}
 	groupedLayerSpans := make([]Spans, len(predictSpans))
 	for ii, grsp := range groupedSpans {

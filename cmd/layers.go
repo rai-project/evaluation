@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	mergeLayerInformationAcrossRuns bool
+)
+
 var layersCmd = &cobra.Command{
 	Use: "layers",
 	Aliases: []string{
@@ -34,13 +38,27 @@ var layersCmd = &cobra.Command{
 				return err
 			}
 
-			lyrs, err := evals.LayerInformationSummary(performanceCollection)
+			if mergeLayerInformationAcrossRuns {
+				summary, err := evals.AcrossEvaluationLayerInformationSummary(performanceCollection)
+				if err != nil {
+					return err
+				}
+				writer := NewWriter(evaluation.MeanLayerInformation{})
+				defer writer.Close()
 
-			writer := NewWriter(evaluation.SummaryLayerInformation{})
+				for _, lyr := range summary[0].LayerInformations {
+					writer.Row(evaluation.MeanLayerInformation{LayerInformation: lyr})
+				}
+				return nil
+			}
+
+			summaries, err := evals.LayerInformationSummary(performanceCollection)
+
+			writer := NewWriter(evaluation.LayerInformation{})
 			defer writer.Close()
 
-			for _, lyr := range lyrs {
-				writer.Row(lyr)
+			for _, summary := range summaries {
+				writer.Row(summary)
 			}
 
 			return nil
@@ -48,4 +66,8 @@ var layersCmd = &cobra.Command{
 
 		return forallmodels(run)
 	},
+}
+
+func init() {
+	layersCmd.PersistentFlags().BoolVar(&mergeLayerInformationAcrossRuns, "merge_evaluations", false, "merges layer evaluations across runs")
 }
