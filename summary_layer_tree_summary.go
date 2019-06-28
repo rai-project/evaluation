@@ -81,7 +81,7 @@ func (p Performance) LayerInformationTreeSummary(e Evaluation) (*SummaryLayerInf
 					ts = append(ts, t)
 				}
 			}
-			durations = append(durations, trimmedMean(ts, DefaultTrimmedMeanFraction))
+			durations = append(durations, TrimmedMean(ts, DefaultTrimmedMeanFraction))
 		}
 		info.Durations = durations
 		infoMap.Set(opName, info)

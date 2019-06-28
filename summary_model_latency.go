@@ -53,7 +53,7 @@ func (s SummaryThroughputLatencies) Rows() [][]string {
 func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	durations := toFloat64Slice(info.Durations)
-	duration := trimmedMean(durations, trimmedMeanFraction)
+	duration := TrimmedMean(durations, trimmedMeanFraction)
 	return SummaryThroughputLatency{
 		SummaryBase: info.SummaryBase,
 		Durations:   durations,
@@ -118,7 +118,7 @@ func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThrough
 			if len(e.Durations) == 0 {
 				continue
 			}
-			duration := trimmedMean(toFloat64Slice(e.Durations), trimmedMeanFraction)
+			duration := TrimmedMean(toFloat64Slice(e.Durations), trimmedMeanFraction)
 			if duration == 0 {
 				continue
 			}

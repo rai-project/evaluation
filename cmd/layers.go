@@ -1,15 +1,21 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
 )
 
 var (
-	mergeLayerInformationAcrossRuns bool
+	listRuns       bool
+	sortByLatency  bool
+	plotLayers     bool
+	plotOpen       bool
+	plotLayersPath string
 )
 
 var layersCmd = &cobra.Command{
@@ -29,6 +35,9 @@ var layersCmd = &cobra.Command{
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
 		}
+		if plotLayers == true && plotLayersPath == "" {
+			plotLayersPath = evaluation.TempFile("", "layer_plot_*.html")
+		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -38,29 +47,54 @@ var layersCmd = &cobra.Command{
 				return err
 			}
 
-			if mergeLayerInformationAcrossRuns {
-				summary, err := evals.AcrossEvaluationLayerInformationSummary(performanceCollection)
+			if listRuns {
+				summaries, err := evals.LayerInformationSummary(performanceCollection)
 				if err != nil {
 					return err
 				}
-				writer := NewWriter(evaluation.MeanLayerInformation{})
-				defer writer.Close()
 
-				for _, lyr := range summary[0].LayerInformations {
-					writer.Row(evaluation.MeanLayerInformation{LayerInformation: lyr})
+				writer := NewWriter(evaluation.LayerInformation{})
+				defer writer.Close()
+				for _, summary := range summaries {
+					writer.Row(summary)
 				}
+
 				return nil
 			}
 
-			summaries, err := evals.LayerInformationSummary(performanceCollection)
-
-			writer := NewWriter(evaluation.LayerInformation{})
-			defer writer.Close()
-
-			for _, summary := range summaries {
-				writer.Row(summary)
+			summary, err := evals.AcrossEvaluationLayerInformationSummary(performanceCollection)
+			if err != nil {
+				return err
 			}
 
+			layers := summary[0].LayerInformations
+			meanLayers := make(evaluation.MeanLayerInformations, len(layers))
+			for ii, layer := range layers {
+				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
+			}
+			if sortByLatency {
+				sort.Slice(meanLayers, func(ii, jj int) bool {
+					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) < evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
+				})
+			}
+
+			if plotOpen {
+				return meanLayers.OpenPlot()
+			}
+			if plotLayers {
+				err := meanLayers.WritePlot(plotLayersPath)
+				if err == nil {
+					fmt.Println("Created plot in " + plotLayersPath)
+				}
+				return err
+			}
+
+			writer := NewWriter(evaluation.MeanLayerInformation{})
+			defer writer.Close()
+
+			for _, lyr := range meanLayers {
+				writer.Row(lyr)
+			}
 			return nil
 		}
 
@@ -69,5 +103,9 @@ var layersCmd = &cobra.Command{
 }
 
 func init() {
-	layersCmd.PersistentFlags().BoolVar(&mergeLayerInformationAcrossRuns, "merge_evaluations", false, "merges layer evaluations across runs")
+	layersCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
+	layersCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
+	layersCmd.PersistentFlags().BoolVar(&plotLayers, "plot", false, "generates a plot of the layers")
+	layersCmd.PersistentFlags().BoolVar(&plotOpen, "open_plot", false, "opens the plot of the layers")
+	layersCmd.PersistentFlags().StringVar(&plotLayersPath, "plot_path", "", "output file for the layer plot")
 }

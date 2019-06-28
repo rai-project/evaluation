@@ -9,7 +9,7 @@ var (
 	DefaultTrimmedMeanFraction = 0.2
 )
 
-func trimmedMean(data []float64, frac float64) float64 {
+func TrimmedMean(data []float64, frac float64) float64 {
 
 	// Sum returns the sum of the elements of the slice.
 	total := func(s []float64) float64 {

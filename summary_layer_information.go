@@ -4,7 +4,9 @@ import (
 	"errors"
 	"sort"
 	"strings"
+	"time"
 
+	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/getlantern/deepcopy"
 	"github.com/iancoleman/orderedmap"
 	"github.com/rai-project/config"
@@ -33,11 +35,15 @@ type MeanLayerInformation struct {
 type LayerInformations []LayerInformation
 
 //easyjson:json
+type MeanLayerInformations []MeanLayerInformation
+
+//easyjson:json
 type SummaryLayerInformation struct {
 	SummaryBase       `json:",inline"`
 	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
 }
 
+//easyjson:json
 type SummaryLayerInformations []SummaryLayerInformation
 
 func (LayerInformation) Header() []string {
@@ -60,7 +66,7 @@ func (info MeanLayerInformation) Row() []string {
 	return []string{
 		cast.ToString(info.Index),
 		info.Name,
-		cast.ToString(trimmedMean(info.Durations, 0)),
+		cast.ToString(TrimmedMean(info.Durations, 0)),
 	}
 }
 
@@ -448,4 +454,90 @@ func frameworkNameOfSpan(predictSpan model.Span) string {
 		}
 	}
 	return ""
+}
+
+func (o LayerInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, elem.Name)
+	}
+
+	bar.AddXAxis(labels)
+	for _, elem := range o {
+		durations := make([]time.Duration, len(elem.Durations))
+		for ii, duration := range elem.Durations {
+			durations[ii] = time.Duration(duration) / time.Millisecond
+		}
+		bar.AddYAxis(elem.Name, durations)
+	}
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: true})
+	bar.SetGlobalOptions(charts.XAxisOpts{Name: "Layer Name"}, charts.YAxisOpts{Name: "Latency(ms)"})
+	return bar
+}
+
+func (o LayerInformations) Name() string {
+	return "LayerInformations"
+}
+
+func (o LayerInformations) WritePlot(path string) error {
+	return writePlot(o, path)
+}
+
+func (o LayerInformations) OpenPlot() error {
+	return openPlot(o)
+}
+
+func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+
+	timeUnit := time.Microsecond
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, elem.Name)
+	}
+	bar.AddXAxis(labels)
+
+	durations := make([]int64, len(o))
+	for ii, elem := range o {
+		val := TrimmedMean(elem.Durations, 0)
+		durations[ii] = cast.ToInt64(val)
+	}
+	bar.AddYAxis("", durations)
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetGlobalOptions(
+		charts.XAxisOpts{Name: "Layer Name"},
+		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+	)
+	return bar
+}
+
+func (o MeanLayerInformations) Name() string {
+	return "MeanLayerInformations"
+}
+
+func (o MeanLayerInformations) WritePlot(path string) error {
+	return writePlot(o, path)
+}
+
+func (o MeanLayerInformations) OpenPlot() error {
+	return openPlot(o)
 }
