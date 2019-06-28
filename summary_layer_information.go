@@ -467,21 +467,31 @@ func (o LayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+	timeUnit := time.Nanosecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
 	}
 
 	bar.AddXAxis(labels)
-	for _, elem := range o {
-		durations := make([]time.Duration, len(elem.Durations))
-		for ii, duration := range elem.Durations {
-			durations[ii] = time.Duration(duration) / time.Millisecond
-		}
-		bar.AddYAxis(elem.Name, durations)
+	durations := make([][]time.Duration, len(o[1].Durations))
+	for ii := range o[1].Durations {
+		durations[ii] = make([]time.Duration, len(o))
 	}
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: true})
-	bar.SetGlobalOptions(charts.XAxisOpts{Name: "Layer Name"}, charts.YAxisOpts{Name: "Latency(ms)"})
+	for ii, elem := range o {
+		for jj, duration := range elem.Durations {
+			durations[jj][ii] = time.Duration(duration) / timeUnit
+		}
+	}
+	for ii, duration := range durations {
+		bar.AddYAxis(cast.ToString(ii), duration)
+	}
+
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetGlobalOptions(
+		charts.XAxisOpts{Name: "Layer Name"},
+		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+	)
 	return bar
 }
 
@@ -508,18 +518,17 @@ func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-
-	timeUnit := time.Microsecond
+	timeUnit := time.Nanosecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
 	}
 	bar.AddXAxis(labels)
 
-	durations := make([]int64, len(o))
+	durations := make([]time.Duration, len(o))
 	for ii, elem := range o {
 		val := TrimmedMean(elem.Durations, 0)
-		durations[ii] = cast.ToInt64(val)
+		durations[ii] = time.Duration(val) / timeUnit
 	}
 	bar.AddYAxis("", durations)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
