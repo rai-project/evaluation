@@ -15,6 +15,7 @@ var (
 	sortByLatency  bool
 	plotLayers     bool
 	plotOpen       bool
+	topLayers      int
 	plotLayersPath string
 )
 
@@ -72,10 +73,16 @@ var layersCmd = &cobra.Command{
 			for ii, layer := range layers {
 				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
 			}
-			if sortByLatency {
+			if sortByLatency || topLayers != -1 {
 				sort.Slice(meanLayers, func(ii, jj int) bool {
-					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) < evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
+					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) > evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
 				})
+				if topLayers != -1 {
+					if topLayers >= len(meanLayers) {
+						topLayers = len(meanLayers)
+					}
+					meanLayers = meanLayers[:topLayers]
+				}
 			}
 
 			if plotOpen {
@@ -107,5 +114,6 @@ func init() {
 	layersCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
 	layersCmd.PersistentFlags().BoolVar(&plotLayers, "plot", false, "generates a plot of the layers")
 	layersCmd.PersistentFlags().BoolVar(&plotOpen, "open_plot", false, "opens the plot of the layers")
+	layersCmd.PersistentFlags().IntVar(&topLayers, "top", -1, "consider only the top k layers")
 	layersCmd.PersistentFlags().StringVar(&plotLayersPath, "plot_path", "", "output file for the layer plot")
 }
