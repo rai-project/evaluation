@@ -23,6 +23,7 @@ type Evaluation struct {
 	MachineArchitecture string                        `json:"machine_architecture,omitempty" bson:"machine_architecture,omitempty"`
 	UsingGPU            bool                          `json:"using_gpu,omitempty" bson:"using_gpu,omitempty"`
 	BatchSize           int                           `json:"batch_size,omitempty" bson:"batch_size,omitempty"`
+	GPUMetrics          string                        `json:"gpu_metrics,omitempty" bson:"gpu_metrics,omitempty"`
 	Hostname            string                        `json:"hostname,omitempty" bson:"hostname,omitempty"`
 	TraceLevel          string                        `json:"trace_level,omitempty" bson:"trace_level,omitempty"`
 	ModelAccuracyID     bson.ObjectId                 `json:"model_accuracy_id,omitempty" bson:"model_accuracy_id,omitempty"`
