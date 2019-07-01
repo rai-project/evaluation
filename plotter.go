@@ -8,22 +8,24 @@ import (
 	"github.com/rai-project/utils/browser"
 )
 
-type Plotter interface {
+type Named interface {
 	Name() string
-	WritePlot(string) error
-	OpenPlot() error
 }
 
 type BarPlotter interface {
-	Plotter
+	Named
 	BarPlot(string) *charts.Bar
 	BarPlotAdd(*charts.Bar) *charts.Bar
+	WriteBarPlot(string) error
+	OpenBarPlot() error
 }
 
 type BoxPlotter interface {
-	Plotter
+	Named
 	BoxPlot(string) *charts.BoxPlot
 	BoxPlotAdd(*charts.BoxPlot) *charts.BoxPlot
+	WriteBoxPlot(string) error
+	OpenBoxPlot() error
 }
 
 func writeBarPlot(o BarPlotter, path string) error {
@@ -64,12 +66,29 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 	return nil
 }
 
-func openPlot(o Plotter) error {
+func openBarPlot(o BarPlotter) error {
 	path := TempFile("", "batchPlot_*.html")
 	if path == "" {
 		return errors.New("failed to create temporary file")
 	}
-	err := o.WritePlot(path)
+	err := o.WriteBarPlot(path)
+	if err != nil {
+		return err
+	}
+	// defer os.Remove(path)
+	if ok := browser.Open(path); !ok {
+		return errors.New("failed to open browser path")
+	}
+
+	return nil
+}
+
+func openBoxPlot(o BoxPlotter) error {
+	path := TempFile("", "batchPlot_*.html")
+	if path == "" {
+		return errors.New("failed to create temporary file")
+	}
+	err := o.WriteBoxPlot(path)
 	if err != nil {
 		return err
 	}

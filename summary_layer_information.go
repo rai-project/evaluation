@@ -471,16 +471,59 @@ func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	return bar
 }
 
+func (o LayerInformations) BoxPlot(title string) *charts.BoxPlot {
+	box := charts.NewBoxPlot()
+	box.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	box = o.BoxPlotAdd(box)
+	return box
+}
+
+func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
+	timeUnit := time.Microsecond
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, elem.Name)
+	}
+	box.AddXAxis(labels)
+
+	durations := make([][]time.Duration, len(o))
+	for ii, elem := range o {
+		ts := make([]time.Duration, len(elem.Durations))
+		for jj, t := range ts {
+			ts[jj] = time.Duration(t) * timeUnit
+		}
+		durations[ii] = ts
+	}
+	box.AddYAxis("", durations)
+	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	box.SetGlobalOptions(
+		charts.XAxisOpts{Name: "Layer Name"},
+		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+	)
+	return box
+}
+
 func (o LayerInformations) Name() string {
 	return "LayerInformations"
 }
 
-func (o LayerInformations) WritePlot(path string) error {
+func (o LayerInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o LayerInformations) OpenPlot() error {
-	return openPlot(o)
+func (o LayerInformations) WriteBoxPlot(path string) error {
+	return writeBoxPlot(o, path)
+}
+
+func (o LayerInformations) OpenBoxPlot() error {
+	return openBoxPlot(o)
+}
+
+func (o LayerInformations) OpenBarPlot() error {
+	return openBarPlot(o)
 }
 
 func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
@@ -510,19 +553,66 @@ func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
 	)
 	return bar
+}
+
+func (o MeanLayerInformations) BoxPlot(title string) *charts.BoxPlot {
+	box := charts.NewBoxPlot()
+	box.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	box = o.BoxPlotAdd(box)
+	return box
+}
+
+func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
+	timeUnit := time.Microsecond
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, elem.Name)
+	}
+	box.AddXAxis(labels)
+
+	durations := make([][]time.Duration, len(o))
+	for ii, elem := range o {
+		ts := make([]time.Duration, len(elem.Durations))
+		for jj, t := range elem.Durations {
+			ts[jj] = time.Duration(t) * timeUnit
+		}
+		durations[ii] = ts
+	}
+	box.AddYAxis("", durations)
+	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	box.SetGlobalOptions(
+		charts.XAxisOpts{Name: "Layer Name"},
+		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
+	)
+	return box
+}
+
+func unitName(d time.Duration) string {
+	return strings.TrimPrefix(d.String(), "1")
 }
 
 func (o MeanLayerInformations) Name() string {
 	return "MeanLayerInformations"
 }
 
-func (o MeanLayerInformations) WritePlot(path string) error {
+func (o MeanLayerInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o MeanLayerInformations) OpenPlot() error {
-	return openPlot(o)
+func (o MeanLayerInformations) WriteBoxPlot(path string) error {
+	return writeBoxPlot(o, path)
+}
+
+func (o MeanLayerInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o MeanLayerInformations) OpenBoxPlot() error {
+	return openBoxPlot(o)
 }

@@ -14,6 +14,8 @@ var (
 	listRuns      bool
 	sortByLatency bool
 	plotLayers    bool
+	barPlotLayers bool
+	boxPlotLayers bool
 	openPlot      bool
 	topLayers     int
 	plotPath      string
@@ -35,6 +37,9 @@ var layersCmd = &cobra.Command{
 		}
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
+		}
+		if plotLayers == true && barPlotLayers == false && boxPlotLayers == false {
+			boxPlotLayers = true
 		}
 		if plotLayers == true && plotPath == "" {
 			plotPath = evaluation.TempFile("", "layer_plot_*.html")
@@ -86,10 +91,22 @@ var layersCmd = &cobra.Command{
 			}
 
 			if openPlot {
-				return meanLayers.OpenPlot()
+				if boxPlotLayers {
+					return meanLayers.OpenBoxPlot()
+				}
+				if barPlotLayers {
+					return meanLayers.OpenBarPlot()
+				}
 			}
 			if plotLayers {
-				err := meanLayers.WritePlot(plotPath)
+				var err error
+				if boxPlotLayers {
+					err = meanLayers.WriteBoxPlot(plotPath)
+				}
+				if barPlotLayers {
+					err = meanLayers.WriteBarPlot(plotPath)
+				}
+
 				if err == nil {
 					fmt.Println("Created plot in " + plotPath)
 				}
@@ -112,7 +129,9 @@ var layersCmd = &cobra.Command{
 func init() {
 	layersCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
 	layersCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
-	layersCmd.PersistentFlags().BoolVar(&plotLayers, "plot", false, "generates a plot of the layers")
+	layersCmd.PersistentFlags().BoolVar(&plotLayers, "plot", false, "generates a bar plot of the layers")
+	layersCmd.PersistentFlags().BoolVar(&barPlotLayers, "bar_plot", false, "generates a bar plot of the layers")
+	layersCmd.PersistentFlags().BoolVar(&boxPlotLayers, "box_plot", false, "generates a box plot of the layers")
 	layersCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
 	layersCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
 	layersCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
