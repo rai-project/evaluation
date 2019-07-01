@@ -8,7 +8,6 @@ go build main.go
 # ./main latency --database_address=minsky1-1.csl.illinois.edu --database_name resnet_50_v1_0_model_trace --model_name ResNet50 --model_version=1.0
 # ./main latency --append --model_name all --database_name resnet_50_1_0 &
 # ./main layers	--append --model_name all -f json --database_name carml_full_trace &
-# ./main layer_tree	--append --model_name all -f json --database_name carml_full_trace &
 #./main cuda_launch	--apend --model_name all -f json --database_name carml_full_trace &
 #./main eventflow	--append --model_name all -f json --database_name carml_full_trace &
 wait
