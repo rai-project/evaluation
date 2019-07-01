@@ -35,7 +35,7 @@ func (KernelLaunchInformation) Header() []string {
 		"name",
 		"tags",
 		"logs",
-		"durations",
+		"durations (us)",
 	}
 }
 

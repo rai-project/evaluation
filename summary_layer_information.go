@@ -50,7 +50,7 @@ func (LayerInformation) Header() []string {
 	return []string{
 		"index",
 		"name",
-		"durations",
+		"durations (us)",
 	}
 }
 
@@ -435,7 +435,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 			if traceLevel == "" {
 				continue
 			}
-			if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
+			if tracer.LevelFromName(traceLevel) != tracer.FRAMEWORK_TRACE {
 				continue
 			}
 			groupedLayerSpans[ii] = append(groupedLayerSpans[ii], sp)
@@ -467,7 +467,7 @@ func (o LayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Nanosecond
+	timeUnit := time.Millisecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
@@ -480,7 +480,7 @@ func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	}
 	for ii, elem := range o {
 		for jj, duration := range elem.Durations {
-			durations[jj][ii] = time.Duration(duration) / timeUnit
+			durations[jj][ii] = time.Duration(duration) * time.Nanosecond / timeUnit
 		}
 	}
 	for ii, duration := range durations {
@@ -518,7 +518,7 @@ func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Nanosecond
+	timeUnit := time.Microsecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
@@ -528,7 +528,7 @@ func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	durations := make([]time.Duration, len(o))
 	for ii, elem := range o {
 		val := TrimmedMean(elem.Durations, 0)
-		durations[ii] = time.Duration(val) / timeUnit
+		durations[ii] = time.Duration(val) * timeUnit
 	}
 	bar.AddYAxis("", durations)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})

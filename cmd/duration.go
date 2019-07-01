@@ -13,7 +13,7 @@ var durationCmd = &cobra.Command{
 	Aliases: []string{
 		"durations",
 	},
-	Short: "Get evaluation duration summary from MLModelScope",
+	Short: "Get evaluation duration summary from model traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

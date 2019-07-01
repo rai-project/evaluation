@@ -13,7 +13,7 @@ var latencyCmd = &cobra.Command{
 	Aliases: []string{
 		"throughput",
 	},
-	Short: "Get evaluation latency or throughput information from MLModelScope",
+	Short: "Get model inference latency or throughput information from model traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

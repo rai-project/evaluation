@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"strings"
+	"time"
 
 	"github.com/spf13/cast"
 )
@@ -21,9 +22,9 @@ type SummaryThroughputLatencies []SummaryThroughputLatency
 func (SummaryThroughputLatency) Header() []string {
 	extra := []string{
 		"durations",
-		"duration",
-		"latency",
-		"throughput",
+		"duration (us)",
+		"latency (us)",
+		"throughput (input/s)",
 	}
 	return append(SummaryBase{}.Header(), extra...)
 }
@@ -132,7 +133,7 @@ func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThrough
 			SummaryBase: first.SummaryBase,
 			Durations:   durations,
 			Duration:    duration,
-			Throughput:  float64(first.BatchSize) / duration,
+			Throughput:  float64(first.BatchSize) * float64(time.Second/time.Microsecond) / duration,
 			Latency:     duration / float64(first.BatchSize),
 		}
 

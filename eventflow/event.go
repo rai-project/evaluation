@@ -28,7 +28,7 @@ func (Event) Header() []string {
 		"name",
 		"metadata",
 		"timestamp",
-		"duration",
+		"duration (us)",
 	}
 }
 

@@ -14,7 +14,7 @@ var layersTreeCmd = &cobra.Command{
 		"layertree",
 		"treemap",
 	},
-	Short: "Get evaluation layer tree information from MLModelScope",
+	Short: "Get model layer tree information from framework traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]

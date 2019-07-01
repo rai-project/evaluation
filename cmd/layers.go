@@ -11,12 +11,12 @@ import (
 )
 
 var (
-	listRuns       bool
-	sortByLatency  bool
-	plotLayers     bool
-	openPlot       bool
-	topLayers      int
-	plotLayersPath string
+	listRuns      bool
+	sortByLatency bool
+	plotLayers    bool
+	openPlot      bool
+	topLayers     int
+	plotPath      string
 )
 
 var layersCmd = &cobra.Command{
@@ -24,7 +24,7 @@ var layersCmd = &cobra.Command{
 	Aliases: []string{
 		"layer",
 	},
-	Short: "Get evaluation layer information from database",
+	Short: "Get model layer information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]
@@ -36,8 +36,8 @@ var layersCmd = &cobra.Command{
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
 		}
-		if plotLayers == true && plotLayersPath == "" {
-			plotLayersPath = evaluation.TempFile("", "layer_plot_*.html")
+		if plotLayers == true && plotPath == "" {
+			plotPath = evaluation.TempFile("", "layer_plot_*.html")
 		}
 		return nil
 	},
@@ -89,9 +89,9 @@ var layersCmd = &cobra.Command{
 				return meanLayers.OpenPlot()
 			}
 			if plotLayers {
-				err := meanLayers.WritePlot(plotLayersPath)
+				err := meanLayers.WritePlot(plotPath)
 				if err == nil {
-					fmt.Println("Created plot in " + plotLayersPath)
+					fmt.Println("Created plot in " + plotPath)
 				}
 				return err
 			}
@@ -114,6 +114,6 @@ func init() {
 	layersCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
 	layersCmd.PersistentFlags().BoolVar(&plotLayers, "plot", false, "generates a plot of the layers")
 	layersCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
-	layersCmd.PersistentFlags().IntVar(&topLayers, "top", -1, "consider only the top k layers")
-	layersCmd.PersistentFlags().StringVar(&plotLayersPath, "plot_path", "", "output file for the layer plot")
+	layersCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
+	layersCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
 }

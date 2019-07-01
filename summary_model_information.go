@@ -17,7 +17,7 @@ type SummaryModelInformations []SummaryModelInformation
 
 func (SummaryModelInformation) Header() []string {
 	extra := []string{
-		"durations",
+		"durations (us)",
 	}
 	return append(SummaryBase{}.Header(), extra...)
 }
