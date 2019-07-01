@@ -39,7 +39,7 @@ var layersCmd = &cobra.Command{
 			os.RemoveAll(outputFileName)
 		}
 		if plotLayers == true && barPlotLayers == false && boxPlotLayers == false {
-			barPlotLayers = true
+			boxPlotLayers = true
 		}
 		if plotLayers == true && plotPath == "" {
 			plotPath = evaluation.TempFile("", "layer_plot_*.html")
