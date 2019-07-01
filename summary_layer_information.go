@@ -23,6 +23,7 @@ var (
 type LayerInformation struct {
 	Index     int       `json:"index,omitempty"`
 	Name      string    `json:"name,omitempty"`
+	Type      string    `json:"type,omitempty"`
 	Durations []float64 `json:"durations,omitempty"`
 }
 
@@ -140,6 +141,7 @@ func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformat
 			info := LayerInformation{
 				Index: layerIndexIds[span.OperationName],
 				Name:  span.OperationName,
+				Type:  getOpName(span),
 				Durations: []float64{
 					cast.ToFloat64(span.Duration),
 				},
@@ -166,6 +168,7 @@ func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformat
 		info := LayerInformation{
 			Index:     layerIndexIds[span.OperationName],
 			Name:      span.OperationName,
+			Type:      getOpName(span),
 			Durations: durations,
 		}
 		infos = append(infos, info)
@@ -173,6 +176,14 @@ func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformat
 
 	summary.LayerInformations = infos
 	return summary, nil
+}
+
+func getOpName(span model.Span) string {
+	opName, err := getTagValueAsString(span, "op_name")
+	if err != nil {
+		return ""
+	}
+	return opName
 }
 
 func (p Performance) LayerInformationSummary(es Evaluations) (*SummaryLayerInformation, error) {
@@ -396,15 +407,8 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 			continue
 		}
 		for _, sp := range grsp {
-			traceLevel0, ok := spanTagValue(sp, "trace_level")
-			if !ok {
-				continue
-			}
-			traceLevel, ok := traceLevel0.(string)
-			if !ok {
-				continue
-			}
-			if traceLevel == "" {
+			traceLevel, err := getTagValueAsString(sp, "trace_level")
+			if err != nil || traceLevel == "" {
 				continue
 			}
 			if tracer.LevelFromName(traceLevel) != tracer.FRAMEWORK_TRACE {

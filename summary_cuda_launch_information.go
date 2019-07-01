@@ -5,7 +5,10 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/getlantern/deepcopy"
+	"github.com/k0kubun/pp"
 	"github.com/rai-project/tracer"
+	trace_tree "github.com/rai-project/tracer/convert"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
 	db "upper.io/db.v3"
@@ -17,10 +20,11 @@ type Metadata map[string]interface{}
 
 //easyjson:json
 type KernelLaunchInformation struct {
-	Name      string     `json:"name,omitempty"`
-	Tags      []Metadata `json:"tags,omitempty"`
-	Logs      []Metadata `json:"logs,omitempty"`
-	Durations []float64  `json:"durations,omitempty"`
+	Name          string     `json:"name,omitempty"`
+	Tags          []Metadata `json:"tags,omitempty"`
+	Logs          []Metadata `json:"logs,omitempty"`
+	Durations     []float64  `json:"durations,omitempty"`
+	CorrelationId int64      `json:"correlation_id,omitempty"`
 }
 
 type KernelLaunchInformations []KernelLaunchInformation
@@ -28,6 +32,7 @@ type KernelLaunchInformations []KernelLaunchInformation
 //easyjson:json
 type SummaryCUDALaunchInformation struct {
 	SummaryBase              `json:",inline"`
+	LayerInformation         `json:",inline"`
 	KernelLaunchInformations KernelLaunchInformations `json:"kernel_launch_information,omitempty"`
 }
 
@@ -53,6 +58,7 @@ func (info KernelLaunchInformation) Row() []string {
 	}
 	_ = tags
 	_ = logs
+	pp.Println(info.Durations)
 	return []string{
 		info.Name,
 		// string(tags),
@@ -75,7 +81,9 @@ func (s KernelLaunchInformations) Rows() [][]string {
 
 func (SummaryCUDALaunchInformation) Header() []string {
 	extra := []string{
-		"kernel_launch_information",
+		"layer_index",
+		"layer",
+		"kernel_name",
 		"duration",
 	}
 	if summaryCUDALaunchInformationShowSummaryBase {
@@ -105,14 +113,16 @@ func (s SummaryCUDALaunchInformation) Rows() [][]string {
 	rows := s.KernelLaunchInformations.Rows()
 	infos = make([][]string, len(rows))
 	for ii, row := range rows {
-		infos[ii] = make([]string, summaryRowLen+len(row))
+		infos[ii] = make([]string, summaryRowLen+len(row)+2)
+		infos[ii][0] = s.LayerInformation.Name
+		infos[ii][1] = cast.ToString(s.LayerInformation.Index)
 		if summaryCUDALaunchInformationShowSummaryBase {
 			for jj, elem := range summaryRow {
-				infos[ii][jj] = elem
+				infos[ii][jj+2] = elem
 			}
 		}
 		for jj, elem := range row {
-			infos[ii][jj+summaryRowLen] = elem
+			infos[ii][jj+summaryRowLen+2] = elem
 		}
 	}
 	return infos
@@ -130,73 +140,102 @@ func (s SummaryCUDALaunchInformations) Rows() [][]string {
 	return rows
 }
 
-func (p Performance) CUDALaunchInformationSummary(e Evaluation) (*SummaryCUDALaunchInformation, error) {
-	sspans := getSpanKernelLaunchesFromSpans(p.Spans())
-	numSSpans := len(sspans)
+func (p Performance) CUDALaunchInformationSummary(e Evaluation) ([]SummaryCUDALaunchInformation, error) {
+	es := []Evaluation{e}
+	infoAcrossRuns := getSpanKernelLaunchesFromSpans(es, p.Spans())
+	numRuns := len(infoAcrossRuns)
 
-	summary := &SummaryCUDALaunchInformation{
-		SummaryBase:              e.summaryBase(),
-		KernelLaunchInformations: KernelLaunchInformations{},
-	}
-	if numSSpans == 0 {
-		return summary, nil
+	if numRuns == 0 {
+		return nil, errors.New("no kernels found")
 	}
 
-	infosFull := make([][]KernelLaunchInformation, numSSpans)
-	for ii, spans := range sspans {
-		if infosFull[ii] == nil {
-			infosFull[ii] = []KernelLaunchInformation{}
+	summaries := []SummaryCUDALaunchInformation{}
+
+	getSummaryPosition := func(info SummaryCUDALaunchInformation) int {
+		for ii, s := range summaries {
+			if s.LayerInformation.Name == info.LayerInformation.Name && s.LayerInformation.Index == info.LayerInformation.Index {
+				return ii
+			}
 		}
-		for _, span := range spans {
-			logs := Metadata{}
-			for _, v := range span.Logs {
-				for _, f := range v.Fields {
-					logs[f.Key] = f.Value
-				}
-			}
-			metadata := Metadata{}
-			for _, v := range span.Tags {
-				metadata[v.Key] = v.Value
-			}
-			info := KernelLaunchInformation{
-				Name: span.OperationName,
-				Tags: []Metadata{metadata},
-				Logs: []Metadata{logs},
-				Durations: []float64{
-					cast.ToFloat64(span.Duration),
-				},
-			}
-			infosFull[ii] = append(infosFull[ii], info)
-		}
+		return -1
 	}
 
-	infos := []KernelLaunchInformation{}
-	for ii, span := range sspans[0] {
-		durations := []float64{}
-		tags := []Metadata{}
-		logs := []Metadata{}
-		for _, info := range infosFull {
-			if len(info) <= ii {
+	for _, infoRun := range infoAcrossRuns {
+		for _, layer := range infoRun {
+			summaryPosition := getSummaryPosition(layer)
+			if summaryPosition == -1 {
+				summaryPosition = len(summaries)
+				var summary SummaryCUDALaunchInformation
+				deepcopy.Copy(&summary, layer)
+				summaries = append(summaries, summary)
 				continue
 			}
-			tags = append(tags, info[ii].Tags...)
-			logs = append(logs, info[ii].Logs...)
-			durations = append(durations, info[ii].Durations...)
+			summary := &summaries[summaryPosition]
+			for ii := range summary.KernelLaunchInformations {
+				summaryKernel := summary.KernelLaunchInformations[ii]
+				for _, kernel := range layer.KernelLaunchInformations {
+					if strings.ToLower(summaryKernel.Name) == strings.ToLower(kernel.Name) {
+						summaryKernel.Logs = append(summaryKernel.Logs, kernel.Logs...)
+						summaryKernel.Tags = append(summaryKernel.Tags, kernel.Tags...)
+						summaryKernel.Durations = append(summaryKernel.Durations, kernel.Durations...)
+					}
+				}
+				summary.KernelLaunchInformations[ii] = summaryKernel
+			}
 		}
-		info := KernelLaunchInformation{
-			Name:      mustGetTagValueAsString(span, "kernel_name"),
-			Tags:      tags,
-			Logs:      logs,
-			Durations: durations,
-		}
-		infos = append(infos, info)
 	}
 
-	summary.KernelLaunchInformations = infos
-	return summary, nil
+	return summaries, nil
 }
 
-func (e Evaluation) CUDALaunchInformationSummary(perfCol *PerformanceCollection) (*SummaryCUDALaunchInformation, error) {
+func (k *KernelLaunchInformation) addLogs(spanLogs []model.Log) {
+	if k.Logs == nil {
+		k.Logs = []Metadata{}
+	}
+	logs := Metadata{}
+	for _, v := range spanLogs {
+		for _, f := range v.Fields {
+			logs[f.Key] = f.Value
+		}
+	}
+	k.Logs = append(k.Logs, logs)
+}
+
+func (k *KernelLaunchInformation) addTags(spanTags []model.KeyValue) {
+	if k.Tags == nil {
+		k.Tags = []Metadata{}
+	}
+	tags := Metadata{}
+	for _, v := range spanTags {
+		tags[v.Key] = v.Value
+	}
+	k.Tags = append(k.Tags, tags)
+}
+
+func toKernelInformation(span model.Span) KernelLaunchInformation {
+	logs := Metadata{}
+	for _, v := range span.Logs {
+		for _, f := range v.Fields {
+			logs[f.Key] = f.Value
+		}
+	}
+	metadata := Metadata{}
+	for _, v := range span.Tags {
+		metadata[v.Key] = v.Value
+	}
+	info := KernelLaunchInformation{
+		Name:          mustGetTagValueAsString(span, "kernel_name"),
+		Tags:          []Metadata{metadata},
+		Logs:          []Metadata{logs},
+		CorrelationId: mustGetTagValueAsInt64(span, "correlation_id"),
+		Durations: []float64{
+			cast.ToFloat64(span.Duration),
+		},
+	}
+	return info
+}
+
+func (e Evaluation) CUDALaunchInformationSummary(perfCol *PerformanceCollection) (SummaryCUDALaunchInformations, error) {
 	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 	if err != nil {
 		return nil, err
@@ -222,12 +261,12 @@ func (es Evaluations) CUDALaunchInformationSummary(perfCol *PerformanceCollectio
 		if s == nil {
 			continue
 		}
-		res = append(res, *s)
+		res = append(res, s...)
 	}
 	return res, nil
 }
 
-func getSpanKernelLaunchesFromSpans(spans Spans) []Spans {
+func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDALaunchInformations {
 	predictSpans := spans.FilterByOperationName("c_predict")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
@@ -235,42 +274,92 @@ func getSpanKernelLaunchesFromSpans(spans Spans) []Spans {
 		if idx == -1 {
 			continue
 		}
-		groupedSpans[idx] = append(groupedSpans[idx], span)
+		var spanCopy model.Span
+		deepcopy.Copy(&spanCopy, span)
+		groupedSpans[idx] = append(groupedSpans[idx], spanCopy)
 	}
 
-	groupedKernelSpans := make([]Spans, len(predictSpans))
-
+	summaryCUDALaunchInformations := make([]SummaryCUDALaunchInformations, len(predictSpans))
 	for ii, grsp := range groupedSpans {
-		groupedKernelSpans[ii] = Spans{}
-		if len(grsp) == 0 {
-			continue
+		trace := model.Trace{
+			TraceID: "0",
+			Spans:   grsp,
 		}
+		tree, err := trace_tree.NewIntervalTree(trace)
+		if err != nil {
+			panic(err)
+		}
+
+		summaryCUDALaunchInformations[ii] = []SummaryCUDALaunchInformation{}
 		for _, sp := range grsp {
-			traceLevel0, ok := spanTagValue(sp, "trace_level")
-			if !ok {
+			traceLevel, err := getTagValueAsString(sp, "trace_level")
+			if err != nil || traceLevel == "" {
 				continue
 			}
-			traceLevel, ok := traceLevel0.(string)
-			if !ok {
+			if tracer.LevelFromName(traceLevel) != tracer.FRAMEWORK_TRACE {
 				continue
 			}
-			if traceLevel == "" {
-				continue
+			layerSpan := trace_tree.ToInterval(sp)
+			layerChildren := tree.ChildrenOf(layerSpan)
+			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii], sp})
+			if err != nil {
+				log.WithError(err).Fatal("failed to get layerInformationSummary ")
 			}
-			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-				continue
+			summaryCUDALaunchInformation := SummaryCUDALaunchInformation{
+				SummaryBase:              es[0].summaryBase(),
+				LayerInformation:         layerInfo.LayerInformations[0],
+				KernelLaunchInformations: []KernelLaunchInformation{},
 			}
-			if strings.ToLower(sp.OperationName) != "gpu_kernel" {
-				continue
+			for _, childInterval := range layerChildren {
+				child := *childInterval.Span
+				traceLevel, err := getTagValueAsString(child, "trace_level")
+				if err != nil || traceLevel == "" {
+					continue
+				}
+				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+					continue
+				}
+				if strings.ToLower(child.OperationName) != "gpu_kernel" {
+					continue
+				}
+				child.Tags = append(child.Tags, model.KeyValue{
+					Key:   "kernel_name",
+					Type:  model.StringType,
+					Value: demangleName(mustGetTagValueAsString(child, "name")),
+				})
+				summaryCUDALaunchInformation.KernelLaunchInformations = append(summaryCUDALaunchInformation.KernelLaunchInformations, toKernelInformation(child))
 			}
-			sp.Tags = append(sp.Tags, model.KeyValue{
-				Key:   "kernel_name",
-				Type:  model.StringType,
-				Value: demangleName(mustGetTagValueAsString(sp, "name")),
-			})
-			groupedKernelSpans[ii] = append(groupedKernelSpans[ii], sp)
+			for _, childInterval := range layerChildren {
+				child := *childInterval.Span
+				traceLevel, err := getTagValueAsString(child, "trace_level")
+				if err != nil || traceLevel == "" {
+					continue
+				}
+				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+					continue
+				}
+				if strings.ToLower(child.OperationName) != "cuda_launch" {
+					continue
+				}
+				childCorrelationId, err := getTagValueAsInt64(child, "correlation_id")
+				if err != nil {
+					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
+					continue
+				}
+				for _, kernel := range summaryCUDALaunchInformation.KernelLaunchInformations {
+					if kernel.CorrelationId != childCorrelationId {
+						continue
+					}
+					kernel.addTags(child.Tags)
+					kernel.addLogs(child.Logs)
+				}
+			}
+
+			summaryCUDALaunchInformations[ii] = append(summaryCUDALaunchInformations[ii], summaryCUDALaunchInformation)
+
 		}
+
 	}
 
-	return groupedKernelSpans
+	return summaryCUDALaunchInformations
 }
