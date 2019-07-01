@@ -468,7 +468,7 @@ func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
 	)
 	return bar
 }
@@ -484,7 +484,7 @@ func (o LayerInformations) BoxPlot(title string) *charts.BoxPlot {
 }
 
 func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
-	timeUnit := time.Microsecond
+	timeUnit := time.Nanosecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
@@ -503,7 +503,7 @@ func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	box.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + timeUnit.String() + ")"},
+		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
 	)
 	return box
 }
@@ -539,7 +539,7 @@ func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Microsecond
+	timeUnit := time.Nanosecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
@@ -571,7 +571,7 @@ func (o MeanLayerInformations) BoxPlot(title string) *charts.BoxPlot {
 }
 
 func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
-	timeUnit := time.Microsecond
+	timeUnit := time.Nanosecond
 
 	isPrivate := func(info MeanLayerInformation) bool {
 		return strings.HasPrefix(info.Name, "_")
