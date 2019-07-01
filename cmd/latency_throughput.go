@@ -39,7 +39,7 @@ var latencyCmd = &cobra.Command{
 				return err
 			}
 
-			writer := NewWriter(evaluation.SummaryThroughputLatency{})
+			writer := NewWriter(evaluation.SummaryModelInformationLatency{})
 			defer writer.Close()
 
 			for _, lat := range lats {

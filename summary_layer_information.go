@@ -8,7 +8,6 @@ import (
 
 	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/getlantern/deepcopy"
-	"github.com/iancoleman/orderedmap"
 	"github.com/rai-project/config"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
@@ -110,33 +109,6 @@ func (s SummaryLayerInformations) Rows() [][]string {
 		rows = append(rows, e.Row())
 	}
 	return rows
-}
-
-//easyjson:json
-type layerInformationMap struct {
-	*orderedmap.OrderedMap //map[string]LayerInformation
-}
-
-func (l *layerInformationMap) Get(key string) (LayerInformation, bool) {
-	e, ok := l.OrderedMap.Get(key)
-	if !ok {
-		log.Fatalf("unable to find %s in the layer information map", key)
-		return LayerInformation{}, false
-	}
-	r, ok := e.(LayerInformation)
-	if !ok {
-		log.Fatalf("unable to cast to LayerInformation %s in the layer information map", key)
-		return LayerInformation{}, false
-	}
-	return r, true
-}
-
-func (l *layerInformationMap) MustGet(key string) LayerInformation {
-	e, ok := l.Get(key)
-	if !ok {
-		log.Fatalf("unable to find %s in the layer information map", key)
-	}
-	return e
 }
 
 func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformation, error) {

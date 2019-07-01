@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Unknwon/com"
+	framework "github.com/rai-project/dlframework/framework/cmd"
 	"github.com/rai-project/evaluation"
 	udb "upper.io/db.v3"
 )
@@ -172,4 +173,21 @@ func tempFile(dir, pattern string) string {
 		os.MkdirAll(filepath.Dir(name), os.ModePerm)
 	}
 	return name
+}
+
+func forallmodels(run func() error) error {
+	if modelName != "all" {
+		return run()
+	}
+
+	outputDirectory := outputFileName
+	if !com.IsDir(outputDirectory) {
+		os.MkdirAll(outputDirectory, os.ModePerm)
+	}
+	for _, model := range framework.DefaultEvaulationModels {
+		modelName, modelVersion = framework.ParseModelName(model)
+		outputFileName = filepath.Join(outputDirectory, model+"."+outputFileExtension)
+		run()
+	}
+	return nil
 }

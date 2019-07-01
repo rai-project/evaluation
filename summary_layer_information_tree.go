@@ -9,12 +9,51 @@ import (
 	db "upper.io/db.v3"
 )
 
-func (p Performance) LayerInformationTreeSummary(e Evaluation) (*SummaryLayerInformation, error) {
-	sspans := getSpanLayersFromSpans(p.Spans())
+//easyjson:json
+type layerInformationMap struct {
+	*orderedmap.OrderedMap //map[string]LayerInformation
+}
+
+func (l *layerInformationMap) Get(key string) (LayerInformation, bool) {
+	e, ok := l.OrderedMap.Get(key)
+	if !ok {
+		log.Fatalf("unable to find %s in the layer information map", key)
+		return LayerInformation{}, false
+	}
+	r, ok := e.(LayerInformation)
+	if !ok {
+		log.Fatalf("unable to cast to LayerInformation %s in the layer information map", key)
+		return LayerInformation{}, false
+	}
+	return r, true
+}
+
+func (l *layerInformationMap) MustGet(key string) LayerInformation {
+	e, ok := l.Get(key)
+	if !ok {
+		log.Fatalf("unable to find %s in the layer information map", key)
+	}
+	return e
+}
+
+func (p Performance) LayerInformationTreeSummary(es Evaluations) (*SummaryLayerInformation, error) {
+	return layerInformationTreeSummary(es, p.Spans())
+}
+
+func layerInformationTreeSummary(es Evaluations, spans Spans) (*SummaryLayerInformation, error) {
+	layerIndexIds := map[string]int{}
+	for _, span := range spans {
+		li, foundI := spanTagValue(span, "layer_sequence_index")
+		if foundI {
+			layerIndexIds[span.OperationName] = cast.ToInt(li)
+		}
+	}
+
+	sspans := getSpanLayersFromSpans(spans)
 	numSSpans := len(sspans)
 
 	summary := &SummaryLayerInformation{
-		SummaryBase:       e.summaryBase(),
+		SummaryBase:       es[0].summaryBase(),
 		LayerInformations: LayerInformations{},
 	}
 	if numSSpans == 0 {
@@ -105,7 +144,7 @@ func (e Evaluation) LayerInformationTreeSummary(perfCol *PerformanceCollection) 
 		return nil, errors.New("expecting on performance output")
 	}
 	perf := perfs[0]
-	return perf.LayerInformationTreeSummary(e)
+	return perf.LayerInformationTreeSummary([]Evaluation{e})
 }
 
 func (es Evaluations) LayerInformationTreeSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {

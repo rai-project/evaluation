@@ -8,7 +8,7 @@ import (
 )
 
 //easyjson:json
-type SummaryThroughputLatency struct {
+type SummaryModelInformationLatency struct {
 	SummaryBase `json:",inline"`
 	Durations   []float64 `json:"durations,omitempty"` // in nano seconds
 	Duration    float64   `json:"duration,omitempty"`  // in nano seconds
@@ -17,9 +17,9 @@ type SummaryThroughputLatency struct {
 }
 
 //easyjson:json
-type SummaryThroughputLatencies []SummaryThroughputLatency
+type SummaryModelInformationLatencies []SummaryModelInformationLatency
 
-func (SummaryThroughputLatency) Header() []string {
+func (SummaryModelInformationLatency) Header() []string {
 	extra := []string{
 		"durations",
 		"duration (us)",
@@ -29,7 +29,7 @@ func (SummaryThroughputLatency) Header() []string {
 	return append(SummaryBase{}.Header(), extra...)
 }
 
-func (s SummaryThroughputLatency) Row() []string {
+func (s SummaryModelInformationLatency) Row() []string {
 	extra := []string{
 		strings.Join(float64SliceToString(s.Durations), ";"),
 		cast.ToString(s.Duration),
@@ -39,11 +39,11 @@ func (s SummaryThroughputLatency) Row() []string {
 	return append(s.SummaryBase.Row(), extra...)
 }
 
-func (SummaryThroughputLatencies) Header() []string {
-	return SummaryThroughputLatency{}.Header()
+func (SummaryModelInformationLatencies) Header() []string {
+	return SummaryModelInformationLatency{}.Header()
 }
 
-func (s SummaryThroughputLatencies) Rows() [][]string {
+func (s SummaryModelInformationLatencies) Rows() [][]string {
 	rows := [][]string{}
 	for _, e := range s {
 		rows = append(rows, e.Row())
@@ -51,11 +51,11 @@ func (s SummaryThroughputLatencies) Rows() [][]string {
 	return rows
 }
 
-func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryThroughputLatency, error) {
+func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryModelInformationLatency, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	durations := toFloat64Slice(info.Durations)
 	duration := TrimmedMean(durations, trimmedMeanFraction)
-	return SummaryThroughputLatency{
+	return SummaryModelInformationLatency{
 		SummaryBase: info.SummaryBase,
 		Durations:   durations,
 		Duration:    duration,
@@ -64,7 +64,7 @@ func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryThroughpu
 	}, nil
 }
 
-func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThroughputLatencies, error) {
+func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryModelInformationLatencies, error) {
 
 	// MinIdx returns the index of the minimum value in the input slice. If several
 	// entries have the maximum value, the first such index is returned. If the slice
@@ -98,10 +98,10 @@ func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThrough
 		groups[k] = append(groups[k], info)
 	}
 
-	res := []SummaryThroughputLatency{}
+	res := []SummaryModelInformationLatency{}
 	for _, v := range groups {
 		if len(v) == 0 {
-			log.Error("expecting more more than one input in SummaryThroughputLatencies")
+			log.Error("expecting more more than one input in SummaryModelInformationLatencies")
 			continue
 		}
 		if len(v) == 1 {
@@ -129,7 +129,7 @@ func (infos SummaryModelInformations) ThroughputLatencySummary() (SummaryThrough
 		first := v[0]
 
 		duration := min(durations)
-		sum := SummaryThroughputLatency{
+		sum := SummaryModelInformationLatency{
 			SummaryBase: first.SummaryBase,
 			Durations:   durations,
 			Duration:    duration,

@@ -9,9 +9,11 @@ import (
 )
 
 var layersTreeCmd = &cobra.Command{
-	Use: "layer_tree",
+	Use: "layers_tree",
 	Aliases: []string{
-		"layertree",
+		"layerstree",
+		"layers_tree",
+		"layer_tree",
 		"treemap",
 	},
 	Short: "Get model layer tree information from framework traces in a database. Specify model name as `all` to list information of all the models.",
