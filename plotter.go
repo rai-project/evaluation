@@ -10,13 +10,23 @@ import (
 
 type Plotter interface {
 	Name() string
-	BarPlot(string) *charts.Bar
-	BarPlotAdd(*charts.Bar) *charts.Bar
 	WritePlot(string) error
 	OpenPlot() error
 }
 
-func writePlot(o Plotter, path string) error {
+type BarPlotter interface {
+	Plotter
+	BarPlot(string) *charts.Bar
+	BarPlotAdd(*charts.Bar) *charts.Bar
+}
+
+type BoxPlotter interface {
+	Plotter
+	BoxPlot(string) *charts.BoxPlot
+	BoxPlotAdd(*charts.BoxPlot) *charts.BoxPlot
+}
+
+func writeBarPlot(o BarPlotter, path string) error {
 	bar := o.BarPlot(o.Name())
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Right: "40%"},
@@ -29,6 +39,25 @@ func writePlot(o Plotter, path string) error {
 	}
 	defer f.Close()
 	err = bar.Render(f)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func writeBoxPlot(o BoxPlotter, path string) error {
+	box := o.BoxPlot(o.Name())
+	box.SetGlobalOptions(
+		charts.TitleOpts{Right: "40%"},
+		charts.LegendOpts{Right: "80%"},
+		charts.ToolboxOpts{Show: true},
+	)
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	err = box.Render(f)
 	if err != nil {
 		return err
 	}

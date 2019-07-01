@@ -476,7 +476,7 @@ func (o LayerInformations) Name() string {
 }
 
 func (o LayerInformations) WritePlot(path string) error {
-	return writePlot(o, path)
+	return writeBarPlot(o, path)
 }
 
 func (o LayerInformations) OpenPlot() error {
@@ -520,7 +520,7 @@ func (o MeanLayerInformations) Name() string {
 }
 
 func (o MeanLayerInformations) WritePlot(path string) error {
-	return writePlot(o, path)
+	return writeBarPlot(o, path)
 }
 
 func (o MeanLayerInformations) OpenPlot() error {
