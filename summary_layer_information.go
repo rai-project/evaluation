@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	json "encoding/json"
 	"errors"
 	"sort"
 	"strings"
@@ -603,11 +604,16 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	}
 	box.AddYAxis("", durations)
 	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+    var labels = ` + strings.ReplaceAll(string(jsLabelsBts), `"`, "'") + `;
+    return labels.indexOf(name);
+  }`
 	box.SetGlobalOptions(
 		charts.XAxisOpts{
 			Name:      "Layer Name",
 			Type:      "category",
-			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 90, Formatter: charts.FuncOpts(`function (name, index) { return index;}`)},
+			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 45, Formatter: charts.FuncOpts(jsFun)},
 			SplitLine: charts.SplitLineOpts{Show: false},
 			SplitArea: charts.SplitAreaOpts{Show: true},
 		},
@@ -618,6 +624,12 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 			AxisLabel: charts.LabelTextOpts{Formatter: "{value}" + unitName(timeUnit)},
 			SplitArea: charts.SplitAreaOpts{Show: true},
 			Mix:       0,
+		},
+		charts.DataZoomOpts{
+			Type:       "slider",
+			XAxisIndex: []int{0},
+			Start:      0,
+			End:        float32(len(labels)),
 		},
 	)
 	return box
