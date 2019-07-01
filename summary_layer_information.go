@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/getlantern/deepcopy"
+	"github.com/k0kubun/pp"
 	"github.com/rai-project/config"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
@@ -570,27 +571,65 @@ func (o MeanLayerInformations) BoxPlot(title string) *charts.BoxPlot {
 
 func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	timeUnit := time.Microsecond
-	labels := []string{}
+
+	isPrivate := func(info MeanLayerInformation) bool {
+		return strings.HasPrefix(info.Name, "_")
+	}
+
+	labels := []int{}
 	for _, elem := range o {
-		labels = append(labels, elem.Name)
+		if isPrivate(elem) {
+			continue
+		}
+		labels = append(labels, elem.Index)
 	}
 	box.AddXAxis(labels)
 
-	durations := make([][]time.Duration, len(o))
-	for ii, elem := range o {
+	durations := make([][]time.Duration, 0, len(o))
+	for _, elem := range o {
+		if isPrivate(elem) {
+			continue
+		}
 		ts := make([]time.Duration, len(elem.Durations))
 		for jj, t := range elem.Durations {
 			ts[jj] = time.Duration(t) * timeUnit
 		}
-		durations[ii] = ts
+		durations = append(durations, prepareBoxplotData(ts))
+	}
+	if false {
+		pp.Println(len(labels))
+		pp.Println(len(durations))
+		pp.Println(len(durations[0]))
 	}
 	box.AddYAxis("", durations)
 	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	box.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
+		charts.XAxisOpts{
+			Name:      "Layer Name",
+			Type:      "category",
+			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 45},
+			SplitLine: charts.SplitLineOpts{Show: false},
+			SplitArea: charts.SplitAreaOpts{Show: true},
+		},
+		charts.YAxisOpts{
+			Name: "Latency(" + unitName(timeUnit) + ")",
+			Type: "value",
+			// NameRotate: 90,
+			AxisLabel: charts.LabelTextOpts{Formatter: "{value}" + unitName(timeUnit)},
+			SplitArea: charts.SplitAreaOpts{Show: true},
+			Mix:       0,
+		},
 	)
 	return box
+}
+
+func prepareBoxplotData(ds []time.Duration) []time.Duration {
+	min := durationMin(ds)
+	q1 := durationPercentile(ds, 25)
+	q2 := durationPercentile(ds, 50)
+	q3 := durationPercentile(ds, 75)
+	max := durationMax(ds)
+	return []time.Duration{min, q1, q2, q3, max}
 }
 
 func unitName(d time.Duration) string {
