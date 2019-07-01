@@ -34,6 +34,7 @@ func writeBarPlot(o BarPlotter, path string) error {
 		charts.TitleOpts{Right: "40%"},
 		charts.LegendOpts{Right: "80%"},
 		charts.ToolboxOpts{Show: true},
+		charts.InitOpts{Theme: charts.ThemeType.Shine},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
 	f, err := os.Create(path)
@@ -54,6 +55,7 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 		charts.TitleOpts{Right: "40%"},
 		charts.LegendOpts{Right: "80%"},
 		charts.ToolboxOpts{Show: true},
+		charts.InitOpts{Theme: charts.ThemeType.Shine},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
 	f, err := os.Create(path)

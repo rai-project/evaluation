@@ -576,12 +576,12 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 		return strings.HasPrefix(info.Name, "_")
 	}
 
-	labels := []int{}
+	labels := []string{}
 	for _, elem := range o {
 		if isPrivate(elem) {
 			continue
 		}
-		labels = append(labels, elem.Index)
+		labels = append(labels, elem.Name)
 	}
 	box.AddXAxis(labels)
 
@@ -607,7 +607,7 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 		charts.XAxisOpts{
 			Name:      "Layer Name",
 			Type:      "category",
-			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 45},
+			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 90, Formatter: charts.FuncOpts(`function (name, index) { return index;}`)},
 			SplitLine: charts.SplitLineOpts{Show: false},
 			SplitArea: charts.SplitAreaOpts{Show: true},
 		},
