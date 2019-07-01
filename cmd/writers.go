@@ -95,6 +95,7 @@ func (w *Writer) Rows(rower Rowers) error {
 	}
 	return nil
 }
+
 func (w *Writer) Flush() {
 	switch w.format {
 	case "table":
@@ -123,12 +124,11 @@ func (w *Writer) Flush() {
 		if err != nil {
 			log.WithError(err).Error("failed to marshal indent data")
 			return
-    }
-    
+		}
 
-      b = bytes.Replace(b, []byte("\\u003c"), []byte("<"), -1)
-      b = bytes.Replace(b, []byte("\\u003e"), []byte(">"), -1)
-      b = bytes.Replace(b, []byte("\\u0026"), []byte("&"), -1)
+		b = bytes.Replace(b, []byte("\\u003c"), []byte("<"), -1)
+		b = bytes.Replace(b, []byte("\\u003e"), []byte(">"), -1)
+		b = bytes.Replace(b, []byte("\\u0026"), []byte("&"), -1)
 
 		w.output.Write(b)
 	}

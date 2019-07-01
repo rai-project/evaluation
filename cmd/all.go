@@ -32,13 +32,15 @@ func runAll(cmd *cobra.Command, args []string) error {
 
 		pcmd.Flags().AddFlagSet(rootFlags)
 		pcmd.Flags().Parse(pargs)
-		rootSetup()
-
+		err := rootSetup()
+		if err != nil {
+			return err
+		}
 		log.WithField("command", pcmd.Name()).
 			WithField("args", pargs).
 			Info("running evaluation command")
 		//pp.Println("running evaluation command ", pargs, "  ", pcmd.Name())
-		err := pcmd.PreRunE(pcmd, pargs)
+		err = pcmd.PreRunE(pcmd, pargs)
 		if err != nil {
 			log.WithError(err).
 				WithField("command", pcmd.Name()).

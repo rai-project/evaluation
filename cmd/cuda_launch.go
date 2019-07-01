@@ -19,7 +19,10 @@ var cudaLaunchCmd = &cobra.Command{
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]
 		}
-		rootSetup()
+		err := rootSetup()
+		if err != nil {
+			return err
+		}
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "cuda_kernel_launch")
 		}
@@ -30,19 +33,18 @@ var cudaLaunchCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		run := func() error {
-
 			evals, err := getEvaluations()
 			if err != nil {
 				return err
 			}
 
-			lst, err := evals.CUDALaunchInformationSummary(performanceCollection)
+			lst, err := evals.CUDAKernelInformationSummary(performanceCollection)
 
-			writer := NewWriter(evaluation.SummaryCUDALaunchInformation{})
+			writer := NewWriter(evaluation.SummaryCUDAKernelInformation{})
 			defer writer.Close()
 
 			for _, elem := range lst {
-				writer.Rows(elem)
+				writer.Row(elem)
 			}
 
 			return nil

@@ -19,7 +19,10 @@ var eventflowCmd = &cobra.Command{
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]
 		}
-		rootSetup()
+		err := rootSetup()
+		if err != nil {
+			return err
+		}
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
 			outputFileName = filepath.Join(mlArcWebAssetsPath, "event_flow")
 		}

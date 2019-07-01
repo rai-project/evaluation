@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -63,11 +64,9 @@ func rootSetup() error {
 		opts = append(opts, database.Endpoints(databaseEndpoints))
 	}
 
-	var err error
-
-	db, err = mongodb.NewDatabase(databaseName, opts...)
+	db, err := mongodb.NewDatabase(databaseName, opts...)
 	if err != nil {
-		return err
+		return errors.New("cannot connect to the database server")
 	}
 
 	evaluationCollection, err = evaluation.NewEvaluationCollection(db)
