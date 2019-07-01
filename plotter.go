@@ -3,8 +3,8 @@ package evaluation
 import (
 	"os"
 
-	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/pkg/errors"
+	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/utils/browser"
 )
 

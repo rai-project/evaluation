@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/getlantern/deepcopy"
 	"github.com/rai-project/config"
+	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"

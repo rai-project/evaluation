@@ -5,9 +5,9 @@ import (
 	"os"
 	"sort"
 
-	"github.com/chenjiandongx/go-echarts/charts"
 	"github.com/fatih/structs"
 	"github.com/pkg/errors"
+	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/utils/browser"
 	"github.com/spf13/cast"
 )
