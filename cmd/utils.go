@@ -46,6 +46,11 @@ func getEvaluations() (evaluation.Evaluations, error) {
 	}
 
 	if limit > 0 {
+		// reverse list
+		for i := len(evals)/2 - 1; i >= 0; i-- {
+			opp := len(evals) - 1 - i
+			evals[i], evals[opp] = evals[opp], evals[i]
+		}
 		evals = evals[:minInt(len(evals)-1, limit)]
 	}
 

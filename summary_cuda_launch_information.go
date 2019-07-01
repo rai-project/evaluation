@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/getlantern/deepcopy"
-	"github.com/k0kubun/pp"
 	"github.com/rai-project/tracer"
 	trace_tree "github.com/rai-project/tracer/convert"
 	"github.com/spf13/cast"
@@ -58,7 +57,6 @@ func (info KernelLaunchInformation) Row() []string {
 	}
 	_ = tags
 	_ = logs
-	pp.Println(info.Durations)
 	return []string{
 		info.Name,
 		// string(tags),
@@ -170,7 +168,7 @@ func (p Performance) CUDALaunchInformationSummary(e Evaluation) ([]SummaryCUDALa
 				summaries = append(summaries, summary)
 				continue
 			}
-			summary := &summaries[summaryPosition]
+			summary := summaries[summaryPosition]
 			for ii := range summary.KernelLaunchInformations {
 				summaryKernel := summary.KernelLaunchInformations[ii]
 				for _, kernel := range layer.KernelLaunchInformations {
@@ -182,6 +180,7 @@ func (p Performance) CUDALaunchInformationSummary(e Evaluation) ([]SummaryCUDALa
 				}
 				summary.KernelLaunchInformations[ii] = summaryKernel
 			}
+			summaries[summaryPosition] = summary
 		}
 	}
 
