@@ -119,11 +119,16 @@ func (w *Writer) Flush() {
 
 		data = append(data, w.jsonRows...)
 
-		b, err := json.Marshal(data)
+		b, err := json.MarshalIndent(data, "", "  ")
 		if err != nil {
 			log.WithError(err).Error("failed to marshal indent data")
 			return
-		}
+    }
+    
+
+      b = bytes.Replace(b, []byte("\\u003c"), []byte("<"), -1)
+      b = bytes.Replace(b, []byte("\\u003e"), []byte(">"), -1)
+      b = bytes.Replace(b, []byte("\\u0026"), []byte("&"), -1)
 
 		w.output.Write(b)
 	}
