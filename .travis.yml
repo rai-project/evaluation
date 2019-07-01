@@ -3,7 +3,6 @@ cache:
   apt: true
 matrix:
   include:
-    - go: 1.11.x
     - go: 1.12.x
     - go: tip
   allow_failures:
