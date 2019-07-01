@@ -7,8 +7,11 @@ import (
 
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
+	model "github.com/uber/jaeger/model/json"
 	db "upper.io/db.v3"
 )
+
+var summaryCUDALaunchInformationShowSummaryBase = false
 
 type Metadata map[string]interface{}
 
@@ -33,8 +36,8 @@ type SummaryCUDALaunchInformations []SummaryCUDALaunchInformation
 func (KernelLaunchInformation) Header() []string {
 	return []string{
 		"name",
-		"tags",
-		"logs",
+		// "tags",
+		// "logs",
 		"durations (us)",
 	}
 }
@@ -48,10 +51,12 @@ func (info KernelLaunchInformation) Row() []string {
 	if err != nil {
 		logs = []byte{}
 	}
+	_ = tags
+	_ = logs
 	return []string{
 		info.Name,
-		string(tags),
-		string(logs),
+		// string(tags),
+		// string(logs),
 		strings.Join(float64SliceToStringSlice(info.Durations), "\t"),
 	}
 }
@@ -71,8 +76,12 @@ func (s KernelLaunchInformations) Rows() [][]string {
 func (SummaryCUDALaunchInformation) Header() []string {
 	extra := []string{
 		"kernel_launch_information",
+		"duration",
 	}
-	return append(SummaryBase{}.Header(), extra...)
+	if summaryCUDALaunchInformationShowSummaryBase {
+		return append(SummaryBase{}.Header(), extra...)
+	}
+	return extra
 }
 
 func (s SummaryCUDALaunchInformation) Row() []string {
@@ -84,6 +93,29 @@ func (s SummaryCUDALaunchInformation) Row() []string {
 		strings.Join(infos, ";"),
 	}
 	return append(s.SummaryBase.Row(), extra...)
+}
+
+func (s SummaryCUDALaunchInformation) Rows() [][]string {
+	infos := [][]string{}
+	summaryRow := s.SummaryBase.Row()
+	summaryRowLen := len(summaryRow)
+	if !summaryCUDALaunchInformationShowSummaryBase {
+		summaryRowLen = 0
+	}
+	rows := s.KernelLaunchInformations.Rows()
+	infos = make([][]string, len(rows))
+	for ii, row := range rows {
+		infos[ii] = make([]string, summaryRowLen+len(row))
+		if summaryCUDALaunchInformationShowSummaryBase {
+			for jj, elem := range summaryRow {
+				infos[ii][jj] = elem
+			}
+		}
+		for jj, elem := range row {
+			infos[ii][jj+summaryRowLen] = elem
+		}
+	}
+	return infos
 }
 
 func (SummaryCUDALaunchInformations) Header() []string {
@@ -99,7 +131,7 @@ func (s SummaryCUDALaunchInformations) Rows() [][]string {
 }
 
 func (p Performance) CUDALaunchInformationSummary(e Evaluation) (*SummaryCUDALaunchInformation, error) {
-	sspans := getSpanLayersFromSpans(p.Spans())
+	sspans := getSpanKernelLaunchesFromSpans(p.Spans())
 	numSSpans := len(sspans)
 
 	summary := &SummaryCUDALaunchInformation{
@@ -152,7 +184,7 @@ func (p Performance) CUDALaunchInformationSummary(e Evaluation) (*SummaryCUDALau
 			durations = append(durations, info[ii].Durations...)
 		}
 		info := KernelLaunchInformation{
-			Name:      span.OperationName,
+			Name:      mustGetTagValueAsString(span, "kernel_name"),
 			Tags:      tags,
 			Logs:      logs,
 			Durations: durations,
@@ -205,34 +237,40 @@ func getSpanKernelLaunchesFromSpans(spans Spans) []Spans {
 		}
 		groupedSpans[idx] = append(groupedSpans[idx], span)
 	}
-	groupededSpans := make([]Spans, len(predictSpans))
-	for ii, grp := range groupedSpans {
-		groupededSpans[ii] = Spans{}
-		if len(grp) == 0 {
+
+	groupedKernelSpans := make([]Spans, len(predictSpans))
+
+	for ii, grsp := range groupedSpans {
+		groupedKernelSpans[ii] = Spans{}
+		if len(grsp) == 0 {
 			continue
 		}
-		predict := predictSpans[ii]
-		traceLevel0, ok := spanTagValue(predict, "trace_level")
-		if !ok {
-			continue
-		}
-		traceLevel, ok := traceLevel0.(string)
-		if !ok {
-			continue
-		}
-		if traceLevel == "" {
-			continue
-		}
-		if tracer.LevelFromName(traceLevel) < tracer.FRAMEWORK_TRACE {
-			continue
-		}
-		r := groupededSpans[ii]
-		for _, span := range grp {
-			if strings.ToLower(span.OperationName) == "gpu_kernel" {
-				r = append(r, span)
+		for _, sp := range grsp {
+			traceLevel0, ok := spanTagValue(sp, "trace_level")
+			if !ok {
+				continue
 			}
+			traceLevel, ok := traceLevel0.(string)
+			if !ok {
+				continue
+			}
+			if traceLevel == "" {
+				continue
+			}
+			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+				continue
+			}
+			if strings.ToLower(sp.OperationName) != "gpu_kernel" {
+				continue
+			}
+			sp.Tags = append(sp.Tags, model.KeyValue{
+				Key:   "kernel_name",
+				Type:  model.StringType,
+				Value: demangleName(mustGetTagValueAsString(sp, "name")),
+			})
+			groupedKernelSpans[ii] = append(groupedKernelSpans[ii], sp)
 		}
-		groupededSpans[ii] = r
 	}
-	return groupededSpans
+
+	return groupedKernelSpans
 }

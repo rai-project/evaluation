@@ -35,3 +35,6 @@ carml
 vendor
 *.pprof
 debug
+
+output.tmp
+main

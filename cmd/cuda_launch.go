@@ -42,7 +42,7 @@ var cudaLaunchCmd = &cobra.Command{
 			defer writer.Close()
 
 			for _, elem := range lst {
-				writer.Row(elem)
+				writer.Rows(elem)
 			}
 
 			return nil

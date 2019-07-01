@@ -27,6 +27,11 @@ type Rower interface {
 	Row() []string
 }
 
+type Rowers interface {
+	Rower
+	Rows() [][]string
+}
+
 func NewWriter(rower Rower) *Writer {
 	var output io.Writer = os.Stdout
 	if outputFileName != "" {
@@ -73,6 +78,23 @@ func (w *Writer) Row(rower Rower) error {
 	return nil
 }
 
+func (w *Writer) Rows(rower Rowers) error {
+	switch w.format {
+	case "table":
+		for _, r := range rower.Rows() {
+			w.tbl.Append(r)
+		}
+	case "csv":
+		for _, r := range rower.Rows() {
+			w.csv.Write(r)
+		}
+	case "json":
+		for _, r := range rower.Rows() {
+			w.jsonRows = append(w.jsonRows, r)
+		}
+	}
+	return nil
+}
 func (w *Writer) Flush() {
 	switch w.format {
 	case "table":
