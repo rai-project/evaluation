@@ -46,18 +46,50 @@ func (info LayerCUDAKernelInformation) Header() []string {
 		// "kernel_tags",
 		// "kernel_logs",
 	}
-	for _, cudaKernelInformation := range info.CUDAKernelInformations {
+
+	if kernelLogKeys := getKernelLogKeys(info.CUDAKernelInformations); len(kernelLogKeys) != 0 {
+		extraHeader = append(extraHeader, kernelLogKeys...)
+	}
+	return append(LayerInformation{}.Header(), extraHeader...)
+}
+
+func getKernelLogKeys(infos CUDAKernelInformations) []string {
+	kernelLogs := []Metadata{}
+	for _, cudaKernelInformation := range infos {
 		if len(cudaKernelInformation.Logs) == 0 {
 			continue
 		}
-		logNames := []string{}
-		for logName, _ := range cudaKernelInformation.Logs[0] {
-			logNames = append(logNames, logName)
-		}
-		extraHeader = append(extraHeader, logNames...)
-		break
+		kernelLogs = append(kernelLogs, cudaKernelInformation.Logs...)
 	}
-	return append(LayerInformation{}.Header(), extraHeader...)
+	return getMetaDataKeys(kernelLogs)
+}
+
+func getMetaDataKeys(metadatas []Metadata) []string {
+	if metadatas == nil || len(metadatas) == 0 {
+		return []string{}
+	}
+	keyVisited := map[string]bool{}
+	keys := []string{}
+	for _, metadata := range metadatas {
+		for key, _ := range metadata {
+			if _, ok := keyVisited[key]; ok {
+				continue
+			}
+			keys = append(keys, key)
+			keyVisited[key] = true
+		}
+	}
+	return keys
+}
+
+func getMetaDataValuesAsString(lg Metadata) []string {
+	res := make([]string, len(lg))
+	idx := 0
+	for _, val := range lg {
+		res[idx] = cast.ToString(val)
+		idx += 1
+	}
+	return res
 }
 
 func (info LayerCUDAKernelInformation) Rows() [][]string {
@@ -65,19 +97,9 @@ func (info LayerCUDAKernelInformation) Rows() [][]string {
 	layerInfo := info.LayerInformation
 	layerInfoRow := layerInfo.Row()
 
-	emptyLayerInfoRow := make([]string, len(layerInfoRow))
-
 	rows := [][]string{}
 
-	metadataValuesOf := func(lg Metadata) []string {
-		res := make([]string, len(lg))
-		idx := 0
-		for _, val := range lg {
-			res[idx] = cast.ToString(val)
-			idx += 1
-		}
-		return res
-	}
+	kernelLogKeys := getKernelLogKeys(cudaKernelInfos)
 
 	for _, cki := range cudaKernelInfos {
 		kernelTags, err := json.Marshal(cki.Tags)
@@ -85,39 +107,26 @@ func (info LayerCUDAKernelInformation) Rows() [][]string {
 			kernelTags = []byte{}
 		}
 
-		kernelLogs := cki.Logs
-		firstkernelLog := cki.Logs[0]
-		restKernelLogs := []Metadata{}
-		if len(kernelLogs) > 1 {
-			restKernelLogs = cki.Logs[1:]
-		}
-
 		_ = kernelTags
-		_ = kernelLogs
-
-		if false {
-			pp.Println("logs = ", cki.Logs)
-		}
 
 		extra := []string{
 			cki.Name,
 			strings.Join(float64SliceToStringSlice(cki.Durations), "\t"),
 		}
 
-		extra = append(extra, metadataValuesOf(firstkernelLog)...)
+		for _, kernelLogKey := range kernelLogKeys {
+			kernelLogs := []string{}
+			for _, kernelLog := range cki.Logs {
+				for kernelLogKeyName, keryeLogValue := range kernelLog {
+					if kernelLogKeyName == kernelLogKey {
+						kernelLogs = append(kernelLogs, cast.ToString(keryeLogValue))
+					}
+				}
+			}
+			extra = append(extra, strings.Join(kernelLogs, "\t"))
+		}
 
 		rows = append(rows, append(layerInfoRow, extra...))
-
-		for _, kernelLog := range restKernelLogs {
-			extra := []string{
-				"",
-				"",
-			}
-
-			extra = append(extra, metadataValuesOf(kernelLog)...)
-
-			rows = append(rows, append(emptyLayerInfoRow, extra...))
-		}
 	}
 	return rows
 }
@@ -362,4 +371,9 @@ func getGroupedCUDAKernelSpansFromSpans(predictSpans Spans, spans Spans) ([]Span
 	}
 
 	return groupedCUDAKernelSpans, nil
+}
+
+func dummyPP() {
+	// for import pp
+	pp.Println("dummy")
 }
