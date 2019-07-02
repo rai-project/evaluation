@@ -395,7 +395,7 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	jsLabelsBts, _ := json.Marshal(labels)
 	jsFun := `function (name, index) {
-    var labels = ` + strings.ReplaceAll(string(jsLabelsBts), `"`, "'") + `;
+    var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
     return labels.indexOf(name);
   }`
 	box.SetGlobalOptions(
