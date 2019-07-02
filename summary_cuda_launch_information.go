@@ -32,7 +32,37 @@ type LayerCUDAKernelInformation struct {
 	CUDAKernelInformations CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
 }
 
+func (p CUDAKernelInformations) Len() int { return len(p) }
+func (p CUDAKernelInformations) Less(i, j int) bool {
+	x := p[i]
+	y := p[j]
+	xDuration := TrimmedMean(x.Durations, DefaultTrimmedMeanFraction)
+	yDuration := TrimmedMean(y.Durations, DefaultTrimmedMeanFraction)
+	return xDuration > yDuration
+}
+func (p CUDAKernelInformations) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+func (p LayerCUDAKernelInformation) Len() int { return len(p.CUDAKernelInformations) }
+func (p LayerCUDAKernelInformation) Less(i, j int) bool {
+	x := p.CUDAKernelInformations[i]
+	y := p.CUDAKernelInformations[j]
+	xDuration := TrimmedMean(x.Durations, DefaultTrimmedMeanFraction)
+	yDuration := TrimmedMean(y.Durations, DefaultTrimmedMeanFraction)
+	return xDuration > yDuration
+}
+func (p LayerCUDAKernelInformation) Swap(i, j int) {
+	p.CUDAKernelInformations[i], p.CUDAKernelInformations[j] = p.CUDAKernelInformations[j], p.CUDAKernelInformations[i]
+}
+
 type LayerCUDAKernelInformations []LayerCUDAKernelInformation
+
+func (p LayerCUDAKernelInformations) Len() int { return len(p) }
+func (p LayerCUDAKernelInformations) Less(i, j int) bool {
+	return p[i].LayerInformation.Index < p[j].LayerInformation.Index
+}
+func (p LayerCUDAKernelInformations) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
 type SummaryLayerCUDAKernelInformation struct {
 	SummaryBase                 `json:",inline"`
