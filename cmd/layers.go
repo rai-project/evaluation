@@ -56,31 +56,27 @@ var layersCmd = &cobra.Command{
 				return err
 			}
 
-			if listRuns {
-				summaries, err := evals.LayerInformationSummary(performanceCollection)
-				if err != nil {
-					return err
-				}
-
-				writer := NewWriter(evaluation.LayerInformation{})
-				defer writer.Close()
-				for _, summary := range summaries {
-					writer.Row(summary)
-				}
-
-				return nil
-			}
-
-			summary, err := evals.AcrossEvaluationLayerInformationSummary(performanceCollection)
+			summary, err := evals.LayerInformationSummary(performanceCollection)
 			if err != nil {
 				return err
 			}
 
 			layers := summary.LayerInformations
+
+			if listRuns {
+				writer := NewWriter(evaluation.LayerInformation{})
+				defer writer.Close()
+				for _, lyr := range layers {
+					writer.Row(lyr)
+				}
+				return nil
+			}
+
 			meanLayers := make(evaluation.MeanLayerInformations, len(layers))
 			for ii, layer := range layers {
 				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
 			}
+
 			if sortByLatency || topLayers != -1 {
 				sort.Slice(meanLayers, func(ii, jj int) bool {
 					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) > evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
@@ -101,6 +97,7 @@ var layersCmd = &cobra.Command{
 					return meanLayers.OpenBarPlot()
 				}
 			}
+
 			if plotLayers {
 				var err error
 				if boxPlotLayers {

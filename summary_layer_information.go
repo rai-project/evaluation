@@ -7,9 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/getlantern/deepcopy"
 	"github.com/k0kubun/pp"
-	"github.com/rai-project/config"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
@@ -44,9 +42,6 @@ type SummaryLayerInformation struct {
 	SummaryBase       `json:",inline"`
 	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
 }
-
-//easyjson:json
-type SummaryLayerInformations []SummaryLayerInformation
 
 func (LayerInformation) Header() []string {
 	return []string{
@@ -84,113 +79,6 @@ func (s LayerInformations) Rows() [][]string {
 	return rows
 }
 
-func (SummaryLayerInformation) Header() []string {
-	extra := []string{
-		"layer_informations",
-	}
-	return append(SummaryBase{}.Header(), extra...)
-}
-
-func (s SummaryLayerInformation) Row() []string {
-	infos := []string{}
-	for _, row := range s.LayerInformations.Rows() {
-		infos = append(infos, strings.Join(row, ":"))
-	}
-	extra := []string{
-		strings.Join(infos, ";"),
-	}
-	return append(s.SummaryBase.Row(), extra...)
-}
-
-func (SummaryLayerInformations) Header() []string {
-	return SummaryLayerInformation{}.Header()
-}
-
-func (s SummaryLayerInformations) Rows() [][]string {
-	rows := [][]string{}
-	for _, e := range s {
-		rows = append(rows, e.Row())
-	}
-	return rows
-}
-
-func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformation, error) {
-	// layerIndexIds := map[string]int{}
-	// for _, span := range spans {
-	// 	li, foundI := spanTagValue(span, "layer_sequence_index")
-	// 	if foundI {
-	// 		layerIndexIds[span.OperationName] = cast.ToInt(li)
-	// 	}
-	// }
-
-	sspans := getSpanLayersFromSpans(spans)
-	numSSpans := len(sspans)
-
-	summary := SummaryLayerInformation{
-		SummaryBase:       es[0].summaryBase(),
-		LayerInformations: LayerInformations{},
-	}
-	if numSSpans == 0 {
-		return summary, nil
-	}
-
-	infosFull := make([][]LayerInformation, numSSpans)
-	for ii, spans := range sspans {
-		if infosFull[ii] == nil {
-			infosFull[ii] = []LayerInformation{}
-		}
-		for _, span := range spans {
-			idx, found := spanTagValue(span, "layer_sequence_index")
-			if !found {
-				return summary, errors.New("cannot find tag layer_sequence_index")
-			}
-			info := LayerInformation{
-				// Index: layerIndexIds[span.OperationName],
-				Index: cast.ToInt(idx),
-				Name:  span.OperationName,
-				Type:  getOpName(span),
-				Durations: []float64{
-					cast.ToFloat64(span.Duration),
-				},
-			}
-			infosFull[ii] = append(infosFull[ii], info)
-		}
-	}
-
-	infos := []LayerInformation{}
-	for ii, span := range sspans[0] {
-		durations := []float64{}
-		for _, info := range infosFull {
-			if len(info) <= ii {
-				continue
-			}
-			durationToAppend := []float64{}
-			for _, r := range info {
-				if r.Name == span.OperationName {
-					durationToAppend = append(durationToAppend, r.Durations...)
-				}
-			}
-			durations = append(durations, durationToAppend...)
-		}
-
-		idx, found := spanTagValue(span, "layer_sequence_index")
-		if !found {
-			return summary, errors.New("cannot find tag layer_sequence_index")
-		}
-		info := LayerInformation{
-			// Index:     layerIndexIds[span.OperationName],
-			Index:     cast.ToInt(idx),
-			Name:      span.OperationName,
-			Type:      getOpName(span),
-			Durations: durations,
-		}
-		infos = append(infos, info)
-	}
-
-	summary.LayerInformations = infos
-	return summary, nil
-}
-
 func getOpName(span model.Span) string {
 	opName, err := getTagValueAsString(span, "op_name")
 	if err != nil {
@@ -199,193 +87,97 @@ func getOpName(span model.Span) string {
 	return opName
 }
 
-func (p Performance) LayerInformationSummary(es Evaluations) (SummaryLayerInformation, error) {
-	return layerInformationSummary(es, p.Spans())
-}
+func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
+	summary := SummaryLayerInformation{}
 
-func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
-	s := SummaryLayerInformation{}
+	if len(es) == 0 {
+		return summary, errors.New("no evaluation is found in the database")
+	}
 
-	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-	if err != nil {
-		return s, err
-	}
-	if len(perfs) != 1 {
-		return s, errors.New("expecting on performance output")
-	}
-	perf := perfs[0]
-	s, err = perf.LayerInformationSummary([]Evaluation{e})
-	if err != nil {
-		return s, err
-	}
-	return s, nil
-}
-
-func (es Evaluations) AcrossEvaluationLayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
-	s := SummaryLayerInformation{}
 	spans := []model.Span{}
 	for _, e := range es {
 		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 		if err != nil {
-			return s, err
+			return summary, err
 		}
 		if len(foundPerfs) != 1 {
-			return s, errors.New("expecting on performance output")
+			return summary, errors.New("no performance is found for the evaluation")
 		}
 		perf := foundPerfs[0]
 		spans = append(spans, perf.Spans()...)
 	}
-
-	s, err := layerInformationSummary(es, spans)
-	if err != nil {
-		log.WithError(err).Error("failed to get layer information summary")
-		return s, err
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
 	}
 
-	return s, nil
-}
+	groupedSpans := getGroupedLayerSpansFromSpans(spans)
+	if len(groupedSpans) == 0 {
+		return summary, errors.New("no group of spans is found")
+	}
+	numGroups := len(groupedSpans)
 
-func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
-	res := []SummaryLayerInformation{}
-	for _, e := range es {
-		s, err := e.LayerInformationSummary(perfCol)
-		if err != nil {
-			log.WithError(err).Error("failed to get layer information summary")
-			continue
-		}
-		res = append(res, s)
+	summary = SummaryLayerInformation{
+		SummaryBase:       es[0].summaryBase(),
+		LayerInformations: LayerInformations{},
 	}
-	return res, nil
-}
+	if numGroups == 0 {
+		return summary, nil
+	}
 
-func spanIsCUPTI(span model.Span) bool {
-	for _, tag := range span.Tags {
-		key := strings.ToLower(tag.Key)
-		switch key {
-		case "cupti_domain", "cupti_callback_id":
-			return true
+	groupedLayerInfos := make([][]LayerInformation, numGroups)
+	for ii, spans := range groupedSpans {
+		if groupedLayerInfos[ii] == nil {
+			groupedLayerInfos[ii] = []LayerInformation{}
+		}
+		for _, span := range spans {
+			idx, err := getTagValueAsString(span, "layer_sequence_index")
+			if err != nil || idx == "" {
+				return summary, errors.New("cannot find tag layer_sequence_index")
+			}
+			layerInfo := LayerInformation{
+				Index: cast.ToInt(idx),
+				Name:  span.OperationName,
+				Type:  getOpName(span),
+				Durations: []float64{
+					cast.ToFloat64(span.Duration),
+				},
+			}
+			groupedLayerInfos[ii] = append(groupedLayerInfos[ii], layerInfo)
 		}
 	}
-	return false
-}
 
-func spanTagExists(span model.Span, key string) bool {
-	for _, tag := range span.Tags {
-		key0 := strings.ToLower(tag.Key)
-		if key0 == key {
-			return true
+	layerInfos := []LayerInformation{}
+	for ii, span := range groupedSpans[0] {
+		durations := []float64{}
+		idx, err := getTagValueAsString(span, "layer_sequence_index")
+		if err != nil || idx == "" {
+			return summary, errors.New("cannot find tag layer_sequence_index")
 		}
-	}
-	return false
-}
+		for _, infos := range groupedLayerInfos {
+			if len(infos) <= ii {
+				continue
+			}
+			durationToAppend := []float64{}
+			for _, info := range infos {
+				if info.Index == cast.ToInt(idx) && info.Name == span.OperationName {
+					durationToAppend = append(durationToAppend, info.Durations...)
+				}
+			}
+			durations = append(durations, durationToAppend...)
+		}
 
-func spanTagValue(span model.Span, key string) (interface{}, bool) {
-	for _, tag := range span.Tags {
-		key0 := strings.ToLower(tag.Key)
-		if key0 == key {
-			return tag.Value, true
-		}
+		layerInfos = append(layerInfos,
+			LayerInformation{
+				Index:     cast.ToInt(idx),
+				Name:      span.OperationName,
+				Type:      getOpName(span),
+				Durations: durations,
+			})
 	}
-	return nil, false
-}
 
-func spanTagEquals(span model.Span, key string, value string) bool {
-	for _, tag := range span.Tags {
-		key0 := strings.ToLower(tag.Key)
-		if key0 == key {
-			e := strings.TrimSpace(strings.ToLower(cast.ToString(tag.Value)))
-			return e == value
-		}
-	}
-	return false
-}
+	summary.LayerInformations = layerInfos
 
-func spanComponentIs(span model.Span, name string) bool {
-	for _, tag := range span.Tags {
-		key := strings.ToLower(tag.Key)
-		switch key {
-		case "component":
-			return strings.ToLower(cast.ToString(tag.Value)) == name
-		}
-	}
-	return false
-}
-
-func selectTensorflowLayerSpans(spans Spans) Spans {
-	res := []model.Span{}
-	for _, span := range spans {
-		if spanIsCUPTI(span) {
-			continue
-		}
-		if !spanComponentIs(span, config.App.Name) {
-			continue
-		}
-		if !spanTagExists(span, "thread_id") {
-			continue
-		}
-		if !spanTagExists(span, "timeline_label") {
-			continue
-		}
-		res = append(res, span)
-	}
-	return res
-}
-
-func selectMXNetLayerSpans(spans Spans) Spans {
-	res := []model.Span{}
-	for _, span := range spans {
-		if spanIsCUPTI(span) {
-			continue
-		}
-		if !spanComponentIs(span, config.App.Name) {
-			continue
-		}
-		if !spanTagExists(span, "thread_id") {
-			continue
-		}
-		if !spanTagExists(span, "process_id") {
-			continue
-		}
-		res = append(res, span)
-	}
-	return res
-}
-func selectCaffeLayerSpans(spans Spans) Spans {
-	return selectCaffe2LayerSpans(spans)
-}
-func selectCaffe2LayerSpans(spans Spans) Spans {
-	res := []model.Span{}
-	for _, span := range spans {
-		if spanIsCUPTI(span) {
-			continue
-		}
-		if !spanComponentIs(span, config.App.Name) {
-			continue
-		}
-		if !spanTagExists(span, "metadata") {
-			continue
-		}
-		if !spanTagExists(span, "thread_id") {
-			continue
-		}
-		if !spanTagEquals(span, "process_id", "0") {
-			continue
-		}
-		res = append(res, span)
-	}
-	return res
-}
-
-func selectCNTKLayerSpans(spans Spans) Spans {
-	if cntkLogMessageShown {
-		return Spans{}
-	}
-	cntkLogMessageShown = true
-	log.WithField("function", "selectCNTKLayerSpans").Error("layer information is not currently supported by cntk")
-	return Spans{}
-}
-func selectTensorRTLayerSpans(spans Spans) Spans {
-	return selectCaffe2LayerSpans(spans)
+	return summary, nil
 }
 
 func sortByLayerIndex(spans Spans) {
@@ -403,7 +195,7 @@ func sortByLayerIndex(spans Spans) {
 	})
 }
 
-func getSpanLayersFromSpans(spans Spans) []Spans {
+func getGroupedLayerSpansFromSpans(spans Spans) []Spans {
 	predictSpans := spans.FilterByOperationName("c_predict")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
@@ -411,9 +203,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		if idx == -1 {
 			continue
 		}
-		var spanCopy model.Span
-		deepcopy.Copy(&spanCopy, span)
-		groupedSpans[idx] = append(groupedSpans[idx], spanCopy)
+		groupedSpans[idx] = append(groupedSpans[idx], span)
 	}
 	groupedLayerSpans := make([]Spans, len(predictSpans))
 	for ii, grsp := range groupedSpans {
@@ -433,18 +223,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 		}
 		sortByLayerIndex(groupedLayerSpans[ii])
 	}
-
 	return groupedLayerSpans
-}
-
-func frameworkNameOfSpan(predictSpan model.Span) string {
-	tagName := "framework_name"
-	for _, tag := range predictSpan.Tags {
-		if tag.Key == tagName {
-			return cast.ToString(tag.Value)
-		}
-	}
-	return ""
 }
 
 func (o LayerInformations) BarPlot(title string) *charts.Bar {
