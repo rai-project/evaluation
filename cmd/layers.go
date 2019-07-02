@@ -71,7 +71,7 @@ var layersCmd = &cobra.Command{
 				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
 			}
 
-			if sortOutput || topLayers != -1 {
+			if sortByLatency || topLayers != -1 {
 				sort.Slice(meanLayers, func(ii, jj int) bool {
 					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) > evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
 				})
@@ -125,7 +125,7 @@ var layersCmd = &cobra.Command{
 
 func init() {
 	layersCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
-	layersCmd.PersistentFlags().BoolVar(&sortOutput, "sort", false, "sort layer information by layer latency")
+	layersCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
 	layersCmd.PersistentFlags().BoolVar(&barPlot, "bar_plot", false, "generates a bar plot of the layers")
 	layersCmd.PersistentFlags().BoolVar(&boxPlot, "box_plot", false, "generates a box plot of the layers")
 	layersCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
