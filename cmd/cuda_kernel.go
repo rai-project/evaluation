@@ -3,9 +3,16 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
+)
+
+var (
+	sortByLatency  bool
+	trimKernelName bool
+	topLayers      int
 )
 
 var cudaKernelCmd = &cobra.Command{
@@ -48,6 +55,18 @@ var cudaKernelCmd = &cobra.Command{
 
 			layerCUDAKernelInfos := summary.LayerCUDAKernelInformations
 
+			if sortByLatency || topLayers != -1 {
+				sort.Slice(layerCUDAKernelInfos, func(ii, jj int) bool {
+					return evaluation.TrimmedMean(layerCUDAKernelInfos[ii].Durations, 0) > evaluation.TrimmedMean(layerCUDAKernelInfos[jj].Durations, 0)
+				})
+				if topLayers != -1 {
+					if topLayers >= len(layerCUDAKernelInfos) {
+						topLayers = len(layerCUDAKernelInfos)
+					}
+					layerCUDAKernelInfos = layerCUDAKernelInfos[:topLayers]
+				}
+			}
+
 			writer := NewWriter(evaluation.LayerCUDAKernelInformation{})
 			defer writer.Close()
 
@@ -60,4 +79,10 @@ var cudaKernelCmd = &cobra.Command{
 
 		return forallmodels(run)
 	},
+}
+
+func init() {
+	cudaKernelCmd.PersistentFlags().BoolVar(&sortByLatency, "sort_by_latency", false, "sort layer information by layer latency")
+	cudaKernelCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
+	cudaKernelCmd.PersistentFlags().BoolVar(&trimKernelName, "trim_name", true, "trim kernel names to the first `<`")
 }

@@ -11,13 +11,11 @@ import (
 )
 
 var (
-	listRuns      bool
-	sortByLatency bool
-	barPlot       bool
-	boxPlot       bool
-	openPlot      bool
-	topLayers     int
-	plotPath      string
+	listRuns bool
+	barPlot  bool
+	boxPlot  bool
+	openPlot bool
+	plotPath string
 )
 
 var layersCmd = &cobra.Command{
