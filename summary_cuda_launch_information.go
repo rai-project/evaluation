@@ -1,3 +1,5 @@
+// +build ignore
+
 package evaluation
 
 import (
@@ -211,17 +213,17 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 	}
 
 	predictSpans := spans.FilterByOperationName("c_predict")
-	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(predictSpans, spans)
+	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
 	if err != nil {
 		return summary, err
 	}
-	numGroups := len(groupedLayerSpans)
+	numGroups := len(groupedSpans)
 	if numGroups == 0 {
 		return summary, errors.New("no group of spans is found")
 	}
 
 	groupedLayerCUDAKernelInfos := make([][]LayerCUDAKernelInformation, numGroups)
-	for ii, grsp := range groupedLayerSpans {
+	for ii, grsp := range groupedSpans {
 		if groupedLayerCUDAKernelInfos[ii] == nil {
 			groupedLayerCUDAKernelInfos[ii] = []LayerCUDAKernelInformation{}
 		}
@@ -293,12 +295,12 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
 					continue
 				}
-				for _, kernel := range layerCUDAKernelInformation.CUDAKernelInformations {
-					if kernel.CorrelationId != childCorrelationId {
+				for _, info := range layerCUDAKernelInformation.CUDAKernelInformations {
+					if info.CorrelationId != childCorrelationId {
 						continue
 					}
-					kernel.addTags(child.Tags)
-					kernel.addLogs(child.Logs)
+					info.addTags(child.Tags)
+					info.addLogs(child.Logs)
 				}
 			}
 
@@ -306,6 +308,45 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		}
 	}
 
+  groupedLayerSpans, err := getGroupedLayerSpansFromSpans(predictSpans, spans)
+	if err != nil {
+		return summary, err
+  }
+
+  layerCUDAKernelInfos:= []LayerCUDAKernelInformation{}
+	for ii, span := range groupedSpans[0] {
+    durations := []float64{}
+    traceLevel, err := getTagValueAsString(span, "trace_level")
+    if err != nil || traceLevel == "" {
+      continue
+    }
+    if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+      continue
+    }
+    if strings.ToLower(child.OperationName) != "gpu_kernel" {
+      continue
+    }
+		for _, infos := range groupedLayerCUDAKernelInfos {
+			if len(infos) <= ii {
+				continue
+			}
+			durationToAppend := []float64{}
+			for _, info := range infos {
+				if info.Name == span.OperationName {
+					durationToAppend = append(durationToAppend, info.Durations...)
+				}
+			}
+			durations = append(durations, durationToAppend...)
+		}
+
+		layerCUDAKernelInfos = append(layerCUDAKernelInfos,
+			LayerCUDAKernelInformation{
+        s
+				Name:      span.OperationName,
+				Type:      getOpName(span),
+				Durations: durations,
+			})
+	}
 	return summary, nil
 }
 
