@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	sortByLatency          bool
+	sortOutput             bool
 	trimKernelName         bool
 	sortOutput             bool
 	kernelNameFilterString string
