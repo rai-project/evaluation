@@ -8,6 +8,26 @@ import (
 	model "github.com/uber/jaeger/model/json"
 )
 
+func getGroupedSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans := make([]Spans, len(predictSpans))
+	for _, span := range spans {
+		idx := predictSpanIndexOf(span, predictSpans)
+		if idx == -1 {
+			continue
+		}
+		groupedSpans[idx] = append(groupedSpans[idx], span)
+	}
+	return groupedSpans, nil
+}
+
+func getOpName(span model.Span) string {
+	opName, err := getTagValueAsString(span, "op_name")
+	if err != nil {
+		return ""
+	}
+	return opName
+}
+
 func frameworkNameOfSpan(predictSpan model.Span) string {
 	tagName := "framework_name"
 	for _, tag := range predictSpan.Tags {

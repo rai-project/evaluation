@@ -45,9 +45,9 @@ type SummaryLayerInformation struct {
 
 func (LayerInformation) Header() []string {
 	return []string{
-		"index",
-		"name",
-		"durations (us)",
+		"layer_index",
+		"layer_name",
+		"layer_durations (us)",
 	}
 }
 
@@ -79,53 +79,29 @@ func (s LayerInformations) Rows() [][]string {
 	return rows
 }
 
-func getOpName(span model.Span) string {
-	opName, err := getTagValueAsString(span, "op_name")
-	if err != nil {
-		return ""
-	}
-	return opName
-}
-
-func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
+func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformation, error) {
 	summary := SummaryLayerInformation{}
-
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
 	}
-
-	spans := []model.Span{}
-	for _, e := range es {
-		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-		if err != nil {
-			return summary, err
-		}
-		if len(foundPerfs) != 1 {
-			return summary, errors.New("no performance is found for the evaluation")
-		}
-		perf := foundPerfs[0]
-		spans = append(spans, perf.Spans()...)
-	}
-	if len(spans) == 0 {
-		return summary, errors.New("no span is found for the evaluation")
-	}
-
-	groupedSpans := getGroupedLayerSpansFromSpans(spans)
-	if len(groupedSpans) == 0 {
-		return summary, errors.New("no group of spans is found")
-	}
-	numGroups := len(groupedSpans)
 
 	summary = SummaryLayerInformation{
 		SummaryBase:       es[0].summaryBase(),
 		LayerInformations: LayerInformations{},
 	}
+
+	predictSpans := spans.FilterByOperationName("c_predict")
+	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(predictSpans, spans)
+	if err != nil {
+		return summary, err
+	}
+	numGroups := len(groupedLayerSpans)
 	if numGroups == 0 {
-		return summary, nil
+		return summary, errors.New("no group of spans is found")
 	}
 
 	groupedLayerInfos := make([][]LayerInformation, numGroups)
-	for ii, spans := range groupedSpans {
+	for ii, spans := range groupedLayerSpans {
 		if groupedLayerInfos[ii] == nil {
 			groupedLayerInfos[ii] = []LayerInformation{}
 		}
@@ -147,7 +123,7 @@ func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (S
 	}
 
 	layerInfos := []LayerInformation{}
-	for ii, span := range groupedSpans[0] {
+	for ii, span := range groupedLayerSpans[0] {
 		durations := []float64{}
 		idx, err := getTagValueAsString(span, "layer_sequence_index")
 		if err != nil || idx == "" {
@@ -180,6 +156,27 @@ func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (S
 	return summary, nil
 }
 
+func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
+	summary := SummaryLayerInformation{}
+	spans := []model.Span{}
+	for _, e := range es {
+		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
+		if err != nil {
+			return summary, err
+		}
+		if len(foundPerfs) != 1 {
+			return summary, errors.New("no performance is found for the evaluation")
+		}
+		perf := foundPerfs[0]
+		spans = append(spans, perf.Spans()...)
+	}
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
+	}
+
+	return layerInformationSummary(es, spans)
+}
+
 func sortByLayerIndex(spans Spans) {
 	sort.Slice(spans, func(ii, jj int) bool {
 		li, foundI := spanTagValue(spans[ii], "layer_sequence_index")
@@ -195,22 +192,20 @@ func sortByLayerIndex(spans Spans) {
 	})
 }
 
-func getGroupedLayerSpansFromSpans(spans Spans) []Spans {
-	predictSpans := spans.FilterByOperationName("c_predict")
-	groupedSpans := make([]Spans, len(predictSpans))
-	for _, span := range spans {
-		idx := predictSpanIndexOf(span, predictSpans)
-		if idx == -1 {
-			continue
-		}
-		groupedSpans[idx] = append(groupedSpans[idx], span)
+func getGroupedLayerSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
+	if err != nil {
+		return nil, err
 	}
-	groupedLayerSpans := make([]Spans, len(predictSpans))
+	numPredictSpans := len(groupedSpans)
+
+	groupedLayerSpans := make([]Spans, numPredictSpans)
 	for ii, grsp := range groupedSpans {
-		groupedLayerSpans[ii] = Spans{}
 		if len(grsp) == 0 {
 			continue
 		}
+
+		groupedLayerSpans[ii] = Spans{}
 		for _, sp := range grsp {
 			traceLevel, err := getTagValueAsString(sp, "trace_level")
 			if err != nil || traceLevel == "" {
@@ -221,9 +216,11 @@ func getGroupedLayerSpansFromSpans(spans Spans) []Spans {
 			}
 			groupedLayerSpans[ii] = append(groupedLayerSpans[ii], sp)
 		}
+
 		sortByLayerIndex(groupedLayerSpans[ii])
 	}
-	return groupedLayerSpans
+
+	return groupedLayerSpans, nil
 }
 
 func (o LayerInformations) BarPlot(title string) *charts.Bar {
@@ -240,7 +237,7 @@ func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	timeUnit := time.Millisecond
 	labels := []string{}
 	for _, elem := range o {
-		labels = append(labels, elem.Name)
+		labels = append(labels, cast.ToString(elem.Index))
 	}
 
 	bar.AddXAxis(labels)

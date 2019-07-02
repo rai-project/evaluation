@@ -1,5 +1,3 @@
-// +build ignore
-
 package evaluation
 
 import (
@@ -7,7 +5,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/getlantern/deepcopy"
 	"github.com/rai-project/tracer"
 	trace_tree "github.com/rai-project/tracer/convert"
 	"github.com/spf13/cast"
@@ -21,128 +18,70 @@ type Metadata map[string]interface{}
 
 //easyjson:json
 type CUDAKernelInformation struct {
-	Name             string     `json:"name,omitempty"`
-	Tags             []Metadata `json:"tags,omitempty"`
-	Logs             []Metadata `json:"logs,omitempty"`
-	Durations        []float64  `json:"durations,omitempty"`
-	CorrelationId    int64      `json:"correlation_id,omitempty"`
-	LayerInformation `json:",inline"`
+	Name          string     `json:"name,omitempty"`
+	Tags          []Metadata `json:"tags,omitempty"`
+	Logs          []Metadata `json:"logs,omitempty"`
+	Durations     []float64  `json:"durations,omitempty"`
+	CorrelationId int64      `json:"correlation_id,omitempty"`
 }
 
 type CUDAKernelInformations []CUDAKernelInformation
 
 //easyjson:json
-type SummaryCUDAKernelInformation struct {
-	SummaryBase            `json:",inline"`
+type LayerCUDAKernelInformation struct {
+	LayerInformation       `json:",inline"`
 	CUDAKernelInformations CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
 }
 
-type SummaryCUDAKernelInformations []SummaryCUDAKernelInformation
+type LayerCUDAKernelInformations []LayerCUDAKernelInformation
 
-func (CUDAKernelInformation) Header() []string {
-	return []string{
-		"name",
-		"tags",
-		"logs",
-		"durations (us)",
-	}
+//easyjson:json
+type SummaryLayerCUDAKernelInformation struct {
+	SummaryBase                 `json:",inline"`
+	LayerCUDAKernelInformations LayerCUDAKernelInformations `json:"layer_informations,omitempty"`
 }
 
-func (info CUDAKernelInformation) Row() []string {
-	tags, err := json.Marshal(info.Tags)
-	if err != nil {
-		tags = []byte{}
-	}
-	logs, err := json.Marshal(info.Logs)
-	if err != nil {
-		logs = []byte{}
-	}
-	_ = tags
-	_ = logs
-	return []string{
-		info.Name,
-		string(tags),
-		string(logs),
-		strings.Join(float64SliceToStringSlice(info.Durations), "\t"),
-	}
-}
-
-func (CUDAKernelInformations) Header() []string {
-	return CUDAKernelInformation{}.Header()
-}
-
-func (s CUDAKernelInformations) Rows() [][]string {
-	rows := [][]string{}
-	for _, e := range s {
-		rows = append(rows, e.Row())
-	}
-	return rows
-}
-
-func (SummaryCUDAKernelInformation) Header() []string {
+func (LayerCUDAKernelInformation) Header() []string {
 	extra := []string{
 		"kernel_name",
-		"kernel_duration",
-		"layer_index",
-		"layer_name",
-		"layer_duration",
+		"kernel_durations (us)",
+		// "kernel_tags",
+		// "kernel_logs",
 	}
-	if summaryCUDAKernelInformationShowSummaryBase {
-		return append(SummaryBase{}.Header(), extra...)
-	}
-	return extra
+	return append(LayerInformation{}.Header(), extra...)
 }
 
-func (s SummaryCUDAKernelInformation) Row() []string {
-	infos := []string{}
-	for _, row := range s.CUDAKernelInformations.Rows() {
-		infos = append(infos, strings.Join(row, ":"))
-	}
-	extra := []string{
-		strings.Join(infos, ";"),
-	}
-	return append(s.SummaryBase.Row(), extra...)
-}
+func (info LayerCUDAKernelInformation) Rows() [][]string {
+	cudaKernelInfos := info.CUDAKernelInformations
+	layerInfo := info.LayerInformation
 
-// func (s SummaryCUDAKernelInformation) Rows() [][]string {
-// 	infos := [][]string{}
-// 	summaryRow := s.SummaryBase.Row()
-// 	summaryRowLen := len(summaryRow)
-// 	if !summaryCUDAKernelInformationShowSummaryBase {
-// 		summaryRowLen = 0
-// 	}
-// 	rows := s.CUDAKernelInformations.Rows()
-// 	infos = make([][]string, len(rows))
-// 	for ii, row := range rows {
-// 		infos[ii] = make([]string, summaryRowLen+len(row)+2)
-// 		infos[ii][0] = cast.ToString(s.LayerInformation.Index)
-// 		infos[ii][1] = s.LayerInformation.Name
-// 		if summaryCUDAKernelInformationShowSummaryBase {
-// 			for jj, elem := range summaryRow {
-// 				infos[ii][jj+2] = elem
-// 			}
-// 		}
-// 		for jj, elem := range row {
-// 			infos[ii][jj+summaryRowLen+2] = elem
-// 		}
-// 	}
-// 	return infos
-// }
+	rows := make([][]string, len(cudaKernelInfos))
+	for ii, cki := range cudaKernelInfos {
+		tags, err := json.Marshal(cki.Tags)
+		if err != nil {
+			tags = []byte{}
+		}
+		logs, err := json.Marshal(cki.Logs)
+		if err != nil {
+			logs = []byte{}
+		}
+		_ = tags
+		_ = logs
 
-func (SummaryCUDAKernelInformations) Header() []string {
-	return SummaryCUDAKernelInformation{}.Header()
-}
-
-func (s SummaryCUDAKernelInformations) Rows() [][]string {
-	rows := [][]string{}
-	for _, e := range s {
-		rows = append(rows, e.Row())
+		extra := []string{
+			cki.Name,
+			strings.Join(float64SliceToStringSlice(cki.Durations), "\t"),
+			// string(tags),
+			// string(logs),
+		}
+		row := append(layerInfo.Row(), extra...)
+		rows[ii] = row
 	}
 	return rows
 }
 
 // func (p Performance) CUDAKernelInformationSummary(es Evaluations) ([]SummaryCUDAKernelInformation, error) {
-// 	infoAcrossRuns := getSpanKernelLaunchesFromSpans(es, p.Spans())
+// 	infoAcrossRuns := getGroupedCUDAKernelSpansFromSpans(es, p.Spans())
 // 	numRuns := len(infoAcrossRuns)
 
 // 	if numRuns == 0 {
@@ -236,19 +175,7 @@ func toKernelInformation(span model.Span) CUDAKernelInformation {
 	return info
 }
 
-// func (e Evaluation) CUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryCUDAKernelInformations, error) {
-// 	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	if len(perfs) != 1 {
-// 		return nil, errors.New("expecting on performance output")
-// 	}
-// 	perf := perfs[0]
-// 	return perf.CUDAKernelInformationSummary(e)
-// }
-
-func (es Evaluations) CUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryCUDAKernelInformations, error) {
+func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceCollection) (Spans, error) {
 	spans := []model.Span{}
 	for _, e := range es {
 		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
@@ -261,70 +188,44 @@ func (es Evaluations) CUDAKernelInformationSummary(perfCol *PerformanceCollectio
 		perf := foundPerfs[0]
 		spans = append(spans, perf.Spans()...)
 	}
-
-	infoAcrossRuns := getSpanKernelLaunchesFromSpans(es, spans)
-	numRuns := len(infoAcrossRuns)
-
-	if numRuns == 0 {
-		return nil, errors.New("no kernels found")
-	}
-
-	summaries := []SummaryCUDAKernelInformation{}
-
-	getSummaryPosition := func(info SummaryCUDAKernelInformation) int {
-		for ii, s := range summaries {
-			if s.LayerInformation.Name == info.LayerInformation.Name && s.LayerInformation.Index == info.LayerInformation.Index {
-				return ii
-			}
-		}
-		return -1
-	}
-
-	for _, infoRun := range infoAcrossRuns {
-		for _, layer := range infoRun {
-			summaryPosition := getSummaryPosition(layer)
-			if summaryPosition == -1 {
-				summaryPosition = len(summaries)
-				var summary SummaryCUDAKernelInformation
-				deepcopy.Copy(&summary, layer)
-				summaries = append(summaries, summary)
-				continue
-			}
-			summary := summaries[summaryPosition]
-			for ii := range summary.CUDAKernelInformations {
-				summaryKernel := summary.CUDAKernelInformations[ii]
-				for _, kernel := range layer.CUDAKernelInformations {
-					if strings.ToLower(summaryKernel.Name) == strings.ToLower(kernel.Name) {
-						summaryKernel.Logs = append(summaryKernel.Logs, kernel.Logs...)
-						summaryKernel.Tags = append(summaryKernel.Tags, kernel.Tags...)
-						summaryKernel.Durations = append(summaryKernel.Durations, kernel.Durations...)
-					}
-				}
-				summary.CUDAKernelInformations[ii] = summaryKernel
-			}
-			summaries[summaryPosition] = summary
-		}
-	}
-
-	return summaries, nil
+	return spans, nil
 }
 
-func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKernelInformations {
-	predictSpans := spans.FilterByOperationName("c_predict")
-	numPredictSpans := len(predictSpans)
-	groupedSpans := make([]Spans, numPredictSpans)
-	for _, span := range spans {
-		idx := predictSpanIndexOf(span, predictSpans)
-		if idx == -1 {
-			continue
-		}
-		var spanCopy model.Span
-		deepcopy.Copy(&spanCopy, span)
-		groupedSpans[idx] = append(groupedSpans[idx], spanCopy)
+func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryLayerCUDAKernelInformation, error) {
+	summary := SummaryLayerCUDAKernelInformation{}
+	if len(es) == 0 {
+		return summary, errors.New("no evaluation is found in the database")
 	}
 
-	SummaryCUDAKernelInformations := make([]SummaryCUDAKernelInformations, numPredictSpans)
-	for ii, grsp := range groupedSpans {
+	summary = SummaryLayerCUDAKernelInformation{
+		SummaryBase:                 es[0].summaryBase(),
+		LayerCUDAKernelInformations: []LayerCUDAKernelInformation{},
+	}
+
+	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	if err != nil {
+		return summary, err
+	}
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
+	}
+
+	predictSpans := spans.FilterByOperationName("c_predict")
+	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(predictSpans, spans)
+	if err != nil {
+		return summary, err
+	}
+	numGroups := len(groupedLayerSpans)
+	if numGroups == 0 {
+		return summary, errors.New("no group of spans is found")
+	}
+
+	groupedLayerCUDAKernelInfos := make([][]LayerCUDAKernelInformation, numGroups)
+	for ii, grsp := range groupedLayerSpans {
+		if groupedLayerCUDAKernelInfos[ii] == nil {
+			groupedLayerCUDAKernelInfos[ii] = []LayerCUDAKernelInformation{}
+		}
+
 		trace := model.Trace{
 			TraceID: "0",
 			Spans:   grsp,
@@ -334,7 +235,6 @@ func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKe
 			panic(err)
 		}
 
-		SummaryCUDAKernelInformations[ii] = []SummaryCUDAKernelInformation{}
 		for _, sp := range grsp {
 			traceLevel, err := getTagValueAsString(sp, "trace_level")
 			if err != nil || traceLevel == "" {
@@ -343,17 +243,19 @@ func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKe
 			if tracer.LevelFromName(traceLevel) != tracer.FRAMEWORK_TRACE {
 				continue
 			}
+
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
-			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii], sp})
+			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii]})
 			if err != nil {
-				log.WithError(err).Fatal("failed to get layerInformationSummary ")
+				log.WithError(err).Fatal("failed to get layerInformationSummary")
 			}
-			SummaryCUDAKernelInformation := SummaryCUDAKernelInformation{
-				SummaryBase:            es[0].summaryBase(),
+
+			layerCUDAKernelInformation := LayerCUDAKernelInformation{
 				LayerInformation:       layerInfo.LayerInformations[0],
 				CUDAKernelInformations: []CUDAKernelInformation{},
 			}
+
 			for _, childInterval := range layerChildren {
 				child := *childInterval.Span
 				traceLevel, err := getTagValueAsString(child, "trace_level")
@@ -371,8 +273,9 @@ func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKe
 					Type:  model.StringType,
 					Value: demangleName(mustGetTagValueAsString(child, "name")),
 				})
-				SummaryCUDAKernelInformation.CUDAKernelInformations = append(SummaryCUDAKernelInformation.CUDAKernelInformations, toKernelInformation(child))
+				layerCUDAKernelInformation.CUDAKernelInformations = append(layerCUDAKernelInformation.CUDAKernelInformations, toKernelInformation(child))
 			}
+
 			for _, childInterval := range layerChildren {
 				child := *childInterval.Span
 				traceLevel, err := getTagValueAsString(child, "trace_level")
@@ -390,7 +293,7 @@ func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKe
 					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
 					continue
 				}
-				for _, kernel := range SummaryCUDAKernelInformation.CUDAKernelInformations {
+				for _, kernel := range layerCUDAKernelInformation.CUDAKernelInformations {
 					if kernel.CorrelationId != childCorrelationId {
 						continue
 					}
@@ -399,9 +302,88 @@ func getSpanKernelLaunchesFromSpans(es Evaluations, spans Spans) []SummaryCUDAKe
 				}
 			}
 
-			SummaryCUDAKernelInformations[ii] = append(SummaryCUDAKernelInformations[ii], SummaryCUDAKernelInformation)
+			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
 		}
 	}
 
-	return SummaryCUDAKernelInformations
+	return summary, nil
+}
+
+// // infoAcrossRuns :=
+// numRuns := len(infoAcrossRuns)
+
+// if numRuns == 0 {
+// 	return nil, errors.New("no kernels found")
+// }
+
+// summaries := []SummaryCUDAKernelInformation{}
+
+// getSummaryPosition := func(info SummaryCUDAKernelInformation) int {
+// 	for ii, s := range summaries {
+// 		if s.LayerInformation.Name == info.LayerInformation.Name && s.LayerInformation.Index == info.LayerInformation.Index {
+// 			return ii
+// 		}
+// 	}
+// 	return -1
+// }
+
+// for _, infoRun := range infoAcrossRuns {
+// 	for _, layer := range infoRun {
+// 		summaryPosition := getSummaryPosition(layer)
+// 		if summaryPosition == -1 {
+// 			summaryPosition = len(summaries)
+// 			var summary SummaryCUDAKernelInformation
+// 			deepcopy.Copy(&summary, layer)
+// 			summaries = append(summaries, summary)
+// 			continue
+// 		}
+// 		summary := summaries[summaryPosition]
+// 		for ii := range summary.CUDAKernelInformations {
+// 			summaryKernel := summary.CUDAKernelInformations[ii]
+// 			for _, kernel := range layer.CUDAKernelInformations {
+// 				if strings.ToLower(summaryKernel.Name) == strings.ToLower(kernel.Name) {
+// 					summaryKernel.Logs = append(summaryKernel.Logs, kernel.Logs...)
+// 					summaryKernel.Tags = append(summaryKernel.Tags, kernel.Tags...)
+// 					summaryKernel.Durations = append(summaryKernel.Durations, kernel.Durations...)
+// 				}
+// 			}
+// 			summary.CUDAKernelInformations[ii] = summaryKernel
+// 		}
+// 		summaries[summaryPosition] = summary
+// 	}
+// }
+
+// return summaries, nil
+// }
+
+func getGroupedCUDAKernelSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
+	if err != nil {
+		return nil, err
+	}
+	numPredictSpans := len(groupedSpans)
+
+	groupedCUDAKernelSpans := make([]Spans, numPredictSpans)
+	for ii, grsp := range groupedSpans {
+		if len(grsp) == 0 {
+			continue
+		}
+
+		groupedCUDAKernelSpans[ii] = Spans{}
+		for _, sp := range grsp {
+			traceLevel, err := getTagValueAsString(sp, "trace_level")
+			if err != nil || traceLevel == "" {
+				continue
+			}
+			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+				continue
+			}
+			if strings.ToLower(sp.OperationName) != "gpu_kernel" {
+				continue
+			}
+			groupedCUDAKernelSpans[ii] = append(groupedCUDAKernelSpans[ii], sp)
+		}
+	}
+
+	return groupedCUDAKernelSpans, nil
 }
