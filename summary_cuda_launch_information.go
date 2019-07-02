@@ -131,6 +131,7 @@ func getMetaDataValuesAsString(lg Metadata) []string {
 	return res
 }
 
+// Rows ...
 func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 	cudaKernelInfos := info.CUDAKernelInformations
 	layerInfo := info.LayerInformation
