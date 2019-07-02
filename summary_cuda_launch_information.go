@@ -18,7 +18,6 @@ var summaryCUDAKernelInformationShowSummaryBase = false
 
 type Metadata map[string]interface{}
 
-//easyjson:json
 type CUDAKernelInformation struct {
 	Name          string     `json:"name,omitempty"`
 	Tags          []Metadata `json:"tags,omitempty"`
@@ -29,7 +28,6 @@ type CUDAKernelInformation struct {
 
 type CUDAKernelInformations []CUDAKernelInformation
 
-//easyjson:json
 type LayerCUDAKernelInformation struct {
 	LayerInformation       `json:",inline"`
 	CUDAKernelInformations CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
@@ -37,7 +35,6 @@ type LayerCUDAKernelInformation struct {
 
 type LayerCUDAKernelInformations []LayerCUDAKernelInformation
 
-//easyjson:json
 type SummaryLayerCUDAKernelInformation struct {
 	SummaryBase                 `json:",inline"`
 	LayerCUDAKernelInformations LayerCUDAKernelInformations `json:"layer_informations,omitempty"`
@@ -341,8 +338,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 		layerCUDAKernelInfos = append(layerCUDAKernelInfos,
 			LayerCUDAKernelInformation{
-        s
-				Name:      span.OperationName,
+        				Name:      span.OperationName,
 				Type:      getOpName(span),
 				Durations: durations,
 			})

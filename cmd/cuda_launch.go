@@ -40,9 +40,9 @@ var cudaLaunchCmd = &cobra.Command{
 				return err
 			}
 
-			lst, err := evals.CUDAKernelInformationSummary(performanceCollection)
+			lst, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
 
-			writer := NewWriter(evaluation.SummaryCUDAKernelInformation{})
+			writer := NewWriter(evaluation.SummaryLayerCUDAKernelInformation{})
 			defer writer.Close()
 
 			for _, elem := range lst {
