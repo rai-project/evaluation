@@ -76,7 +76,7 @@ var layersCmd = &cobra.Command{
 				return err
 			}
 
-			layers := summary[0].LayerInformations
+			layers := summary.LayerInformations
 			meanLayers := make(evaluation.MeanLayerInformations, len(layers))
 			for ii, layer := range layers {
 				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}

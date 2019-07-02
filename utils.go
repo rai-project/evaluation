@@ -72,13 +72,13 @@ func uint64SliceToStringSlice(us []uint64) []string {
 	return res
 }
 
-func predictIndexOf(span model.Span, predictSpans Spans) int {
-	for ii, predict := range predictSpans {
-		if span.ParentSpanID == predict.SpanID {
+func predictSpanIndexOf(span model.Span, predictSpans Spans) int {
+	for ii, predictSpan := range predictSpans {
+		if span.ParentSpanID == predictSpan.SpanID {
 			return ii
 		}
 		for _, ref := range span.References {
-			if ref.RefType == model.ChildOf && ref.SpanID == predict.SpanID {
+			if ref.RefType == model.ChildOf && ref.SpanID == predictSpan.SpanID {
 				return ii
 			}
 		}

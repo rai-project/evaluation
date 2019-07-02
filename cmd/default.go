@@ -18,7 +18,7 @@ var (
 	AllCmds = []*cobra.Command{
 		latencyCmd,
 		layersCmd,
-		cudaLaunchCmd,
+		// cudaLaunchCmd,
 		eventflowCmd,
 		durationCmd,
 		accuracyCmd,

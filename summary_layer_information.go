@@ -114,19 +114,19 @@ func (s SummaryLayerInformations) Rows() [][]string {
 	return rows
 }
 
-func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformation, error) {
-	layerIndexIds := map[string]int{}
-	for _, span := range spans {
-		li, foundI := spanTagValue(span, "layer_sequence_index")
-		if foundI {
-			layerIndexIds[span.OperationName] = cast.ToInt(li)
-		}
-	}
+func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformation, error) {
+	// layerIndexIds := map[string]int{}
+	// for _, span := range spans {
+	// 	li, foundI := spanTagValue(span, "layer_sequence_index")
+	// 	if foundI {
+	// 		layerIndexIds[span.OperationName] = cast.ToInt(li)
+	// 	}
+	// }
 
 	sspans := getSpanLayersFromSpans(spans)
 	numSSpans := len(sspans)
 
-	summary := &SummaryLayerInformation{
+	summary := SummaryLayerInformation{
 		SummaryBase:       es[0].summaryBase(),
 		LayerInformations: LayerInformations{},
 	}
@@ -140,8 +140,13 @@ func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformat
 			infosFull[ii] = []LayerInformation{}
 		}
 		for _, span := range spans {
+			idx, found := spanTagValue(span, "layer_sequence_index")
+			if !found {
+				return summary, errors.New("cannot find tag layer_sequence_index")
+			}
 			info := LayerInformation{
-				Index: layerIndexIds[span.OperationName],
+				// Index: layerIndexIds[span.OperationName],
+				Index: cast.ToInt(idx),
 				Name:  span.OperationName,
 				Type:  getOpName(span),
 				Durations: []float64{
@@ -167,8 +172,14 @@ func layerInformationSummary(es Evaluations, spans Spans) (*SummaryLayerInformat
 			}
 			durations = append(durations, durationToAppend...)
 		}
+
+		idx, found := spanTagValue(span, "layer_sequence_index")
+		if !found {
+			return summary, errors.New("cannot find tag layer_sequence_index")
+		}
 		info := LayerInformation{
-			Index:     layerIndexIds[span.OperationName],
+			// Index:     layerIndexIds[span.OperationName],
+			Index:     cast.ToInt(idx),
 			Name:      span.OperationName,
 			Type:      getOpName(span),
 			Durations: durations,
@@ -188,31 +199,38 @@ func getOpName(span model.Span) string {
 	return opName
 }
 
-func (p Performance) LayerInformationSummary(es Evaluations) (*SummaryLayerInformation, error) {
+func (p Performance) LayerInformationSummary(es Evaluations) (SummaryLayerInformation, error) {
 	return layerInformationSummary(es, p.Spans())
 }
 
-func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (*SummaryLayerInformation, error) {
+func (e Evaluation) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
+	s := SummaryLayerInformation{}
+
 	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 	if err != nil {
-		return nil, err
+		return s, err
 	}
 	if len(perfs) != 1 {
-		return nil, errors.New("expecting on performance output")
+		return s, errors.New("expecting on performance output")
 	}
 	perf := perfs[0]
-	return perf.LayerInformationSummary([]Evaluation{e})
+	s, err = perf.LayerInformationSummary([]Evaluation{e})
+	if err != nil {
+		return s, err
+	}
+	return s, nil
 }
 
-func (es Evaluations) AcrossEvaluationLayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
+func (es Evaluations) AcrossEvaluationLayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
+	s := SummaryLayerInformation{}
 	spans := []model.Span{}
 	for _, e := range es {
 		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 		if err != nil {
-			return nil, err
+			return s, err
 		}
 		if len(foundPerfs) != 1 {
-			return nil, errors.New("expecting on performance output")
+			return s, errors.New("expecting on performance output")
 		}
 		perf := foundPerfs[0]
 		spans = append(spans, perf.Spans()...)
@@ -221,12 +239,10 @@ func (es Evaluations) AcrossEvaluationLayerInformationSummary(perfCol *Performan
 	s, err := layerInformationSummary(es, spans)
 	if err != nil {
 		log.WithError(err).Error("failed to get layer information summary")
-		return nil, err
+		return s, err
 	}
-	if s == nil {
-		return nil, errors.New("nil layer information summary")
-	}
-	return []SummaryLayerInformation{*s}, nil
+
+	return s, nil
 }
 
 func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
@@ -237,10 +253,7 @@ func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (S
 			log.WithError(err).Error("failed to get layer information summary")
 			continue
 		}
-		if s == nil {
-			continue
-		}
-		res = append(res, *s)
+		res = append(res, s)
 	}
 	return res, nil
 }
@@ -394,7 +407,7 @@ func getSpanLayersFromSpans(spans Spans) []Spans {
 	predictSpans := spans.FilterByOperationName("c_predict")
 	groupedSpans := make([]Spans, len(predictSpans))
 	for _, span := range spans {
-		idx := predictIndexOf(span, predictSpans)
+		idx := predictSpanIndexOf(span, predictSpans)
 		if idx == -1 {
 			continue
 		}
