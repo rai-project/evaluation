@@ -44,7 +44,7 @@ func (LayerCUDAKernelInformation) Header() []string {
 		"kernel_name",
 		"kernel_durations (us)",
 		// "kernel_tags",
-		// "kernel_logs",
+		"kernel_logs",
 	}
 	return append(LayerInformation{}.Header(), extra...)
 }
@@ -75,7 +75,7 @@ func (info LayerCUDAKernelInformation) Rows() [][]string {
 			cki.Name,
 			strings.Join(float64SliceToStringSlice(cki.Durations), "\t"),
 			// string(tags),
-			// string(logs),
+			string(logs),
 		}
 
 		row := append(layerInfo.Row(), extra...)
@@ -245,12 +245,14 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
 					continue
 				}
-				for _, info := range layerCUDAKernelInformation.CUDAKernelInformations {
+				for infoIdx := range layerCUDAKernelInformation.CUDAKernelInformations {
+					info := layerCUDAKernelInformation.CUDAKernelInformations[infoIdx]
 					if info.CorrelationId != childCorrelationId {
 						continue
 					}
 					info.addTags(child.Tags)
 					info.addLogs(child.Logs)
+					layerCUDAKernelInformation.CUDAKernelInformations[infoIdx] = info
 				}
 			}
 			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
@@ -269,9 +271,6 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					}
 					for _, ccki := range lli.CUDAKernelInformations {
 						if cki.Name == ccki.Name {
-							if ii < 10 {
-								pp.Println(ccki.Logs)
-							}
 							cki.Tags = append(cki.Tags, ccki.Tags...)
 							cki.Logs = append(cki.Logs, ccki.Logs...)
 							cki.Durations = append(cki.Durations, ccki.Durations...)
