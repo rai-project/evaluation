@@ -70,7 +70,7 @@ type SummaryLayerCUDAKernelInformation struct {
 	LayerCUDAKernelInformations LayerCUDAKernelInformations `json:"layer_informations,omitempty"`
 }
 
-func (info LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
+func (info LayerCUDAKernelInformations) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
 		"kernel_durations (us)",
@@ -78,19 +78,26 @@ func (info LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
 		// "kernel_logs",
 	}
 
-	if kernelLogKeys := getKernelLogKeys(info.CUDAKernelInformations); len(kernelLogKeys) != 0 {
+	if kernelLogKeys := getKernelLogKeys(info); len(kernelLogKeys) != 0 {
 		extraHeader = append(extraHeader, kernelLogKeys...)
 	}
 	return append(LayerInformation{}.Header(opts...), extraHeader...)
 }
 
-func getKernelLogKeys(infos CUDAKernelInformations) []string {
+func (info0 LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
+	info := LayerCUDAKernelInformations([]LayerCUDAKernelInformation{info0})
+	return info.Header(opts...)
+}
+
+func getKernelLogKeys(infos LayerCUDAKernelInformations) []string {
 	kernelLogs := []Metadata{}
-	for _, cudaKernelInformation := range infos {
-		if len(cudaKernelInformation.Logs) == 0 {
-			continue
+	for _, info := range infos {
+		for _, cudaKernelInformation := range info.CUDAKernelInformations {
+			if len(cudaKernelInformation.Logs) == 0 {
+				continue
+			}
+			kernelLogs = append(kernelLogs, cudaKernelInformation.Logs...)
 		}
-		kernelLogs = append(kernelLogs, cudaKernelInformation.Logs...)
 	}
 	return getMetaDataKeys(kernelLogs)
 }
@@ -130,7 +137,7 @@ func (info LayerCUDAKernelInformation) Rows(opts ...writer.Option) [][]string {
 
 	rows := [][]string{}
 
-	kernelLogKeys := getKernelLogKeys(cudaKernelInfos)
+	kernelLogKeys := getKernelLogKeys([]LayerCUDAKernelInformation{info})
 
 	for _, cki := range cudaKernelInfos {
 		kernelTags, err := json.Marshal(cki.Tags)
@@ -162,8 +169,9 @@ func (info LayerCUDAKernelInformation) Rows(opts ...writer.Option) [][]string {
 	return rows
 }
 
-func (LayerCUDAKernelInformations) Header() []string {
-	return LayerInformation{}.Header()
+func (LayerCUDAKernelInformations) Row(opts ...writer.Option) []string {
+	panic("...")
+	return nil
 }
 
 func (k *CUDAKernelInformation) addLogs(spanLogs []model.Log) {

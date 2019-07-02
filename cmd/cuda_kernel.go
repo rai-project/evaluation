@@ -80,7 +80,7 @@ var cudaKernelCmd = &cobra.Command{
 				}
 			}
 
-			writer := NewWriter(layerCUDAKernelInfos[0])
+			writer := NewWriter(layerCUDAKernelInfos)
 			defer writer.Close()
 
 			for _, elem := range layerCUDAKernelInfos {
