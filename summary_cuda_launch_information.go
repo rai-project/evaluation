@@ -247,7 +247,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
-			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii]})
+			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii], sp})
 			if err != nil {
 				log.WithError(err).Fatal("failed to get layerInformationSummary")
 			}
