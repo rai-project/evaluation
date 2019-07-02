@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
@@ -17,28 +18,28 @@ type SummaryModelInformation struct {
 
 type SummaryModelInformations []SummaryModelInformation
 
-func (SummaryModelInformation) Header() []string {
+func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"durations (us)",
 	}
-	return append(SummaryBase{}.Header(), extra...)
+	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
-func (s SummaryModelInformation) Row() []string {
+func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		strings.Join(uint64SliceToStringSlice(s.Durations), ";"),
 	}
-	return append(s.SummaryBase.Row(), extra...)
+	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (SummaryModelInformations) Header() []string {
-	return SummaryModelInformation{}.Header()
+func (SummaryModelInformations) Header(opts ...writer.Option) []string {
+	return SummaryModelInformation{}.Header(opts...)
 }
 
-func (s SummaryModelInformations) Rows() [][]string {
+func (s SummaryModelInformations) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }
@@ -105,34 +106,34 @@ type SummaryModelInformationLatency struct {
 //easyjson:json
 type SummaryModelInformationLatencies []SummaryModelInformationLatency
 
-func (SummaryModelInformationLatency) Header() []string {
+func (SummaryModelInformationLatency) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"durations",
 		"duration (us)",
 		"latency (us)",
 		"throughput (input/s)",
 	}
-	return append(SummaryBase{}.Header(), extra...)
+	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
-func (s SummaryModelInformationLatency) Row() []string {
+func (s SummaryModelInformationLatency) Row(opts ...writer.Option) []string {
 	extra := []string{
 		strings.Join(float64SliceToString(s.Durations), ";"),
 		cast.ToString(s.Duration),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
 	}
-	return append(s.SummaryBase.Row(), extra...)
+	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (SummaryModelInformationLatencies) Header() []string {
-	return SummaryModelInformationLatency{}.Header()
+func (SummaryModelInformationLatencies) Header(opts ...writer.Option) []string {
+	return SummaryModelInformationLatency{}.Header(opts...)
 }
 
-func (s SummaryModelInformationLatencies) Rows() [][]string {
+func (s SummaryModelInformationLatencies) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }

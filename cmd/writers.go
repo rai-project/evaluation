@@ -10,6 +10,7 @@ import (
 
 	"github.com/Unknwon/com"
 	"github.com/olekukonko/tablewriter"
+	"github.com/rai-project/evaluation/writer"
 )
 
 //easyjson:json
@@ -20,19 +21,20 @@ type Writer struct {
 	tbl            *tablewriter.Table
 	csv            *csv.Writer
 	jsonRows       []interface{}
+	opts           []writer.Option
 }
 
 type Rower interface {
-	Header() []string
-	Row() []string
+	Header(...writer.Option) []string
+	Row(...writer.Option) []string
 }
 
 type Rowers interface {
 	Rower
-	Rows() [][]string
+	Rows(...writer.Option) [][]string
 }
 
-func NewWriter(rower Rower) *Writer {
+func NewWriter(rower Rower, opts ...writer.Option) *Writer {
 	var output io.Writer = os.Stdout
 	if outputFileName != "" {
 		output = &bytes.Buffer{}
@@ -59,9 +61,9 @@ func NewWriter(rower Rower) *Writer {
 func (w *Writer) Header(rower Rower) error {
 	switch w.format {
 	case "table":
-		w.tbl.SetHeader(rower.Header())
+		w.tbl.SetHeader(rower.Header(w.opts...))
 	case "csv":
-		w.csv.Write(rower.Header())
+		w.csv.Write(rower.Header(w.opts...))
 	}
 	return nil
 }
@@ -69,9 +71,9 @@ func (w *Writer) Header(rower Rower) error {
 func (w *Writer) Row(rower Rower) error {
 	switch w.format {
 	case "table":
-		w.tbl.Append(rower.Row())
+		w.tbl.Append(rower.Row(w.opts...))
 	case "csv":
-		w.csv.Write(rower.Row())
+		w.csv.Write(rower.Row(w.opts...))
 	case "json":
 		w.jsonRows = append(w.jsonRows, rower)
 	}
@@ -81,15 +83,15 @@ func (w *Writer) Row(rower Rower) error {
 func (w *Writer) Rows(rower Rowers) error {
 	switch w.format {
 	case "table":
-		for _, r := range rower.Rows() {
+		for _, r := range rower.Rows(w.opts...) {
 			w.tbl.Append(r)
 		}
 	case "csv":
-		for _, r := range rower.Rows() {
+		for _, r := range rower.Rows(w.opts...) {
 			w.csv.Write(r)
 		}
 	case "json":
-		for _, r := range rower.Rows() {
+		for _, r := range rower.Rows(w.opts...) {
 			w.jsonRows = append(w.jsonRows, r)
 		}
 	}

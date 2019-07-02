@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
@@ -17,20 +18,20 @@ type SummaryPredictAccuracyInformation struct {
 
 type SummaryPredictAccuracyInformations []SummaryPredictAccuracyInformation
 
-func (SummaryPredictAccuracyInformation) Header() []string {
+func (SummaryPredictAccuracyInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"top1_accuracy",
 		"top5_accuracy",
 	}
-	return append(SummaryBase{}.Header(), extra...)
+	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
-func (s SummaryPredictAccuracyInformation) Row() []string {
+func (s SummaryPredictAccuracyInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		cast.ToString(s.Top1Accuracy),
 		cast.ToString(s.Top5Accuracy),
 	}
-	return append(s.SummaryBase.Row(), extra...)
+	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
 func (s SummaryPredictAccuracyInformation) key() string {
@@ -48,14 +49,14 @@ func (s SummaryPredictAccuracyInformation) key() string {
 	)
 }
 
-func (SummaryPredictAccuracyInformations) Header() []string {
-	return SummaryPredictAccuracyInformation{}.Header()
+func (SummaryPredictAccuracyInformations) Header(opts ...writer.Option) []string {
+	return SummaryPredictAccuracyInformation{}.Header(opts...)
 }
 
-func (s SummaryPredictAccuracyInformations) Rows() [][]string {
+func (s SummaryPredictAccuracyInformations) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 	m "github.com/uber/jaeger/model"
 	model "github.com/uber/jaeger/model/json"
@@ -21,7 +22,7 @@ type Event struct {
 
 type Events []Event
 
-func (Event) Header() []string {
+func (Event) Header(opts ...writer.Option) []string {
 	return []string{
 		"id",
 		"parent_id",
@@ -32,7 +33,7 @@ func (Event) Header() []string {
 	}
 }
 
-func (e Event) Row() []string {
+func (e Event) Row(opts ...writer.Option) []string {
 	metadata, err := json.Marshal(e.MetaData)
 	if err != nil {
 		metadata = []byte{}
@@ -47,14 +48,14 @@ func (e Event) Row() []string {
 	}
 }
 
-func (Events) Header() []string {
-	return Event{}.Header()
+func (Events) Header(opts ...writer.Option) []string {
+	return Event{}.Header(opts...)
 }
 
-func (s Events) Rows() [][]string {
+func (s Events) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }

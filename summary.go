@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -24,7 +25,7 @@ type SummaryBase struct {
 	HostName            string        `json:"host_name,omitempty"`
 }
 
-func (SummaryBase) Header() []string {
+func (SummaryBase) Header(opts ...writer.Option) []string {
 	return []string{
 		"id",
 		"created_at",
@@ -40,7 +41,7 @@ func (SummaryBase) Header() []string {
 	}
 }
 
-func (s SummaryBase) Row() []string {
+func (s SummaryBase) Row(opts ...writer.Option) []string {
 	return []string{
 		fmt.Sprintf(`%x`, string(s.ID)),
 		s.CreatedAt.String(),

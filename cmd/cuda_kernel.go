@@ -4,15 +4,18 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	sortByLatency  bool
-	trimKernelName bool
-	sortOutput     bool
-	topLayers      int
+	sortByLatency          bool
+	trimKernelName         bool
+	sortOutput             bool
+	kernelNameFilterString string
+	kernelNameFilterList   = []string{}
+	topLayers              int
 )
 
 var cudaKernelCmd = &cobra.Command{
@@ -39,6 +42,11 @@ var cudaKernelCmd = &cobra.Command{
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
 		}
+
+		if kernelNameFilterString != "" {
+			kernelNameFilterList = strings.Split(kernelNameFilterString, ",")
+		}
+
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -88,6 +96,7 @@ var cudaKernelCmd = &cobra.Command{
 
 func init() {
 	cudaKernelCmd.PersistentFlags().BoolVar(&sortOutput, "sort", false, "sort layer information by layer index and then kernel duration")
+	cudaKernelCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
 	cudaKernelCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
 	cudaKernelCmd.PersistentFlags().BoolVar(&trimKernelName, "trim_name", true, "trim kernel names to the first `<`")
 }

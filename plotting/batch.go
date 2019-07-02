@@ -7,6 +7,7 @@ import (
 
 	"github.com/fatih/structs"
 	"github.com/pkg/errors"
+	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/utils/browser"
 	"github.com/spf13/cast"
@@ -182,19 +183,19 @@ func (o batchPlot) Handler(w http.ResponseWriter, _ *http.Request) {
 	bar.Render(w)
 }
 
-func (o batchPlot) Header() []string {
-	return batchDurationSummary{}.Header()
+func (o batchPlot) Header(opts ...writer.Option) []string {
+	return batchDurationSummary{}.Header(opts...)
 }
 
-func (o batchPlot) Rows() [][]string {
+func (o batchPlot) Rows(opts ...writer.Option) [][]string {
 	res := make([][]string, len(o.Durations))
 	for ii, dur := range o.Durations {
-		res[ii] = dur.Row()
+		res[ii] = dur.Row(opts...)
 	}
 	return res
 }
 
-func (o batchDurationSummary) Header() []string {
+func (o batchDurationSummary) Header(opts ...writer.Option) []string {
 	res := []string{}
 	s := structs.New(&o)
 	for _, field := range s.Fields() {
@@ -203,7 +204,7 @@ func (o batchDurationSummary) Header() []string {
 	return res
 }
 
-func (o batchDurationSummary) Row() []string {
+func (o batchDurationSummary) Row(opts ...writer.Option) []string {
 	res := []string{}
 	s := structs.New(&o)
 	for _, field := range s.Fields() {

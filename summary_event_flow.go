@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/rai-project/evaluation/eventflow"
+	"github.com/rai-project/evaluation/writer"
 	db "upper.io/db.v3"
 )
 
@@ -16,30 +17,30 @@ type SummaryEventFlow struct {
 
 type SummaryEventFlows []SummaryEventFlow
 
-func (SummaryEventFlow) Header() []string {
+func (SummaryEventFlow) Header(opts ...writer.Option) []string {
 	extra := eventflow.Event{}.Header()
-	return append(SummaryBase{}.Header(), extra...)
+	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
-func (s SummaryEventFlow) Row() []string {
+func (s SummaryEventFlow) Row(opts ...writer.Option) []string {
 	events := []string{}
 	for _, e := range s.EventFlow {
-		events = append(events, strings.Join(e.Row(), "\t"))
+		events = append(events, strings.Join(e.Row(opts...), "\t"))
 	}
 	extra := []string{
 		strings.Join(events, ";"),
 	}
-	return append(s.SummaryBase.Row(), extra...)
+	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (SummaryEventFlows) Header() []string {
-	return SummaryEventFlow{}.Header()
+func (SummaryEventFlows) Header(opts ...writer.Option) []string {
+	return SummaryEventFlow{}.Header(opts...)
 }
 
-func (s SummaryEventFlows) Rows() [][]string {
+func (s SummaryEventFlows) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }

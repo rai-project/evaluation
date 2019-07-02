@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/k0kubun/pp"
+	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
@@ -43,7 +44,7 @@ type SummaryLayerInformation struct {
 	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
 }
 
-func (LayerInformation) Header() []string {
+func (LayerInformation) Header(opts ...writer.Option) []string {
 	return []string{
 		"layer_index",
 		"layer_name",
@@ -51,7 +52,7 @@ func (LayerInformation) Header() []string {
 	}
 }
 
-func (info LayerInformation) Row() []string {
+func (info LayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		cast.ToString(info.Index),
 		info.Name,
@@ -59,7 +60,7 @@ func (info LayerInformation) Row() []string {
 	}
 }
 
-func (info MeanLayerInformation) Row() []string {
+func (info MeanLayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		cast.ToString(info.Index),
 		info.Name,
@@ -67,14 +68,14 @@ func (info MeanLayerInformation) Row() []string {
 	}
 }
 
-func (LayerInformations) Header() []string {
-	return LayerInformation{}.Header()
+func (LayerInformations) Header(opts ...writer.Option) []string {
+	return LayerInformation{}.Header(opts...)
 }
 
-func (s LayerInformations) Rows() [][]string {
+func (s LayerInformations) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
-		rows = append(rows, e.Row())
+		rows = append(rows, e.Row(opts...))
 	}
 	return rows
 }

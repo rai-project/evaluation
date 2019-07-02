@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/k0kubun/pp"
+	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/tracer"
 	trace_tree "github.com/rai-project/tracer/convert"
 	"github.com/spf13/cast"
@@ -69,7 +70,7 @@ type SummaryLayerCUDAKernelInformation struct {
 	LayerCUDAKernelInformations LayerCUDAKernelInformations `json:"layer_informations,omitempty"`
 }
 
-func (info LayerCUDAKernelInformation) Header() []string {
+func (info LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
 		"kernel_durations (us)",
@@ -80,7 +81,7 @@ func (info LayerCUDAKernelInformation) Header() []string {
 	if kernelLogKeys := getKernelLogKeys(info.CUDAKernelInformations); len(kernelLogKeys) != 0 {
 		extraHeader = append(extraHeader, kernelLogKeys...)
 	}
-	return append(LayerInformation{}.Header(), extraHeader...)
+	return append(LayerInformation{}.Header(opts...), extraHeader...)
 }
 
 func getKernelLogKeys(infos CUDAKernelInformations) []string {
@@ -122,10 +123,10 @@ func getMetaDataValuesAsString(lg Metadata) []string {
 	return res
 }
 
-func (info LayerCUDAKernelInformation) Rows() [][]string {
+func (info LayerCUDAKernelInformation) Rows(opts ...writer.Option) [][]string {
 	cudaKernelInfos := info.CUDAKernelInformations
 	layerInfo := info.LayerInformation
-	layerInfoRow := layerInfo.Row()
+	layerInfoRow := layerInfo.Row(opts...)
 
 	rows := [][]string{}
 
