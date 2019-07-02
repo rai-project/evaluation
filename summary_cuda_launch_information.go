@@ -170,7 +170,7 @@ func (info LayerCUDAKernelInformation) Rows(opts ...writer.Option) [][]string {
 }
 
 func (LayerCUDAKernelInformations) Row(opts ...writer.Option) []string {
-	panic("...")
+	panic("does not mean anything.... make it satisfy the rower type")
 	return nil
 }
 
