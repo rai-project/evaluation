@@ -20,7 +20,7 @@ func runAll(cmd *cobra.Command, args []string) error {
 				durationCmd.Name():
 				databaseName = "carml_model_trace"
 			case layersCmd.Name(),
-				// cudaLaunchCmd.Name(),
+				// cudaKernelCmd.Name(),
 				eventflowCmd.Name():
 				databaseName = "carml_full_trace"
 			}

@@ -13,7 +13,7 @@
       "env": {},
       "showLog": true,
       "args": [
-        "cuda_launch",
+        "cuda_kernel",
         "--database_address=54.172.226.29",
         "--limit=1",
         "--output=output.tmp",

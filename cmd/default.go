@@ -12,13 +12,13 @@ var (
 		"latency":     defaultModelTraceDatabaseName,
 		"eventflow":   defaultFrameworkTraceDatabaseName,
 		"layers":      defaultFrameworkTraceDatabaseName,
-		"cuda_launch": defaultFullTraceDatabaseName,
+		"cuda_kernel": defaultFullTraceDatabaseName,
 		"accuracy":    defaultAccuracyDatabaseName,
 	}
 	AllCmds = []*cobra.Command{
 		latencyCmd,
 		layersCmd,
-		// cudaLaunchCmd,
+		cudaKernelCmd,
 		eventflowCmd,
 		durationCmd,
 		accuracyCmd,

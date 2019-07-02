@@ -1,5 +1,3 @@
-// +build ignore
-
 package cmd
 
 import (
@@ -10,11 +8,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cudaLaunchCmd = &cobra.Command{
-	Use: "cuda_launch",
+var cudaKernelCmd = &cobra.Command{
+	Use: "cuda_kernel",
 	Aliases: []string{
-		"kernel_launch",
+		"cuda",
+		"kernel",
 		"kernels",
+		"gpu_kernel",
+		"gpu_kernels",
 	},
 	Short: "Get evaluation kernel launch information from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -40,13 +41,18 @@ var cudaLaunchCmd = &cobra.Command{
 				return err
 			}
 
-			lst, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
+			summary, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
+			if err != nil {
+				return err
+			}
 
-			writer := NewWriter(evaluation.SummaryLayerCUDAKernelInformation{})
+			layerCUDAKernelInfos := summary.LayerCUDAKernelInformations
+
+			writer := NewWriter(evaluation.LayerCUDAKernelInformation{})
 			defer writer.Close()
 
-			for _, elem := range lst {
-				writer.Row(elem)
+			for _, elem := range layerCUDAKernelInfos {
+				writer.Rows(elem)
 			}
 
 			return nil
