@@ -1,14 +1,17 @@
 package writer
 
 type Options struct {
-	filterKernelNames []string
+	FilterKernelNames []string
 }
 
 type Option func(*Options)
 
 func FilterKernelNames(kernels []string) Option {
 	return func(w *Options) {
-		w.filterKernelNames = kernels
+		if kernels == nil {
+			kernels = []string{}
+		}
+		w.FilterKernelNames = kernels
 	}
 }
 

@@ -20,6 +20,7 @@ type Metadata map[string]interface{}
 
 type CUDAKernelInformation struct {
 	Name          string     `json:"name,omitempty"`
+	MangledName   string     `json:"mangled_name,omitempty"`
 	Tags          []Metadata `json:"tags,omitempty"`
 	Logs          []Metadata `json:"logs,omitempty"`
 	Durations     []float64  `json:"durations,omitempty"`
@@ -130,16 +131,35 @@ func getMetaDataValuesAsString(lg Metadata) []string {
 	return res
 }
 
-func (info LayerCUDAKernelInformation) Rows(opts ...writer.Option) [][]string {
+// Rows ...
+func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 	cudaKernelInfos := info.CUDAKernelInformations
 	layerInfo := info.LayerInformation
-	layerInfoRow := layerInfo.Row(opts...)
+	layerInfoRow := layerInfo.Row(iopts...)
+
+	opts := writer.NewOptions(iopts...)
 
 	rows := [][]string{}
 
 	kernelLogKeys := getKernelLogKeys([]LayerCUDAKernelInformation{info})
 
+	isFilteredKernel := func(kernelInfo CUDAKernelInformation) bool {
+		if len(opts.FilterKernelNames) == 0 {
+			return true
+		}
+		name := strings.ToLower(kernelInfo.MangledName)
+		for _, filterName := range opts.FilterKernelNames {
+			if name == strings.ToLower(filterName) {
+				return true
+			}
+		}
+		return false
+	}
+
 	for _, cki := range cudaKernelInfos {
+		if !isFilteredKernel(cki) {
+			continue
+		}
 		kernelTags, err := json.Marshal(cki.Tags)
 		if err != nil {
 			kernelTags = []byte{}
@@ -207,6 +227,7 @@ func (k *CUDAKernelInformation) addTags(spanTags []model.KeyValue) {
 func toKernelInformation(span model.Span) CUDAKernelInformation {
 	info := &CUDAKernelInformation{
 		Name:          mustGetTagValueAsString(span, "kernel_name"),
+		MangledName:   mustGetTagValueAsString(span, "name"),
 		Tags:          []Metadata{},
 		Logs:          []Metadata{},
 		CorrelationId: mustGetTagValueAsInt64(span, "correlation_id"),
