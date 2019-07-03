@@ -136,27 +136,29 @@ func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 	layerInfo := info.LayerInformation
 	layerInfoRow := layerInfo.Row(iopts...)
 
+	pp.Println(len(cudaKernelInfos))
+
 	opts := writer.NewOptions(iopts...)
 
 	rows := [][]string{}
 
 	kernelLogKeys := getKernelLogKeys([]LayerCUDAKernelInformation{info})
 
-	isFilteredKernel := func(kernelInfo CUDAKernelInformation) bool {
-		if len(opts.FilterKernelNames) == 0 {
-			return true
+	isKernelSkipBecauseOfFiltered := func(kernelInfo CUDAKernelInformation) bool {
+		if opts.FilterKernelNames == nil || len(opts.FilterKernelNames) == 0 {
+			return false
 		}
 		name := strings.ToLower(kernelInfo.MangledName)
 		for _, filterName := range opts.FilterKernelNames {
 			if name == strings.ToLower(filterName) {
-				return true
+				return false
 			}
 		}
-		return false
+		return true
 	}
 
 	for _, cki := range cudaKernelInfos {
-		if !isFilteredKernel(cki) {
+		if isKernelSkipBecauseOfFiltered(cki) {
 			continue
 		}
 		kernelTags, err := json.Marshal(cki.Tags)
@@ -369,7 +371,13 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			}
 			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
 		}
+		// if len(groupedLayerCUDAKernelInfos[ii]) == 0 {
+		// 	pp.Println(predictSpans[ii].TraceID)
+		// 	panic("invalid length")
+		// }
 	}
+
+	pp.Println(len(groupedLayerCUDAKernelInfos[0]))
 
 	layerCUDAKernelInfos := []LayerCUDAKernelInformation{}
 	for _, li := range groupedLayerCUDAKernelInfos[0] {
@@ -392,8 +400,11 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			}
 			layerCUDAKernelInfo.CUDAKernelInformations[ii] = cki
 		}
+		pp.Println(len(layerCUDAKernelInfos))
 		layerCUDAKernelInfos = append(layerCUDAKernelInfos, layerCUDAKernelInfo)
 	}
+
+	pp.Println(len(layerCUDAKernelInfos))
 
 	summary.LayerCUDAKernelInformations = layerCUDAKernelInfos
 

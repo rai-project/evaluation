@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cobra"
 )
 
@@ -80,7 +81,10 @@ var cudaKernelCmd = &cobra.Command{
 				}
 			}
 
-			writer := NewWriter(layerCUDAKernelInfos)
+			writer := NewWriter(
+				layerCUDAKernelInfos,
+				writer.FilterKernelNames(kernelNameFilterList),
+			)
 			defer writer.Close()
 
 			for _, elem := range layerCUDAKernelInfos {

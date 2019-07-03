@@ -15,7 +15,8 @@
       "args": [
         "cuda_kernel",
         "--database_address=54.172.226.29",
-        "--limit=1",
+        "--database_name=carml_system_library_trace",
+        "--model_name=ResNet_v1_50",
         "--output=output.tmp",
         "--format=json"
       ]
