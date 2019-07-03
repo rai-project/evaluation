@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	sortByLatency          bool
-	trimKernelName         bool
+	sortLayer              bool
+	trimOutput             int
 	sortOutput             bool
 	kernelNameFilterString string
 	kernelNameFilterList   = []string{}
@@ -95,8 +95,8 @@ var cudaKernelCmd = &cobra.Command{
 }
 
 func init() {
-	cudaKernelCmd.PersistentFlags().BoolVar(&sortOutput, "sort", false, "sort layer information by layer index and then kernel duration")
+	cudaKernelCmd.PersistentFlags().BoolVar(&sortOutput, "sort_output", false, "sort cuda kernel information by layer index and then kernel duration")
 	cudaKernelCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
 	cudaKernelCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
-	cudaKernelCmd.PersistentFlags().BoolVar(&trimKernelName, "trim_name", true, "trim kernel names to the first `<`")
+	cudaKernelCmd.PersistentFlags().IntVar(&trimOutput, "trim_output", "-1", "trim the output to a certain number of charaters")
 }

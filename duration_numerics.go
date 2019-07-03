@@ -144,5 +144,4 @@ func durationPercentile(input []time.Duration, percent int64) (percentile time.D
 	}
 
 	return percentile
-
 }
