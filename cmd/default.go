@@ -12,7 +12,7 @@ var (
 		"duration":    defaultModelTraceDatabaseName,
 		"latency":     defaultModelTraceDatabaseName,
 		"eventflow":   defaultFrameworkTraceDatabaseName,
-		"layers":      defaultFrameworkTraceDatabaseName,
+		"layer":       defaultFrameworkTraceDatabaseName,
 		"cuda_kernel": defaultSystemLibraryTraceDatabaseName,
 		"accuracy":    defaultAccuracyDatabaseName,
 	}
