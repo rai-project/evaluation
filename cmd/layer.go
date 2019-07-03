@@ -71,7 +71,7 @@ var layersCmd = &cobra.Command{
 				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
 			}
 
-			if sortByLatency || topLayers != -1 {
+			if sortLayer || topLayers != -1 {
 				sort.Slice(meanLayers, func(ii, jj int) bool {
 					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) > evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
 				})
