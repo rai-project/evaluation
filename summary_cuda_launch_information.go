@@ -136,8 +136,6 @@ func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 	layerInfo := info.LayerInformation
 	layerInfoRow := layerInfo.Row(iopts...)
 
-	pp.Println(len(cudaKernelInfos))
-
 	opts := writer.NewOptions(iopts...)
 
 	rows := [][]string{}
@@ -377,6 +375,19 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		// }
 	}
 
+	removeEmpty := func(infos [][]LayerCUDAKernelInformation) [][]LayerCUDAKernelInformation {
+		res := make([][]LayerCUDAKernelInformation, 0, len(infos))
+		for _, elem := range infos {
+			if len(elem) == 0 {
+				continue
+			}
+			res = append(res, elem)
+		}
+		return res
+	}
+
+	groupedLayerCUDAKernelInfos = removeEmpty(groupedLayerCUDAKernelInfos)
+
 	pp.Println(len(groupedLayerCUDAKernelInfos[0]))
 
 	layerCUDAKernelInfos := []LayerCUDAKernelInformation{}
@@ -400,7 +411,6 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			}
 			layerCUDAKernelInfo.CUDAKernelInformations[ii] = cki
 		}
-		pp.Println(len(layerCUDAKernelInfos))
 		layerCUDAKernelInfos = append(layerCUDAKernelInfos, layerCUDAKernelInfo)
 	}
 
