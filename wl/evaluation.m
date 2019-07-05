@@ -125,7 +125,7 @@ durationInformation[eval0_] :=
     performanceid,
     performance,
     trace,
-    predictSpans,
+    cPredictSpans,
     durations,
     spans,
     modelName,
@@ -161,8 +161,8 @@ durationInformation[eval0_] :=
       Return[Nothing]
     ];
     spans = Flatten[getSpans /@ trace["spans"]];
-    predictSpans = Select[spans, ToLowerCase[#["operationname"]] === "predict" &];
-    durations = N[Lookup[predictSpans, "duration", {}]];
+    cPredictSpans = Select[spans, ToLowerCase[#["operationname"]] === "predict" &];
+    durations = N[Lookup[cPredictSpans, "duration", {}]];
     frameworkName = Lookup[Lookup[model, "framework"], "name"];
     <|
       "ID" -> Lookup[eval, "_id"],

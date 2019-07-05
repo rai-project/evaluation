@@ -60,11 +60,11 @@ type SummaryMemoryInformation struct {
 }
 
 func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {
-	spans := p.Spans().FilterByOperationName("predict")
+	cPredictSpans := p.Spans().FilterByOperationName("c_predict", tracer)
 
 	return &SummaryMemoryInformation{
 		SummaryBase:        e.summaryBase(),
-		MemoryInformations: spans.MemoryInformation(),
+		MemoryInformations: cPredictSpans.MemoryInformation(),
 	}, nil
 }
 

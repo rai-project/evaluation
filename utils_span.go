@@ -8,10 +8,10 @@ import (
 	model "github.com/uber/jaeger/model/json"
 )
 
-func getGroupedSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
-	groupedSpans := make([]Spans, len(predictSpans))
+func getGroupedSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans := make([]Spans, len(cPredictSpans))
 	for _, span := range spans {
-		idx := predictSpanIndexOf(span, predictSpans)
+		idx := predictSpanIndexOf(span, cPredictSpans)
 		if idx == -1 {
 			continue
 		}

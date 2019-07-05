@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/rai-project/evaluation/writer"
+	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	db "upper.io/db.v3"
 )
@@ -45,11 +46,10 @@ func (s SummaryModelInformations) Rows(opts ...writer.Option) [][]string {
 }
 
 func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryModelInformation, error) {
-	spans := p.Spans().FilterByOperationName("c_predict")
-
+	cPredictSpans := p.Spans().FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
 	return &SummaryModelInformation{
 		SummaryBase: e.summaryBase(),
-		Durations:   spans.Duration(),
+		Durations:   cPredictSpans.Duration(),
 	}, nil
 }
 

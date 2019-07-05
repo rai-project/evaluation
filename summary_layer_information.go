@@ -91,8 +91,8 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 		LayerInformations: LayerInformations{},
 	}
 
-	predictSpans := spans.FilterByOperationName("c_predict")
-	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(predictSpans, spans)
+	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
+	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
 		return summary, err
 	}
@@ -193,8 +193,8 @@ func sortByLayerIndex(spans Spans) {
 	})
 }
 
-func getGroupedLayerSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
-	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
+func getGroupedLayerSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
 		return nil, err
 	}

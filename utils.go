@@ -72,8 +72,8 @@ func uint64SliceToStringSlice(us []uint64) []string {
 	return res
 }
 
-func predictSpanIndexOf(span model.Span, predictSpans Spans) int {
-	for ii, predictSpan := range predictSpans {
+func predictSpanIndexOf(span model.Span, cPredictSpans Spans) int {
+	for ii, predictSpan := range cPredictSpans {
 		if span.ParentSpanID == predictSpan.SpanID {
 			return ii
 		}

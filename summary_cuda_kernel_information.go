@@ -75,8 +75,6 @@ func (info LayerCUDAKernelInformations) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
 		"kernel_durations (us)",
-		// "kernel_tags",
-		// "kernel_logs",
 	}
 
 	if kernelLogKeys := getKernelLogKeys(info); len(kernelLogKeys) != 0 {
@@ -275,8 +273,8 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		return summary, errors.New("no span is found for the evaluation")
 	}
 
-	predictSpans := spans.FilterByOperationName("c_predict")
-	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
+	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.SYSTEM_LIBRARY_TRACE.String())
+	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
 		return summary, err
 	}
@@ -311,7 +309,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
-			layerInfo, err := layerInformationSummary(es, []model.Span{predictSpans[ii], sp})
+			layerInfo, err := layerInformationSummary(es, []model.Span{cPredictSpans[ii], sp})
 			if err != nil {
 				log.WithError(err).Fatal("failed to get layerInformationSummary")
 			}
@@ -330,9 +328,11 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
 					continue
 				}
+
 				if strings.ToLower(child.OperationName) != "gpu_kernel" {
 					continue
 				}
+
 				child.Tags = append(child.Tags, model.KeyValue{
 					Key:   "kernel_name",
 					Type:  model.StringType,
@@ -368,6 +368,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					layerCUDAKernelInformation.CUDAKernelInformations[infoIdx] = info
 				}
 			}
+
 			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
 		}
 	}
@@ -401,8 +402,8 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 	return summary, nil
 }
 
-func getGroupedCUDAKernelSpansFromSpans(predictSpans Spans, spans Spans) ([]Spans, error) {
-	groupedSpans, err := getGroupedSpansFromSpans(predictSpans, spans)
+func getGroupedCUDAKernelSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, error) {
+	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
 		return nil, err
 	}

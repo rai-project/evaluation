@@ -19,6 +19,21 @@ func (spns Spans) FilterByOperationName(op string) Spans {
 	return res
 }
 
+func (spns Spans) FilterByOperationNameAndEvalTraceLevel(op string, lvl string) Spans {
+	res := []model.Span{}
+	op = strings.ToLower(op)
+	for _, s := range spns {
+		traceLevel, err := getTagValueAsString(s, "evaluation_trace_level")
+		if err != nil || traceLevel == "" {
+			continue
+		}
+		if strings.ToLower(s.OperationName) == op && traceLevel == lvl {
+			res = append(res, s)
+		}
+	}
+	return res
+}
+
 func (spns Spans) Duration() []uint64 {
 	res := make([]uint64, len(spns))
 	for ii, s := range spns {
