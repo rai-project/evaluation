@@ -22,11 +22,21 @@ var (
 
 //easyjson:json
 type LayerInformation struct {
-	Index     int       `json:"index,omitempty"`
-	Name      string    `json:"name,omitempty"`
-	Type      string    `json:"type,omitempty"`
-	Durations []float64 `json:"durations,omitempty"`
+	Index              int       `json:"index,omitempty"`
+	Name               string    `json:"name,omitempty"`
+	Type               string    `json:"type,omitempty"`
+	StaticType         string    `json:"static_type,omitempty"`
+	Shape              string    `json:"shap,omitempty"`
+	Durations          []float64 `json:"durations,omitempty"`
+	AllocatedBytes     []int64   `json:"allocated_bytes,omitempty"`
+	HostTempMemSizes   []int64   `json:"host_temp_mem_sizes,omitempty"`
+	DeviceTempMemSizes []int64   `json:"device_temp_mem_sizes,omitempty"`
 }
+
+// "temp_memory_size":                   stats.GetTempMemorySize(),
+// "persistent_memory_size":             stats.GetPersistentMemorySize(),
+// "device_temp_memory_size":            stats.GetDeviceTempMemorySize(),
+// "device_persistent_memory_size":      stats.GetDevicePersistentMemorySize(),
 
 type MeanLayerInformation struct {
 	LayerInformation
@@ -48,7 +58,12 @@ func (LayerInformation) Header(opts ...writer.Option) []string {
 	return []string{
 		"layer_index",
 		"layer_name",
-		"layer_durations (us)",
+		"layer_type",
+		"layer_shape",
+		"layer_duration (us)",
+		"layer_allocated_bytes",
+		"layer_host_temp_mem_size",
+		"layer_device_temp_mem_size",
 	}
 }
 
@@ -56,7 +71,12 @@ func (info LayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		cast.ToString(info.Index),
 		info.Name,
+		info.Type,
+		info.Shape,
 		strings.Join(float64SliceToStringSlice(info.Durations), ","),
+		strings.Join(int64SliceToStringSlice(info.AllocatedBytes), ","),
+		strings.Join(int64SliceToStringSlice(info.HostTempMemSizes), ","),
+		strings.Join(int64SliceToStringSlice(info.DeviceTempMemSizes), ","),
 	}
 }
 
@@ -64,7 +84,12 @@ func (info MeanLayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		cast.ToString(info.Index),
 		info.Name,
+		info.Type,
+		info.Shape,
 		cast.ToString(TrimmedMean(info.Durations, 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.AllocatedBytes), 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.HostTempMemSizes), 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.DeviceTempMemSizes), 0)),
 	}
 }
 
@@ -111,12 +136,28 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 			if err != nil || idx == "" {
 				return summary, errors.New("cannot find tag layer_sequence_index")
 			}
+			shape, _ := getTagValueAsString(span, "shape")
+			staticType, _ := getTagValueAsString(span, "static_type")
+			allocation := getAllocationBytes(span)
+			hostTempMemSize, _ := getTagValueAsString(span, "temp_memory_size")
+			deviceTempMemSize, _ := getTagValueAsString(span, "device_temp_memory_size")
 			layerInfo := LayerInformation{
-				Index: cast.ToInt(idx),
-				Name:  span.OperationName,
-				Type:  getOpName(span),
+				Index:      cast.ToInt(idx),
+				Name:       span.OperationName,
+				Type:       getOpName(span),
+				StaticType: staticType,
+				Shape:      shape,
 				Durations: []float64{
 					cast.ToFloat64(span.Duration),
+				},
+				AllocatedBytes: []int64{
+					cast.ToInt64(allocation),
+				},
+				HostTempMemSizes: []int64{
+					cast.ToInt64(hostTempMemSize),
+				},
+				DeviceTempMemSizes: []int64{
+					cast.ToInt64(deviceTempMemSize),
 				},
 			}
 			groupedLayerInfos[ii] = append(groupedLayerInfos[ii], layerInfo)
@@ -126,6 +167,9 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 	layerInfos := []LayerInformation{}
 	for ii, span := range groupedLayerSpans[0] {
 		durations := []float64{}
+		allocations := []int64{}
+		hostTempMems := []int64{}
+		deviceTempMems := []int64{}
 		idx, err := getTagValueAsString(span, "layer_sequence_index")
 		if err != nil || idx == "" {
 			return summary, errors.New("cannot find tag layer_sequence_index")
@@ -135,20 +179,35 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 				continue
 			}
 			durationToAppend := []float64{}
+			allocationToAppend := []int64{}
+			hostTemMemToAppend := []int64{}
+			deviceTemMemToAppend := []int64{}
 			for _, info := range infos {
 				if info.Index == cast.ToInt(idx) && info.Name == span.OperationName {
 					durationToAppend = append(durationToAppend, info.Durations...)
+					allocationToAppend = append(allocationToAppend, info.AllocatedBytes...)
+					hostTemMemToAppend = append(hostTemMemToAppend, info.HostTempMemSizes...)
+					deviceTemMemToAppend = append(deviceTemMemToAppend, info.DeviceTempMemSizes...)
 				}
 			}
 			durations = append(durations, durationToAppend...)
+			allocations = append(allocations, allocationToAppend...)
+			hostTempMems = append(hostTempMems, hostTemMemToAppend...)
+			deviceTempMems = append(deviceTempMems, deviceTemMemToAppend...)
 		}
-
+		shape, _ := getTagValueAsString(span, "shape")
+		staticType, _ := getTagValueAsString(span, "static_type")
 		layerInfos = append(layerInfos,
 			LayerInformation{
-				Index:     cast.ToInt(idx),
-				Name:      span.OperationName,
-				Type:      getOpName(span),
-				Durations: durations,
+				Index:              cast.ToInt(idx),
+				Name:               span.OperationName,
+				Type:               getOpName(span),
+				StaticType:         staticType,
+				Shape:              shape,
+				Durations:          durations,
+				AllocatedBytes:     allocations,
+				HostTempMemSizes:   hostTempMems,
+				DeviceTempMemSizes: deviceTempMems,
 			})
 	}
 
@@ -222,6 +281,15 @@ func getGroupedLayerSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, e
 	}
 
 	return groupedLayerSpans, nil
+}
+
+func (s SummaryLayerInformation) GetLayerInfoByName(name string) LayerInformation {
+	for _, info := range s.LayerInformations {
+		if info.Name == name {
+			return info
+		}
+	}
+	return LayerInformation{}
 }
 
 func (o LayerInformations) BarPlot(title string) *charts.Bar {

@@ -290,21 +290,20 @@ func mustGetTagValueAsFloat64(span json.Span, key string) float64 {
 //go:generate go get github.com/cheekybits/genny
 
 func getTagValueAsString(span json.Span, key string) (string, error) {
-	var res string
 	if isZero(span) {
-		return res, errors.New("nil span")
+		return "", nil
 	}
 	for _, tag := range span.Tags {
 		if tag.Key == key {
 			return cast.ToStringE(tag.Value)
 		}
 	}
-	return res, errors.New("tag not found")
+	return "", nil
 }
 
 func mustGetTagValueAsString(span json.Span, key string) string {
 	val, err := getTagValueAsString(span, key)
-	if err != nil {
+	if err != nil || val == "" {
 		log.WithError(err).WithField("key", key).Fatal("failed to get tag")
 	}
 	return val

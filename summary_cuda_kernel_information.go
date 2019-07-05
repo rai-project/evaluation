@@ -265,6 +265,11 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		LayerCUDAKernelInformations: []LayerCUDAKernelInformation{},
 	}
 
+	layerInfoSummary, err := es.LayerInformationSummary(perfCol) //(es, []model.Span{cPredictSpans[ii], sp})
+	if err != nil {
+		log.WithError(err).Fatal("failed to get layerInformationSummary")
+	}
+
 	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
 	if err != nil {
 		return summary, err
@@ -298,6 +303,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			panic(err)
 		}
 
+		cnt := 0
 		for _, sp := range grsp {
 			traceLevel, err := getTagValueAsString(sp, "trace_level")
 			if err != nil || traceLevel == "" {
@@ -307,15 +313,12 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 				continue
 			}
 
+			cnt++
+
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
-			layerInfo, err := layerInformationSummary(es, []model.Span{cPredictSpans[ii], sp})
-			if err != nil {
-				log.WithError(err).Fatal("failed to get layerInformationSummary")
-			}
-
 			layerCUDAKernelInformation := LayerCUDAKernelInformation{
-				LayerInformation:       layerInfo.LayerInformations[0],
+				LayerInformation:       layerInfoSummary.GetLayerInfoByName(layerSpan.OperationName),
 				CUDAKernelInformations: []CUDAKernelInformation{},
 			}
 
@@ -371,6 +374,8 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
 		}
+		pp.Println(cnt)
+
 	}
 
 	layerCUDAKernelInfos := []LayerCUDAKernelInformation{}

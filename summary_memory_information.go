@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/rai-project/tracer"
+
 	"github.com/k0kubun/pp"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
@@ -60,7 +62,7 @@ type SummaryMemoryInformation struct {
 }
 
 func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {
-	cPredictSpans := p.Spans().FilterByOperationName("c_predict", tracer)
+	cPredictSpans := p.Spans().FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
 
 	return &SummaryMemoryInformation{
 		SummaryBase:        e.summaryBase(),

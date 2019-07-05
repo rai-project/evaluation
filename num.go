@@ -71,6 +71,14 @@ func TrimmedMean(data []float64, frac float64) float64 {
 	return ret
 }
 
+func convertInt64SliceToFloat64Slice(in []int64) []float64 {
+	ret := make([]float64, len(in))
+	for i, v := range in {
+		ret[i] = float64(v)
+	}
+	return ret
+}
+
 func floor(x float64) int {
 	return int(math.Floor(x))
 }
