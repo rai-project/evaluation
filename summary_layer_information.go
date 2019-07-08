@@ -33,11 +33,6 @@ type LayerInformation struct {
 	DeviceTempMemSizes []int64   `json:"device_temp_mem_sizes,omitempty"`
 }
 
-// "temp_memory_size":                   stats.GetTempMemorySize(),
-// "persistent_memory_size":             stats.GetPersistentMemorySize(),
-// "device_temp_memory_size":            stats.GetDeviceTempMemorySize(),
-// "device_persistent_memory_size":      stats.GetDevicePersistentMemorySize(),
-
 type MeanLayerInformation struct {
 	LayerInformation
 }

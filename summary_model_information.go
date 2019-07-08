@@ -14,7 +14,7 @@ import (
 //easyjson:json
 type SummaryModelInformation struct {
 	SummaryBase `json:",inline,omitempty"`
-	Durations   []uint64 `json:"durations,omitempty"` // in nano seconds
+	Durations   []uint64 `json:"durations,omitempty"`
 }
 
 type SummaryModelInformations []SummaryModelInformation
@@ -97,9 +97,9 @@ func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceColl
 //easyjson:json
 type SummaryModelInformationLatency struct {
 	SummaryBase `json:",inline"`
-	Durations   []float64 `json:"durations,omitempty"` // in nano seconds
-	Duration    float64   `json:"duration,omitempty"`  // in nano seconds
-	Latency     float64   `json:"latency,omitempty"`   // in nano seconds
+	Durations   []float64 `json:"durations,omitempty"`
+	Duration    float64   `json:"duration,omitempty"`
+	Latency     float64   `json:"latency,omitempty"`
 	Throughput  float64   `json:"throughput,omitempty"`
 }
 

@@ -18,7 +18,7 @@ var (
 	plotPath string
 )
 
-var layersCmd = &cobra.Command{
+var layerCmd = &cobra.Command{
 	Use: "layer",
 	Aliases: []string{
 		"layers",
@@ -124,11 +124,11 @@ var layersCmd = &cobra.Command{
 }
 
 func init() {
-	layersCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
-	layersCmd.PersistentFlags().BoolVar(&sortLayer, "sort_layer", false, "sort layer information by layer latency")
-	layersCmd.PersistentFlags().BoolVar(&barPlot, "bar_plot", false, "generates a bar plot of the layers")
-	layersCmd.PersistentFlags().BoolVar(&boxPlot, "box_plot", false, "generates a box plot of the layers")
-	layersCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
-	layersCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
-	layersCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
+	layerCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
+	layerCmd.PersistentFlags().BoolVar(&sortLayer, "sort_layer", false, "sort layer information by layer latency")
+	layerCmd.PersistentFlags().BoolVar(&barPlot, "bar_plot", false, "generates a bar plot of the layers")
+	layerCmd.PersistentFlags().BoolVar(&boxPlot, "box_plot", false, "generates a box plot of the layers")
+	layerCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
+	layerCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
+	layerCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
 }
