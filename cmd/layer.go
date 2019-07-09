@@ -85,15 +85,15 @@ var layerCmd = &cobra.Command{
 
 			if openPlot {
 				if boxPlot {
-					return meanLayers.OpenBoxPlot()
+					return summary.OpenBoxPlot()
 				}
 				if barPlot {
-					return meanLayers.OpenBarPlot()
+					return summary.OpenBarPlot()
 				}
 			}
 
 			if boxPlot {
-				err := meanLayers.WriteBoxPlot(plotPath)
+				err := summary.WriteBoxPlot(plotPath)
 				if err != nil {
 					return err
 				}
@@ -102,7 +102,7 @@ var layerCmd = &cobra.Command{
 			}
 
 			if barPlot {
-				err := meanLayers.WriteBarPlot(plotPath)
+				err := summary.WriteBarPlot(plotPath)
 				if err != nil {
 					return err
 				}

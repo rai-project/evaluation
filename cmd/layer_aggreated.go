@@ -58,11 +58,11 @@ var layerAggregatedCmd = &cobra.Command{
 			}
 
 			if openPlot {
-				return layerInfos.OpenPiePlot()
+				return summary.OpenPiePlot()
 			}
 
 			if piePlot {
-				err := layerInfos.WritePiePlot(plotPath)
+				err := summary.WritePiePlot(plotPath)
 				if err != nil {
 					return err
 				}

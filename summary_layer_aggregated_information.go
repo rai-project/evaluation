@@ -77,7 +77,11 @@ func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceColl
 	return summary, nil
 }
 
-func (o LayerAggregatedInformations) PiePlot(title string) *charts.Pie {
+func (o SummaryLayerAggregatedInformation) Name() string {
+	return o.ModelName + " Layer Type Composition"
+}
+
+func (o SummaryLayerAggregatedInformation) PiePlot(title string) *charts.Pie {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -86,26 +90,22 @@ func (o LayerAggregatedInformations) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-func (o LayerAggregatedInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+func (o SummaryLayerAggregatedInformation) PiePlotAdd(pie *charts.Pie) *charts.Pie {
 	labels := []string{}
 	data := make(map[string]interface{})
-	for _, elem := range o {
+	for _, elem := range o.LayerAggregatedInformations {
 		data[elem.Type] = elem.Duration
 		labels = append(labels, cast.ToString(elem.Type))
 
 	}
-	pie.Add("pie", data, charts.LabelTextOpts{Show: true})
+	pie.AddSorted("pie", data, charts.LabelTextOpts{Show: true})
 	return pie
 }
 
-func (o LayerAggregatedInformations) WritePiePlot(path string) error {
+func (o SummaryLayerAggregatedInformation) WritePiePlot(path string) error {
 	return writePiePlot(o, path)
 }
 
-func (o LayerAggregatedInformations) Name() string {
-	return "LayerAggregatedInformations"
-}
-
-func (o LayerAggregatedInformations) OpenPiePlot() error {
+func (o SummaryLayerAggregatedInformation) OpenPiePlot() error {
 	return openPiePlot(o)
 }

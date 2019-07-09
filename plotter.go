@@ -39,7 +39,11 @@ type PiePlotter interface {
 func writeBarPlot(o BarPlotter, path string) error {
 	bar := o.BarPlot(o.Name())
 	bar.SetGlobalOptions(
-		charts.TitleOpts{Right: "40%"},
+		charts.TitleOpts{
+			Title: o.Name(),
+			Right: "center",
+			Top:   "top",
+		},
 		charts.LegendOpts{Right: "80%"},
 		charts.ToolboxOpts{Show: true},
 		charts.InitOpts{Theme: charts.ThemeType.Shine},
@@ -60,7 +64,11 @@ func writeBarPlot(o BarPlotter, path string) error {
 func writeBoxPlot(o BoxPlotter, path string) error {
 	box := o.BoxPlot(o.Name())
 	box.SetGlobalOptions(
-		charts.TitleOpts{Right: "40%"},
+		charts.TitleOpts{
+			Title: o.Name(),
+			Right: "center",
+			Top:   "top",
+		},
 		charts.LegendOpts{Right: "80%"},
 		charts.ToolboxOpts{Show: true},
 		charts.InitOpts{Theme: charts.ThemeType.Shine},
@@ -80,11 +88,14 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 func writePiePlot(o PiePlotter, path string) error {
 	pie := o.PiePlot(o.Name())
 	pie.SetGlobalOptions(
-		// charts.TitleOpts{Bottom: "40%"},
-		charts.LegendOpts{Right: "80%"},
-	// charts.ToolboxOpts{Show: true},
-	// charts.InitOpts{Theme: charts.ThemeType.Shine},
-	// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
+		charts.TitleOpts{
+			Title: o.Name(),
+			Right: "center",
+			Top:   "top",
+		},
+		charts.LegendOpts{
+			Right: "90%",
+		},
 	)
 	f, err := os.Create(path)
 	if err != nil {

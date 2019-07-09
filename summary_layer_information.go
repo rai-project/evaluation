@@ -298,10 +298,10 @@ func (o LayerInformations) BarPlot(title string) *charts.Bar {
 }
 
 func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Millisecond
+	timeUnit := time.Microsecond
 	labels := []string{}
 	for _, elem := range o {
-		labels = append(labels, cast.ToString(elem.Index))
+		labels = append(labels, elem.Name)
 	}
 
 	bar.AddXAxis(labels)
@@ -311,7 +311,7 @@ func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	}
 	for ii, elem := range o {
 		for jj, duration := range elem.Durations {
-			durations[jj][ii] = time.Duration(duration) * time.Nanosecond / timeUnit
+			durations[jj][ii] = time.Duration(duration)
 		}
 	}
 	for ii, duration := range durations {
@@ -337,7 +337,7 @@ func (o LayerInformations) BoxPlot(title string) *charts.BoxPlot {
 }
 
 func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
-	timeUnit := time.Nanosecond
+	timeUnit := time.Microsecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
@@ -348,7 +348,7 @@ func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	for ii, elem := range o {
 		ts := make([]time.Duration, len(elem.Durations))
 		for jj, t := range ts {
-			ts[jj] = time.Duration(t) * timeUnit
+			ts[jj] = time.Duration(t)
 		}
 		durations[ii] = ts
 	}
@@ -362,7 +362,7 @@ func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 }
 
 func (o LayerInformations) Name() string {
-	return "LayerInformations"
+	return "Layer Informations"
 }
 
 func (o LayerInformations) WriteBarPlot(path string) error {
@@ -381,7 +381,7 @@ func (o LayerInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 
-func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryLayerInformation) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -391,29 +391,29 @@ func (o MeanLayerInformations) BarPlot(title string) *charts.Bar {
 	return bar
 }
 
-func (o MeanLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Nanosecond
+func (o SummaryLayerInformation) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+	timeUnit := time.Microsecond
 	labels := []string{}
-	for _, elem := range o {
+	for _, elem := range o.LayerInformations {
 		labels = append(labels, elem.Name)
 	}
 	bar.AddXAxis(labels)
 
-	durations := make([]time.Duration, len(o))
-	for ii, elem := range o {
+	durations := make([]time.Duration, len(o.LayerInformations))
+	for ii, elem := range o.LayerInformations {
 		val := TrimmedMean(elem.Durations, 0)
-		durations[ii] = time.Duration(val) * timeUnit
+		durations[ii] = time.Duration(val)
 	}
 	bar.AddYAxis("", durations)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Name"},
+		charts.XAxisOpts{Name: "Layer Index"},
 		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
 	)
 	return bar
 }
 
-func (o MeanLayerInformations) BoxPlot(title string) *charts.BoxPlot {
+func (o SummaryLayerInformation) BoxPlot(title string) *charts.BoxPlot {
 	box := charts.NewBoxPlot()
 	box.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -423,15 +423,15 @@ func (o MeanLayerInformations) BoxPlot(title string) *charts.BoxPlot {
 	return box
 }
 
-func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
-	timeUnit := time.Nanosecond
+func (o SummaryLayerInformation) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
+	timeUnit := time.Microsecond
 
-	isPrivate := func(info MeanLayerInformation) bool {
+	isPrivate := func(info LayerInformation) bool {
 		return strings.HasPrefix(info.Name, "_")
 	}
 
 	labels := []string{}
-	for _, elem := range o {
+	for _, elem := range o.LayerInformations {
 		if isPrivate(elem) {
 			continue
 		}
@@ -439,14 +439,14 @@ func (o MeanLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	}
 	box.AddXAxis(labels)
 
-	durations := make([][]time.Duration, 0, len(o))
-	for _, elem := range o {
+	durations := make([][]time.Duration, 0, len(o.LayerInformations))
+	for _, elem := range o.LayerInformations {
 		if isPrivate(elem) {
 			continue
 		}
 		ts := make([]time.Duration, len(elem.Durations))
 		for jj, t := range elem.Durations {
-			ts[jj] = time.Duration(t) * timeUnit
+			ts[jj] = time.Duration(t)
 		}
 		durations = append(durations, prepareBoxplotData(ts))
 	}
@@ -497,26 +497,22 @@ func prepareBoxplotData(ds []time.Duration) []time.Duration {
 	return []time.Duration{min, q1, q2, q3, max}
 }
 
-func unitName(d time.Duration) string {
-	return strings.TrimPrefix(d.String(), "1")
+func (o SummaryLayerInformation) Name() string {
+	return o.ModelName + " Layer Latency"
 }
 
-func (o MeanLayerInformations) Name() string {
-	return "MeanLayerInformations"
-}
-
-func (o MeanLayerInformations) WriteBarPlot(path string) error {
+func (o SummaryLayerInformation) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o MeanLayerInformations) WriteBoxPlot(path string) error {
+func (o SummaryLayerInformation) WriteBoxPlot(path string) error {
 	return writeBoxPlot(o, path)
 }
 
-func (o MeanLayerInformations) OpenBarPlot() error {
+func (o SummaryLayerInformation) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 
-func (o MeanLayerInformations) OpenBoxPlot() error {
+func (o SummaryLayerInformation) OpenBoxPlot() error {
 	return openBoxPlot(o)
 }

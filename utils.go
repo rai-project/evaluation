@@ -209,3 +209,7 @@ func demangleName(mangledName string) string {
 	}
 	return name
 }
+
+func unitName(d time.Duration) string {
+	return strings.TrimPrefix(d.String(), "1")
+}
