@@ -131,4 +131,6 @@ func init() {
 	layerCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
 	layerCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
 	layerCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
+
+	layerCmd.AddCommand(layerAggregatedCmd)
 }

@@ -28,6 +28,14 @@ type BoxPlotter interface {
 	OpenBoxPlot() error
 }
 
+type PiePlotter interface {
+	Named
+	PiePlot(string) *charts.Pie
+	PiePlotAdd(*charts.Pie) *charts.Pie
+	WritePiePlot(string) error
+	OpenPiePlot() error
+}
+
 func writeBarPlot(o BarPlotter, path string) error {
 	bar := o.BarPlot(o.Name())
 	bar.SetGlobalOptions(
@@ -69,6 +77,27 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 	return nil
 }
 
+func writePiePlot(o PiePlotter, path string) error {
+	pie := o.PiePlot(o.Name())
+	pie.SetGlobalOptions(
+		// charts.TitleOpts{Bottom: "40%"},
+		charts.LegendOpts{Right: "80%"},
+	// charts.ToolboxOpts{Show: true},
+	// charts.InitOpts{Theme: charts.ThemeType.Shine},
+	// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
+	)
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	err = pie.Render(f)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func openBarPlot(o BarPlotter) error {
 	path := TempFile("", "batchPlot_*.html")
 	if path == "" {
@@ -92,6 +121,23 @@ func openBoxPlot(o BoxPlotter) error {
 		return errors.New("failed to create temporary file")
 	}
 	err := o.WriteBoxPlot(path)
+	if err != nil {
+		return err
+	}
+	// defer os.Remove(path)
+	if ok := browser.Open(path); !ok {
+		return errors.New("failed to open browser path")
+	}
+
+	return nil
+}
+
+func openPiePlot(o PiePlotter) error {
+	path := TempFile("", "batchPlot_*.html")
+	if path == "" {
+		return errors.New("failed to create temporary file")
+	}
+	err := o.WritePiePlot(path)
 	if err != nil {
 		return err
 	}

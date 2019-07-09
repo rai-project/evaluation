@@ -9,13 +9,13 @@ var (
 	defaultFullTraceDatabaseName          = "carml_full_trace"
 	defaultAccuracyDatabaseName           = "carml_accuracy"
 	defaultDatabaseName                   = map[string]string{
-		"duration":         defaultModelTraceDatabaseName,
-		"latency":          defaultModelTraceDatabaseName,
-		"eventflow":        defaultFrameworkTraceDatabaseName,
-		"layer":            defaultFrameworkTraceDatabaseName,
-		"layer_aggregated": defaultFrameworkTraceDatabaseName,
-		"cuda_kernel":      defaultSystemLibraryTraceDatabaseName,
-		"accuracy":         defaultAccuracyDatabaseName,
+		"duration":    defaultModelTraceDatabaseName,
+		"latency":     defaultModelTraceDatabaseName,
+		"eventflow":   defaultFrameworkTraceDatabaseName,
+		"layer":       defaultFrameworkTraceDatabaseName,
+		"aggregated":  defaultFrameworkTraceDatabaseName,
+		"cuda_kernel": defaultSystemLibraryTraceDatabaseName,
+		"accuracy":    defaultAccuracyDatabaseName,
 	}
 	AllCmds = []*cobra.Command{
 		latencyCmd,
@@ -24,6 +24,5 @@ var (
 		eventflowCmd,
 		durationCmd,
 		accuracyCmd,
-		layerAggreCmd,
 	}
 )

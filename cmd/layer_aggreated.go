@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -9,12 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerAggreCmd = &cobra.Command{
-	Use: "layer_aggregated",
-	Aliases: []string{
-		"layers_aggregated",
-	},
-	Short: "Get model layer aggregated information from framework traces in a database",
+var (
+	piePlot bool
+)
+
+var layerAggregatedCmd = &cobra.Command{
+	Use:     "aggregated",
+	Aliases: []string{},
+	Short:   "Get model layer aggregated information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]
@@ -48,9 +51,24 @@ var layerAggreCmd = &cobra.Command{
 
 			layerInfos := summary.LayerAggregatedInformations
 
-			sort.Slice(layerInfos, func(ii, jj int) bool {
-				return layerInfos[ii].Duration > layerInfos[jj].Duration
-			})
+			if sortLayer {
+				sort.Slice(layerInfos, func(ii, jj int) bool {
+					return layerInfos[ii].Duration > layerInfos[jj].Duration
+				})
+			}
+
+			if openPlot {
+				return layerInfos.OpenPiePlot()
+			}
+
+			if piePlot {
+				err := layerInfos.WritePiePlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
 
 			writer := NewWriter(evaluation.LayerAggregatedInformation{})
 			defer writer.Close()
@@ -66,6 +84,5 @@ var layerAggreCmd = &cobra.Command{
 }
 
 func init() {
-	// layerAggreCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
-	// layerAggreCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
+	layerAggregatedCmd.PersistentFlags().BoolVar(&piePlot, "pie_plot", false, "generates a pie plot of the layers")
 }
