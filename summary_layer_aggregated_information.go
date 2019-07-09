@@ -7,9 +7,11 @@ import (
 )
 
 type LayerAggregatedInformation struct {
-	Type       string  `json:"type,omitempty"`
-	Occurences int     `json:"occurences,omitempty"`
-	Duration   float64 `json:"duration,omitempty"`
+	Type                string  `json:"type,omitempty"`
+	Occurences          int     `json:"occurences,omitempty"`
+	OccurencePercentage float32 `json:"occurence_percentage,omitempty"`
+	Duration            float64 `json:"duration,omitempty"`
+	DurationPercentage  float32 `json:"duration_percentage,omitempty"`
 }
 
 type LayerAggregatedInformations []LayerAggregatedInformation
@@ -24,7 +26,9 @@ func (LayerAggregatedInformation) Header(opts ...writer.Option) []string {
 	return []string{
 		"type",
 		"occurences",
+		"occurence percentage (%)",
 		"duration (us)",
+		"duration percentage (%)",
 	}
 }
 
@@ -32,7 +36,9 @@ func (info LayerAggregatedInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		info.Type,
 		cast.ToString(info.Occurences),
+		cast.ToString(info.OccurencePercentage),
 		cast.ToString(info.Duration),
+		cast.ToString(info.DurationPercentage),
 	}
 }
 
@@ -50,6 +56,8 @@ func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceColl
 	}
 
 	exsistedLayers := make(map[string]LayerAggregatedInformation)
+	totalOcurrences := 0
+	totalDuration := float64(0)
 	for _, info := range layerInfos {
 		layerType := info.Type
 		duration := TrimmedMean(info.Durations, DefaultTrimmedMeanFraction)
@@ -65,10 +73,14 @@ func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceColl
 			v.Duration += duration
 			exsistedLayers[layerType] = v
 		}
+		totalOcurrences += 1
+		totalDuration += duration
 	}
 
 	layerAggreInfos := []LayerAggregatedInformation{}
 	for _, info := range exsistedLayers {
+		info.DurationPercentage = 100 * float32(info.Duration/totalDuration)
+		info.OccurencePercentage = 100 * float32(info.Occurences) / float32(totalOcurrences)
 		layerAggreInfos = append(layerAggreInfos, info)
 	}
 
