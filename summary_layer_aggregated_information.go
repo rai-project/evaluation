@@ -22,6 +22,10 @@ type SummaryLayerAggregatedInformation struct {
 	LayerAggregatedInformations LayerAggregatedInformations `json:"layer_aggregated_informations,omitempty"`
 }
 
+type SummaryLayerAggregatedInformationOccurrences struct {
+	SummaryLayerAggregatedInformation
+}
+
 func (LayerAggregatedInformation) Header(opts ...writer.Option) []string {
 	return []string{
 		"type",
@@ -102,16 +106,52 @@ func (o SummaryLayerAggregatedInformation) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-func (o SummaryLayerAggregatedInformation) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+func (o SummaryLayerAggregatedInformationOccurrences) Name() string {
+	return o.ModelName + " Layer Type Occurrences"
+}
+
+func (o SummaryLayerAggregatedInformationOccurrences) PiePlot(title string) *charts.Pie {
+	pie := charts.NewPie()
+	pie.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+	)
+	pie = o.PiePlotAdd(pie)
+	return pie
+}
+
+type LayerAggregatedInformationSelector func(elem LayerAggregatedInformation) interface{}
+
+func (o SummaryLayerAggregatedInformation) piePlotAdd(pie *charts.Pie, elemSelector LayerAggregatedInformationSelector) *charts.Pie {
 	labels := []string{}
 	data := make(map[string]interface{})
 	for _, elem := range o.LayerAggregatedInformations {
-		data[elem.Type] = elem.Duration
-		labels = append(labels, cast.ToString(elem.Type))
+		label := cast.ToString(elem.Type)
+		data[label] = elemSelector(elem)
+		labels = append(labels, label)
 
 	}
-	pie.AddSorted("pie", data, charts.LabelTextOpts{Show: true})
+	pie.AddSorted("", data, charts.LabelTextOpts{Show: true})
 	return pie
+}
+
+func (o SummaryLayerAggregatedInformation) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+	return o.piePlotAdd(pie, func(elem LayerAggregatedInformation) interface{} {
+		return elem.Duration
+	})
+}
+
+func (o SummaryLayerAggregatedInformationOccurrences) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+	return o.piePlotAdd(pie, func(elem LayerAggregatedInformation) interface{} {
+		return elem.Occurences
+	})
+}
+
+func (o SummaryLayerAggregatedInformationOccurrences) WritePiePlot(path string) error {
+	return writePiePlot(o, path)
+}
+
+func (o SummaryLayerAggregatedInformationOccurrences) OpenPiePlot() error {
+	return openPiePlot(o)
 }
 
 func (o SummaryLayerAggregatedInformation) WritePiePlot(path string) error {

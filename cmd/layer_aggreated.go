@@ -44,10 +44,12 @@ var layerAggregatedCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.LayerAggregatedInformationSummary(performanceCollection)
+			summary0, err := evals.LayerAggregatedInformationSummary(performanceCollection)
 			if err != nil {
 				return err
 			}
+
+			summary := evaluation.SummaryLayerAggregatedInformationOccurrences{summary0}
 
 			layerInfos := summary.LayerAggregatedInformations
 

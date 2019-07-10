@@ -66,12 +66,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation(out *jwriter.Writer, in
 	_ = first
 	if in.Code != 0 {
 		const prefix string = ",\"code\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int(int(in.Code))
 	}
 	if in.Msg != "" {
@@ -211,12 +207,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation1(out *jwriter.Writer, i
 	_ = first
 	if len(in.Traces) != 0 {
 		const prefix string = ",\"data\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
 			for v3, v4 := range in.Traces {
@@ -410,22 +402,12 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
 	_ = first
 	{
 		const prefix string = ",\"traceID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.TraceID))
 	}
 	{
 		const prefix string = ",\"spans\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Spans == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -441,12 +423,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
 	}
 	{
 		const prefix string = ",\"processes\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Processes == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
 			out.RawString(`null`)
 		} else {
@@ -467,12 +444,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson(out *jwriter.Writer, in 
 	}
 	{
 		const prefix string = ",\"warnings\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Warnings == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -552,22 +524,12 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson2(out *jwriter.Writer, in
 	_ = first
 	{
 		const prefix string = ",\"serviceName\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.ServiceName))
 	}
 	{
 		const prefix string = ",\"tags\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Tags == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -634,32 +596,17 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson3(out *jwriter.Writer, in
 	_ = first
 	{
 		const prefix string = ",\"key\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.Key))
 	}
 	if in.Type != "" {
 		const prefix string = ",\"type\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.Type))
 	}
 	{
 		const prefix string = ",\"value\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if m, ok := in.Value.(easyjson.Marshaler); ok {
 			m.MarshalEasyJSON(out)
 		} else if m, ok := in.Value.(json.Marshaler); ok {
@@ -827,62 +774,32 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
 	_ = first
 	{
 		const prefix string = ",\"traceID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.TraceID))
 	}
 	{
 		const prefix string = ",\"spanID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.SpanID))
 	}
 	if in.ParentSpanID != "" {
 		const prefix string = ",\"parentSpanID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ParentSpanID))
 	}
 	if in.Flags != 0 {
 		const prefix string = ",\"flags\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint32(uint32(in.Flags))
 	}
 	{
 		const prefix string = ",\"operationName\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.OperationName))
 	}
 	{
 		const prefix string = ",\"references\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.References == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -898,32 +815,17 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
 	}
 	{
 		const prefix string = ",\"startTime\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint64(uint64(in.StartTime))
 	}
 	{
 		const prefix string = ",\"duration\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint64(uint64(in.Duration))
 	}
 	{
 		const prefix string = ",\"tags\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Tags == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -939,12 +841,7 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
 	}
 	{
 		const prefix string = ",\"logs\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Logs == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -960,32 +857,17 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson1(out *jwriter.Writer, in
 	}
 	if in.ProcessID != "" {
 		const prefix string = ",\"processID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ProcessID))
 	}
 	if in.Process != nil {
 		const prefix string = ",\"process\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		easyjson679db3deEncodeGithubComUberJaegerModelJson2(out, *in.Process)
 	}
 	{
 		const prefix string = ",\"warnings\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Warnings == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -1065,22 +947,12 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson5(out *jwriter.Writer, in
 	_ = first
 	{
 		const prefix string = ",\"timestamp\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.Uint64(uint64(in.Timestamp))
 	}
 	{
 		const prefix string = ",\"fields\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		if in.Fields == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -1141,32 +1013,17 @@ func easyjson679db3deEncodeGithubComUberJaegerModelJson4(out *jwriter.Writer, in
 	_ = first
 	{
 		const prefix string = ",\"refType\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.RefType))
 	}
 	{
 		const prefix string = ",\"traceID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.TraceID))
 	}
 	{
 		const prefix string = ",\"spanID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.SpanID))
 	}
 	out.RawByte('}')
@@ -1222,12 +1079,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation2(out *jwriter.Writer, i
 	_ = first
 	if in.StartAvailable != 0 {
 		const prefix string = ",\"start_available\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int64(int64(in.StartAvailable))
 	}
 	if in.StartFree != 0 {
@@ -1377,12 +1230,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation3(out *jwriter.Writer, i
 	_ = first
 	if in.Top1Accuracy != 0 {
 		const prefix string = ",\"top1_accuracy\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Float64(float64(in.Top1Accuracy))
 	}
 	if in.Top5Accuracy != 0 {
@@ -1407,102 +1256,52 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation3(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -1531,7 +1330,73 @@ func (v *SummaryPredictAccuracyInformation) UnmarshalJSON(data []byte) error {
 func (v *SummaryPredictAccuracyInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation3(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation4(in *jlexer.Lexer, out *SummaryModelInformationLatency) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation4(in *jlexer.Lexer, out *SummaryModelLatencyInformations) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		in.Skip()
+		*out = nil
+	} else {
+		in.Delim('[')
+		if *out == nil {
+			if !in.IsDelim(']') {
+				*out = make(SummaryModelLatencyInformations, 0, 1)
+			} else {
+				*out = SummaryModelLatencyInformations{}
+			}
+		} else {
+			*out = (*out)[:0]
+		}
+		for !in.IsDelim(']') {
+			var v33 SummaryModelLatencyInformation
+			(v33).UnmarshalEasyJSON(in)
+			*out = append(*out, v33)
+			in.WantComma()
+		}
+		in.Delim(']')
+	}
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, in SummaryModelLatencyInformations) {
+	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+		out.RawString("null")
+	} else {
+		out.RawByte('[')
+		for v34, v35 := range in {
+			if v34 > 0 {
+				out.RawByte(',')
+			}
+			(v35).MarshalEasyJSON(out)
+		}
+		out.RawByte(']')
+	}
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v SummaryModelLatencyInformations) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation4(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v SummaryModelLatencyInformations) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation4(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *SummaryModelLatencyInformations) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation4(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *SummaryModelLatencyInformations) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation4(l, v)
+}
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation5(in *jlexer.Lexer, out *SummaryModelLatencyInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -1566,9 +1431,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation4(in *jlexer.Lexer, out 
 					out.Durations = (out.Durations)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v33 float64
-					v33 = float64(in.Float64())
-					out.Durations = append(out.Durations, v33)
+					var v36 float64
+					v36 = float64(in.Float64())
+					out.Durations = append(out.Durations, v36)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1621,25 +1486,21 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation4(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, in SummaryModelInformationLatency) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation5(out *jwriter.Writer, in SummaryModelLatencyInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if len(in.Durations) != 0 {
 		const prefix string = ",\"durations\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
-			for v34, v35 := range in.Durations {
-				if v34 > 0 {
+			for v37, v38 := range in.Durations {
+				if v37 > 0 {
 					out.RawByte(',')
 				}
-				out.Float64(float64(v35))
+				out.Float64(float64(v38))
 			}
 			out.RawByte(']')
 		}
@@ -1686,194 +1547,78 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation4(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryModelInformationLatency) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation4(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryModelInformationLatency) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation4(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryModelInformationLatency) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation4(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryModelInformationLatency) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation4(l, v)
-}
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation5(in *jlexer.Lexer, out *SummaryModelInformationLatencies) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		in.Skip()
-		*out = nil
-	} else {
-		in.Delim('[')
-		if *out == nil {
-			if !in.IsDelim(']') {
-				*out = make(SummaryModelInformationLatencies, 0, 1)
-			} else {
-				*out = SummaryModelInformationLatencies{}
-			}
-		} else {
-			*out = (*out)[:0]
-		}
-		for !in.IsDelim(']') {
-			var v36 SummaryModelInformationLatency
-			(v36).UnmarshalEasyJSON(in)
-			*out = append(*out, v36)
-			in.WantComma()
-		}
-		in.Delim(']')
-	}
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation5(out *jwriter.Writer, in SummaryModelInformationLatencies) {
-	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-		out.RawString("null")
-	} else {
-		out.RawByte('[')
-		for v37, v38 := range in {
-			if v37 > 0 {
-				out.RawByte(',')
-			}
-			(v38).MarshalEasyJSON(out)
-		}
-		out.RawByte(']')
-	}
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v SummaryModelInformationLatencies) MarshalJSON() ([]byte, error) {
+func (v SummaryModelLatencyInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation5(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryModelInformationLatencies) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryModelLatencyInformation) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation5(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryModelInformationLatencies) UnmarshalJSON(data []byte) error {
+func (v *SummaryModelLatencyInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation5(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryModelInformationLatencies) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryModelLatencyInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation5(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluation6(in *jlexer.Lexer, out *SummaryModelInformation) {
@@ -1966,12 +1711,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
 	_ = first
 	if len(in.Durations) != 0 {
 		const prefix string = ",\"durations\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
 			for v40, v41 := range in.Durations {
@@ -1995,102 +1736,52 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation6(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -2209,12 +1900,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation7(out *jwriter.Writer, i
 	_ = first
 	if len(in.MemoryInformations) != 0 {
 		const prefix string = ",\"memory_informations\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
 			for v43, v44 := range in.MemoryInformations {
@@ -2238,102 +1925,52 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation7(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -2431,12 +2068,8 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation8(out *jwriter.Writer, i
 	_ = first
 	if len(in.LayerInformations) != 0 {
 		const prefix string = ",\"layer_informations\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		(in.LayerInformations).MarshalEasyJSON(out)
 	}
 	{
@@ -2451,102 +2084,52 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation8(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -2575,7 +2158,7 @@ func (v *SummaryLayerInformation) UnmarshalJSON(data []byte) error {
 func (v *SummaryLayerInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation8(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out *SummaryEventFlow) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out *SummaryLayerAggregatedInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -2594,25 +2177,25 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out 
 			continue
 		}
 		switch key {
-		case "event_flow":
+		case "layer_aggregated_informations":
 			if in.IsNull() {
 				in.Skip()
-				out.EventFlow = nil
+				out.LayerAggregatedInformations = nil
 			} else {
 				in.Delim('[')
-				if out.EventFlow == nil {
+				if out.LayerAggregatedInformations == nil {
 					if !in.IsDelim(']') {
-						out.EventFlow = make(eventflow.Events, 0, 1)
+						out.LayerAggregatedInformations = make(LayerAggregatedInformations, 0, 1)
 					} else {
-						out.EventFlow = eventflow.Events{}
+						out.LayerAggregatedInformations = LayerAggregatedInformations{}
 					}
 				} else {
-					out.EventFlow = (out.EventFlow)[:0]
+					out.LayerAggregatedInformations = (out.LayerAggregatedInformations)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v45 eventflow.Event
-					easyjson679db3deDecodeGithubComRaiProjectEvaluationEventflow(in, &v45)
-					out.EventFlow = append(out.EventFlow, v45)
+					var v45 LayerAggregatedInformation
+					easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in, &v45)
+					out.LayerAggregatedInformations = append(out.LayerAggregatedInformations, v45)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -2659,25 +2242,21 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, in SummaryEventFlow) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, in SummaryLayerAggregatedInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
-	if len(in.EventFlow) != 0 {
-		const prefix string = ",\"event_flow\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+	if len(in.LayerAggregatedInformations) != 0 {
+		const prefix string = ",\"layer_aggregated_informations\":"
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
-			for v46, v47 := range in.EventFlow {
+			for v46, v47 := range in.LayerAggregatedInformations {
 				if v46 > 0 {
 					out.RawByte(',')
 				}
-				easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out, v47)
+				easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out, v47)
 			}
 			out.RawByte(']')
 		}
@@ -2694,102 +2273,336 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
+		out.RawString(prefix)
+		out.String(string(in.HostName))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v SummaryLayerAggregatedInformation) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v SummaryLayerAggregatedInformation) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *SummaryLayerAggregatedInformation) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *SummaryLayerAggregatedInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(l, v)
+}
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in *jlexer.Lexer, out *LayerAggregatedInformation) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "type":
+			out.Type = string(in.String())
+		case "occurences":
+			out.Occurences = int(in.Int())
+		case "occurence_percentage":
+			out.OccurencePercentage = float32(in.Float32())
+		case "duration":
+			out.Duration = float64(in.Float64())
+		case "duration_percentage":
+			out.DurationPercentage = float32(in.Float32())
+		default:
+			in.AddError(&jlexer.LexerError{
+				Offset: in.GetPos(),
+				Reason: "unknown field",
+				Data:   key,
+			})
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, in LayerAggregatedInformation) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if in.Type != "" {
+		const prefix string = ",\"type\":"
+		first = false
+		out.RawString(prefix[1:])
+		out.String(string(in.Type))
+	}
+	if in.Occurences != 0 {
+		const prefix string = ",\"occurences\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
+		out.Int(int(in.Occurences))
+	}
+	if in.OccurencePercentage != 0 {
+		const prefix string = ",\"occurence_percentage\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Float32(float32(in.OccurencePercentage))
+	}
+	if in.Duration != 0 {
+		const prefix string = ",\"duration\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Float64(float64(in.Duration))
+	}
+	if in.DurationPercentage != 0 {
+		const prefix string = ",\"duration_percentage\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Float32(float32(in.DurationPercentage))
+	}
+	out.RawByte('}')
+}
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation11(in *jlexer.Lexer, out *SummaryEventFlow) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "event_flow":
+			if in.IsNull() {
+				in.Skip()
+				out.EventFlow = nil
+			} else {
+				in.Delim('[')
+				if out.EventFlow == nil {
+					if !in.IsDelim(']') {
+						out.EventFlow = make(eventflow.Events, 0, 1)
+					} else {
+						out.EventFlow = eventflow.Events{}
+					}
+				} else {
+					out.EventFlow = (out.EventFlow)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v48 eventflow.Event
+					easyjson679db3deDecodeGithubComRaiProjectEvaluationEventflow(in, &v48)
+					out.EventFlow = append(out.EventFlow, v48)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "id":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.ID).UnmarshalJSON(data))
+			}
+		case "created_at":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.CreatedAt).UnmarshalJSON(data))
+			}
+		case "updated_at":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.UpdatedAt).UnmarshalJSON(data))
+			}
+		case "model_name":
+			out.ModelName = string(in.String())
+		case "model_version":
+			out.ModelVersion = string(in.String())
+		case "framework_name":
+			out.FrameworkName = string(in.String())
+		case "framework_version":
+			out.FrameworkVersion = string(in.String())
+		case "machine_architecture":
+			out.MachineArchitecture = string(in.String())
+		case "using_gpu":
+			out.UsingGPU = bool(in.Bool())
+		case "batch_size":
+			out.BatchSize = int(in.Int())
+		case "host_name":
+			out.HostName = string(in.String())
+		default:
+			in.AddError(&jlexer.LexerError{
+				Offset: in.GetPos(),
+				Reason: "unknown field",
+				Data:   key,
+			})
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, in SummaryEventFlow) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	if len(in.EventFlow) != 0 {
+		const prefix string = ",\"event_flow\":"
+		first = false
+		out.RawString(prefix[1:])
+		{
+			out.RawByte('[')
+			for v49, v50 := range in.EventFlow {
+				if v49 > 0 {
+					out.RawByte(',')
+				}
+				easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out, v50)
+			}
+			out.RawByte(']')
+		}
+	}
+	{
+		const prefix string = ",\"id\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Raw((in.ID).MarshalJSON())
+	}
+	{
+		const prefix string = ",\"created_at\":"
+		out.RawString(prefix)
+		out.Raw((in.CreatedAt).MarshalJSON())
+	}
+	{
+		const prefix string = ",\"updated_at\":"
+		out.RawString(prefix)
+		out.Raw((in.UpdatedAt).MarshalJSON())
+	}
+	if in.ModelName != "" {
+		const prefix string = ",\"model_name\":"
+		out.RawString(prefix)
+		out.String(string(in.ModelName))
+	}
+	if in.ModelVersion != "" {
+		const prefix string = ",\"model_version\":"
+		out.RawString(prefix)
+		out.String(string(in.ModelVersion))
+	}
+	if in.FrameworkName != "" {
+		const prefix string = ",\"framework_name\":"
+		out.RawString(prefix)
+		out.String(string(in.FrameworkName))
+	}
+	if in.FrameworkVersion != "" {
+		const prefix string = ",\"framework_version\":"
+		out.RawString(prefix)
+		out.String(string(in.FrameworkVersion))
+	}
+	if in.MachineArchitecture != "" {
+		const prefix string = ",\"machine_architecture\":"
+		out.RawString(prefix)
+		out.String(string(in.MachineArchitecture))
+	}
+	if in.UsingGPU {
+		const prefix string = ",\"using_gpu\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.UsingGPU))
+	}
+	if in.BatchSize != 0 {
+		const prefix string = ",\"batch_size\":"
+		out.RawString(prefix)
+		out.Int(int(in.BatchSize))
+	}
+	if in.HostName != "" {
+		const prefix string = ",\"host_name\":"
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -2798,25 +2611,25 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
 // MarshalJSON supports json.Marshaler interface
 func (v SummaryEventFlow) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation11(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v SummaryEventFlow) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation11(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *SummaryEventFlow) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation11(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SummaryEventFlow) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation11(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluationEventflow(in *jlexer.Lexer, out *eventflow.Event) {
 	isTopLevel := in.IsStart()
@@ -2856,9 +2669,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluationEventflow(in *jlexer.Lex
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v48 string
-					v48 = string(in.String())
-					(out.MetaData)[key] = v48
+					var v51 string
+					v51 = string(in.String())
+					(out.MetaData)[key] = v51
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -2889,81 +2702,51 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluationEventflow(out *jwriter.W
 	_ = first
 	{
 		const prefix string = ",\"EVENT_ID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.ID))
 	}
 	{
 		const prefix string = ",\"PARENT_ID\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ParentID))
 	}
 	{
 		const prefix string = ",\"EVENT_NAME\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.Name))
 	}
 	if len(in.MetaData) != 0 {
 		const prefix string = ",\"META\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		{
 			out.RawByte('{')
-			v49First := true
-			for v49Name, v49Value := range in.MetaData {
-				if v49First {
-					v49First = false
+			v52First := true
+			for v52Name, v52Value := range in.MetaData {
+				if v52First {
+					v52First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v49Name))
+				out.String(string(v52Name))
 				out.RawByte(':')
-				out.String(string(v49Value))
+				out.String(string(v52Value))
 			}
 			out.RawByte('}')
 		}
 	}
 	if true {
 		const prefix string = ",\"TS\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.TimeStamp).MarshalJSON())
 	}
 	if in.Duration != 0 {
 		const prefix string = ",\"ELAPSED_MS\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Uint64(uint64(in.Duration))
 	}
 	out.RawByte('}')
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in *jlexer.Lexer, out *SummaryBase) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation12(in *jlexer.Lexer, out *SummaryBase) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3024,118 +2807,63 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, in SummaryBase) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, in SummaryBase) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	{
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.Raw((in.ID).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"created_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.CreatedAt).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"updated_at\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.UpdatedAt).MarshalJSON())
 	}
 	if in.ModelName != "" {
 		const prefix string = ",\"model_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelName))
 	}
 	if in.ModelVersion != "" {
 		const prefix string = ",\"model_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.ModelVersion))
 	}
 	if in.FrameworkName != "" {
 		const prefix string = ",\"framework_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkName))
 	}
 	if in.FrameworkVersion != "" {
 		const prefix string = ",\"framework_version\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.FrameworkVersion))
 	}
 	if in.MachineArchitecture != "" {
 		const prefix string = ",\"machine_architecture\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.MachineArchitecture))
 	}
 	if in.UsingGPU {
 		const prefix string = ",\"using_gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Bool(bool(in.UsingGPU))
 	}
 	if in.BatchSize != 0 {
 		const prefix string = ",\"batch_size\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.BatchSize))
 	}
 	if in.HostName != "" {
 		const prefix string = ",\"host_name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.String(string(in.HostName))
 	}
 	out.RawByte('}')
@@ -3144,27 +2872,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v SummaryBase) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation10(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation12(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v SummaryBase) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation10(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation12(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *SummaryBase) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation10(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation12(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SummaryBase) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation10(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation12(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation11(in *jlexer.Lexer, out *RuntimeMemoryInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation13(in *jlexer.Lexer, out *RuntimeMemoryInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3213,18 +2941,14 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation11(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, in RuntimeMemoryInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation13(out *jwriter.Writer, in RuntimeMemoryInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.StartAlloc != 0 {
 		const prefix string = ",\"start_alloc\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int64(int64(in.StartAlloc))
 	}
 	if in.StartHeapAlloc != 0 {
@@ -3303,27 +3027,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation11(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v RuntimeMemoryInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation11(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation13(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v RuntimeMemoryInformation) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation11(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation13(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *RuntimeMemoryInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation11(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation13(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *RuntimeMemoryInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation11(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation13(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation12(in *jlexer.Lexer, out *Performance) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation14(in *jlexer.Lexer, out *Performance) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3370,18 +3094,14 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation12(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, in Performance) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, in Performance) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.ID != "" {
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Raw((in.ID).MarshalJSON())
 	}
 	{
@@ -3396,22 +3116,12 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, 
 	}
 	{
 		const prefix string = ",\"trace\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		(in.Trace).MarshalEasyJSON(out)
 	}
 	{
 		const prefix string = ",\"trace_level\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Raw((in.TraceLevel).MarshalJSON())
 	}
 	out.RawByte('}')
@@ -3420,27 +3130,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation12(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v Performance) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation12(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation14(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Performance) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation12(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation14(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Performance) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation12(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation14(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Performance) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation12(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation14(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation13(in *jlexer.Lexer, out *MemoryInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out *MemoryInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3475,9 +3185,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation13(in *jlexer.Lexer, out
 					out.GPU = (out.GPU)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v50 GPUMemInformation
-					(v50).UnmarshalEasyJSON(in)
-					out.GPU = append(out.GPU, v50)
+					var v53 GPUMemInformation
+					(v53).UnmarshalEasyJSON(in)
+					out.GPU = append(out.GPU, v53)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -3500,25 +3210,21 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation13(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation13(out *jwriter.Writer, in MemoryInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, in MemoryInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if len(in.GPU) != 0 {
 		const prefix string = ",\"gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		{
 			out.RawByte('[')
-			for v51, v52 := range in.GPU {
-				if v51 > 0 {
+			for v54, v55 := range in.GPU {
+				if v54 > 0 {
 					out.RawByte(',')
 				}
-				(v52).MarshalEasyJSON(out)
+				(v55).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -3549,27 +3255,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation13(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v MemoryInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation13(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v MemoryInformation) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation13(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *MemoryInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation13(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *MemoryInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation13(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation14(in *jlexer.Lexer, out *MeanLayerInformations) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out *MeanLayerInformations) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -3586,9 +3292,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation14(in *jlexer.Lexer, out
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v53 MeanLayerInformation
-			(v53).UnmarshalEasyJSON(in)
-			*out = append(*out, v53)
+			var v56 MeanLayerInformation
+			(v56).UnmarshalEasyJSON(in)
+			*out = append(*out, v56)
 			in.WantComma()
 		}
 		in.Delim(']')
@@ -3597,16 +3303,16 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation14(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, in MeanLayerInformations) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, in MeanLayerInformations) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
 		out.RawByte('[')
-		for v54, v55 := range in {
-			if v54 > 0 {
+		for v57, v58 := range in {
+			if v57 > 0 {
 				out.RawByte(',')
 			}
-			(v55).MarshalEasyJSON(out)
+			(v58).MarshalEasyJSON(out)
 		}
 		out.RawByte(']')
 	}
@@ -3615,27 +3321,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation14(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v MeanLayerInformations) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation14(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v MeanLayerInformations) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation14(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *MeanLayerInformations) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation14(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *MeanLayerInformations) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation14(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out *LayerInformations) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation17(in *jlexer.Lexer, out *LayerInformations) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -3652,9 +3358,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v56 LayerInformation
-			(v56).UnmarshalEasyJSON(in)
-			*out = append(*out, v56)
+			var v59 LayerInformation
+			(v59).UnmarshalEasyJSON(in)
+			*out = append(*out, v59)
 			in.WantComma()
 		}
 		in.Delim(']')
@@ -3663,16 +3369,16 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, in LayerInformations) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation17(out *jwriter.Writer, in LayerInformations) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
 		out.RawByte('[')
-		for v57, v58 := range in {
-			if v57 > 0 {
+		for v60, v61 := range in {
+			if v60 > 0 {
 				out.RawByte(',')
 			}
-			(v58).MarshalEasyJSON(out)
+			(v61).MarshalEasyJSON(out)
 		}
 		out.RawByte(']')
 	}
@@ -3681,27 +3387,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v LayerInformations) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation17(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v LayerInformations) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation17(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *LayerInformations) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation17(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *LayerInformations) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation17(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out *LayerInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation18(in *jlexer.Lexer, out *LayerInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3726,6 +3432,10 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out
 			out.Name = string(in.String())
 		case "type":
 			out.Type = string(in.String())
+		case "static_type":
+			out.StaticType = string(in.String())
+		case "shap":
+			out.Shape = string(in.String())
 		case "durations":
 			if in.IsNull() {
 				in.Skip()
@@ -3742,9 +3452,78 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out
 					out.Durations = (out.Durations)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v59 float64
-					v59 = float64(in.Float64())
-					out.Durations = append(out.Durations, v59)
+					var v62 float64
+					v62 = float64(in.Float64())
+					out.Durations = append(out.Durations, v62)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "allocated_bytes":
+			if in.IsNull() {
+				in.Skip()
+				out.AllocatedBytes = nil
+			} else {
+				in.Delim('[')
+				if out.AllocatedBytes == nil {
+					if !in.IsDelim(']') {
+						out.AllocatedBytes = make([]int64, 0, 8)
+					} else {
+						out.AllocatedBytes = []int64{}
+					}
+				} else {
+					out.AllocatedBytes = (out.AllocatedBytes)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v63 int64
+					v63 = int64(in.Int64())
+					out.AllocatedBytes = append(out.AllocatedBytes, v63)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "host_temp_mem_sizes":
+			if in.IsNull() {
+				in.Skip()
+				out.HostTempMemSizes = nil
+			} else {
+				in.Delim('[')
+				if out.HostTempMemSizes == nil {
+					if !in.IsDelim(']') {
+						out.HostTempMemSizes = make([]int64, 0, 8)
+					} else {
+						out.HostTempMemSizes = []int64{}
+					}
+				} else {
+					out.HostTempMemSizes = (out.HostTempMemSizes)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v64 int64
+					v64 = int64(in.Int64())
+					out.HostTempMemSizes = append(out.HostTempMemSizes, v64)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "device_temp_mem_sizes":
+			if in.IsNull() {
+				in.Skip()
+				out.DeviceTempMemSizes = nil
+			} else {
+				in.Delim('[')
+				if out.DeviceTempMemSizes == nil {
+					if !in.IsDelim(']') {
+						out.DeviceTempMemSizes = make([]int64, 0, 8)
+					} else {
+						out.DeviceTempMemSizes = []int64{}
+					}
+				} else {
+					out.DeviceTempMemSizes = (out.DeviceTempMemSizes)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v65 int64
+					v65 = int64(in.Int64())
+					out.DeviceTempMemSizes = append(out.DeviceTempMemSizes, v65)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -3763,18 +3542,14 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, in LayerInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation18(out *jwriter.Writer, in LayerInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.Index != 0 {
 		const prefix string = ",\"index\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int(int(in.Index))
 	}
 	if in.Name != "" {
@@ -3797,6 +3572,26 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, 
 		}
 		out.String(string(in.Type))
 	}
+	if in.StaticType != "" {
+		const prefix string = ",\"static_type\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.StaticType))
+	}
+	if in.Shape != "" {
+		const prefix string = ",\"shap\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.String(string(in.Shape))
+	}
 	if len(in.Durations) != 0 {
 		const prefix string = ",\"durations\":"
 		if first {
@@ -3807,11 +3602,68 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('[')
-			for v60, v61 := range in.Durations {
-				if v60 > 0 {
+			for v66, v67 := range in.Durations {
+				if v66 > 0 {
 					out.RawByte(',')
 				}
-				out.Float64(float64(v61))
+				out.Float64(float64(v67))
+			}
+			out.RawByte(']')
+		}
+	}
+	if len(in.AllocatedBytes) != 0 {
+		const prefix string = ",\"allocated_bytes\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		{
+			out.RawByte('[')
+			for v68, v69 := range in.AllocatedBytes {
+				if v68 > 0 {
+					out.RawByte(',')
+				}
+				out.Int64(int64(v69))
+			}
+			out.RawByte(']')
+		}
+	}
+	if len(in.HostTempMemSizes) != 0 {
+		const prefix string = ",\"host_temp_mem_sizes\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		{
+			out.RawByte('[')
+			for v70, v71 := range in.HostTempMemSizes {
+				if v70 > 0 {
+					out.RawByte(',')
+				}
+				out.Int64(int64(v71))
+			}
+			out.RawByte(']')
+		}
+	}
+	if len(in.DeviceTempMemSizes) != 0 {
+		const prefix string = ",\"device_temp_mem_sizes\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		{
+			out.RawByte('[')
+			for v72, v73 := range in.DeviceTempMemSizes {
+				if v72 > 0 {
+					out.RawByte(',')
+				}
+				out.Int64(int64(v73))
 			}
 			out.RawByte(']')
 		}
@@ -3822,27 +3674,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v LayerInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation18(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v LayerInformation) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation18(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *LayerInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation18(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *LayerInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation18(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation17(in *jlexer.Lexer, out *GPUMemInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation19(in *jlexer.Lexer, out *GPUMemInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3889,18 +3741,14 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation17(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation17(out *jwriter.Writer, in GPUMemInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation19(out *jwriter.Writer, in GPUMemInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.GPUID != 0 {
 		const prefix string = ",\"gpuid\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int(int(in.GPUID))
 	}
 	if in.StartUsed != 0 {
@@ -3969,27 +3817,27 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation17(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v GPUMemInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation17(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation19(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v GPUMemInformation) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation17(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation19(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *GPUMemInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation17(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation19(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *GPUMemInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation17(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation19(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation18(in *jlexer.Lexer, out *Evaluation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation20(in *jlexer.Lexer, out *Evaluation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -4060,11 +3908,11 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation18(in *jlexer.Lexer, out
 					out.InputPredictionIDs = (out.InputPredictionIDs)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v62 bson.ObjectId
+					var v74 bson.ObjectId
 					if data := in.Raw(); in.Ok() {
-						in.AddError((v62).UnmarshalJSON(data))
+						in.AddError((v74).UnmarshalJSON(data))
 					}
-					out.InputPredictionIDs = append(out.InputPredictionIDs, v62)
+					out.InputPredictionIDs = append(out.InputPredictionIDs, v74)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -4088,9 +3936,9 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation18(in *jlexer.Lexer, out
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v63 string
-					v63 = string(in.String())
-					(out.Metadata)[key] = v63
+					var v75 string
+					v75 = string(in.String())
+					(out.Metadata)[key] = v75
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -4109,18 +3957,14 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation18(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation18(out *jwriter.Writer, in Evaluation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation20(out *jwriter.Writer, in Evaluation) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.ID != "" {
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Raw((in.ID).MarshalJSON())
 	}
 	if in.UserID != "" {
@@ -4273,11 +4117,11 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation18(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('[')
-			for v64, v65 := range in.InputPredictionIDs {
-				if v64 > 0 {
+			for v76, v77 := range in.InputPredictionIDs {
+				if v76 > 0 {
 					out.RawByte(',')
 				}
-				out.Raw((v65).MarshalJSON())
+				out.Raw((v77).MarshalJSON())
 			}
 			out.RawByte(']')
 		}
@@ -4312,16 +4156,16 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation18(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('{')
-			v66First := true
-			for v66Name, v66Value := range in.Metadata {
-				if v66First {
-					v66First = false
+			v78First := true
+			for v78Name, v78Value := range in.Metadata {
+				if v78First {
+					v78First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v66Name))
+				out.String(string(v78Name))
 				out.RawByte(':')
-				out.String(string(v66Value))
+				out.String(string(v78Value))
 			}
 			out.RawByte('}')
 		}
@@ -4332,25 +4176,25 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation18(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v Evaluation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation18(&w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation20(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Evaluation) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson679db3deEncodeGithubComRaiProjectEvaluation18(w, v)
+	easyjson679db3deEncodeGithubComRaiProjectEvaluation20(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Evaluation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation18(&r, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation20(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Evaluation) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson679db3deDecodeGithubComRaiProjectEvaluation18(l, v)
+	easyjson679db3deDecodeGithubComRaiProjectEvaluation20(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out *dlframework.ModelManifest) {
 	isTopLevel := in.IsStart()
@@ -4398,17 +4242,17 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v67 *dlframework.ContainerHardware
+					var v79 *dlframework.ContainerHardware
 					if in.IsNull() {
 						in.Skip()
-						v67 = nil
+						v79 = nil
 					} else {
-						if v67 == nil {
-							v67 = new(dlframework.ContainerHardware)
+						if v79 == nil {
+							v79 = new(dlframework.ContainerHardware)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v67)
+						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v79)
 					}
-					(out.Container)[key] = v67
+					(out.Container)[key] = v79
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -4431,9 +4275,9 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 					out.Reference = (out.Reference)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v68 string
-					v68 = string(in.String())
-					out.Reference = append(out.Reference, v68)
+					var v80 string
+					v80 = string(in.String())
+					out.Reference = append(out.Reference, v80)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -4456,17 +4300,17 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 					out.Inputs = (out.Inputs)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v69 *dlframework.ModelManifest_Type
+					var v81 *dlframework.ModelManifest_Type
 					if in.IsNull() {
 						in.Skip()
-						v69 = nil
+						v81 = nil
 					} else {
-						if v69 == nil {
-							v69 = new(dlframework.ModelManifest_Type)
+						if v81 == nil {
+							v81 = new(dlframework.ModelManifest_Type)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, v69)
+						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in, v81)
 					}
-					out.Inputs = append(out.Inputs, v69)
+					out.Inputs = append(out.Inputs, v81)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -4516,9 +4360,9 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework1(in *jlexer.Lexer, out
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v70 string
-					v70 = string(in.String())
-					(out.Attributes)[key] = v70
+					var v82 string
+					v82 = string(in.String())
+					(out.Attributes)[key] = v82
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -4545,12 +4389,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework1(out *jwriter.Writer, 
 	_ = first
 	if in.Name != "" {
 		const prefix string = ",\"name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.Name))
 	}
 	if in.Version != "" {
@@ -4583,19 +4423,19 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework1(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('{')
-			v71First := true
-			for v71Name, v71Value := range in.Container {
-				if v71First {
-					v71First = false
+			v83First := true
+			for v83Name, v83Value := range in.Container {
+				if v83First {
+					v83First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v71Name))
+				out.String(string(v83Name))
 				out.RawByte(':')
-				if v71Value == nil {
+				if v83Value == nil {
 					out.RawString("null")
 				} else {
-					easyjson679db3deEncodeGithubComRaiProjectDlframework2(out, *v71Value)
+					easyjson679db3deEncodeGithubComRaiProjectDlframework2(out, *v83Value)
 				}
 			}
 			out.RawByte('}')
@@ -4621,11 +4461,11 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework1(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('[')
-			for v72, v73 := range in.Reference {
-				if v72 > 0 {
+			for v84, v85 := range in.Reference {
+				if v84 > 0 {
 					out.RawByte(',')
 				}
-				out.String(string(v73))
+				out.String(string(v85))
 			}
 			out.RawByte(']')
 		}
@@ -4650,14 +4490,14 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework1(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('[')
-			for v74, v75 := range in.Inputs {
-				if v74 > 0 {
+			for v86, v87 := range in.Inputs {
+				if v86 > 0 {
 					out.RawByte(',')
 				}
-				if v75 == nil {
+				if v87 == nil {
 					out.RawString("null")
 				} else {
-					easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifest(out, *v75)
+					easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifest(out, *v87)
 				}
 			}
 			out.RawByte(']')
@@ -4753,16 +4593,16 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework1(out *jwriter.Writer, 
 		}
 		{
 			out.RawByte('{')
-			v76First := true
-			for v76Name, v76Value := range in.Attributes {
-				if v76First {
-					v76First = false
+			v88First := true
+			for v88Name, v88Value := range in.Attributes {
+				if v88First {
+					v88First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v76Name))
+				out.String(string(v88Name))
 				out.RawByte(':')
-				out.String(string(v76Value))
+				out.String(string(v88Value))
 			}
 			out.RawByte('}')
 		}
@@ -4830,12 +4670,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifest1(out *jwr
 	_ = first
 	if in.BaseUrl != "" {
 		const prefix string = ",\"base_url\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.BaseUrl))
 	}
 	if in.WeightsPath != "" {
@@ -4926,17 +4762,17 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifest(in *jlexe
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v77 *dlframework.ModelManifest_Type_Parameter
+					var v89 *dlframework.ModelManifest_Type_Parameter
 					if in.IsNull() {
 						in.Skip()
-						v77 = nil
+						v89 = nil
 					} else {
-						if v77 == nil {
-							v77 = new(dlframework.ModelManifest_Type_Parameter)
+						if v89 == nil {
+							v89 = new(dlframework.ModelManifest_Type_Parameter)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifestType(in, v77)
+						easyjson679db3deDecodeGithubComRaiProjectDlframeworkModelManifestType(in, v89)
 					}
-					(out.Parameters)[key] = v77
+					(out.Parameters)[key] = v89
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -4961,12 +4797,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifest(out *jwri
 	_ = first
 	if in.Type != "" {
 		const prefix string = ",\"type\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.Type))
 	}
 	if in.Description != "" {
@@ -4989,19 +4821,19 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifest(out *jwri
 		}
 		{
 			out.RawByte('{')
-			v78First := true
-			for v78Name, v78Value := range in.Parameters {
-				if v78First {
-					v78First = false
+			v90First := true
+			for v90Name, v90Value := range in.Parameters {
+				if v90First {
+					v90First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v78Name))
+				out.String(string(v90Name))
 				out.RawByte(':')
-				if v78Value == nil {
+				if v90Value == nil {
 					out.RawString("null")
 				} else {
-					easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifestType(out, *v78Value)
+					easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifestType(out, *v90Value)
 				}
 			}
 			out.RawByte('}')
@@ -5050,12 +4882,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframeworkModelManifestType(out *
 	_ = first
 	if in.Value != "" {
 		const prefix string = ",\"value\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.Value))
 	}
 	out.RawByte('}')
@@ -5103,12 +4931,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework2(out *jwriter.Writer, 
 	_ = first
 	if in.Gpu != "" {
 		const prefix string = ",\"gpu\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.Gpu))
 	}
 	if in.Cpu != "" {
@@ -5159,17 +4983,17 @@ func easyjson679db3deDecodeGithubComRaiProjectDlframework(in *jlexer.Lexer, out 
 				for !in.IsDelim('}') {
 					key := string(in.String())
 					in.WantColon()
-					var v79 *dlframework.ContainerHardware
+					var v91 *dlframework.ContainerHardware
 					if in.IsNull() {
 						in.Skip()
-						v79 = nil
+						v91 = nil
 					} else {
-						if v79 == nil {
-							v79 = new(dlframework.ContainerHardware)
+						if v91 == nil {
+							v91 = new(dlframework.ContainerHardware)
 						}
-						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v79)
+						easyjson679db3deDecodeGithubComRaiProjectDlframework2(in, v91)
 					}
-					(out.Container)[key] = v79
+					(out.Container)[key] = v91
 					in.WantComma()
 				}
 				in.Delim('}')
@@ -5194,12 +5018,8 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework(out *jwriter.Writer, i
 	_ = first
 	if in.Name != "" {
 		const prefix string = ",\"name\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.String(string(in.Name))
 	}
 	if in.Version != "" {
@@ -5222,19 +5042,19 @@ func easyjson679db3deEncodeGithubComRaiProjectDlframework(out *jwriter.Writer, i
 		}
 		{
 			out.RawByte('{')
-			v80First := true
-			for v80Name, v80Value := range in.Container {
-				if v80First {
-					v80First = false
+			v92First := true
+			for v92Name, v92Value := range in.Container {
+				if v92First {
+					v92First = false
 				} else {
 					out.RawByte(',')
 				}
-				out.String(string(v80Name))
+				out.String(string(v92Name))
 				out.RawByte(':')
-				if v80Value == nil {
+				if v92Value == nil {
 					out.RawString("null")
 				} else {
-					easyjson679db3deEncodeGithubComRaiProjectDlframework2(out, *v80Value)
+					easyjson679db3deEncodeGithubComRaiProjectDlframework2(out, *v92Value)
 				}
 			}
 			out.RawByte('}')
