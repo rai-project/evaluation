@@ -44,16 +44,15 @@ var layerDurationCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.LayerAggregatedInformationSummary(performanceCollection)
+			summary0, err := evals.SummaryLayerAggregatedInformation(performanceCollection)
 			if err != nil {
 				return err
 			}
-
-			layerInfos := summary.LayerAggregatedInformations
+			summary := evaluation.SummaryLayerDruationInformations(summary0)
 
 			if sortLayer {
-				sort.Slice(layerInfos, func(ii, jj int) bool {
-					return layerInfos[ii].Duration > layerInfos[jj].Duration
+				sort.Slice(summary, func(ii, jj int) bool {
+					return summary[ii].Duration > summary[jj].Duration
 				})
 			}
 
@@ -70,10 +69,10 @@ var layerDurationCmd = &cobra.Command{
 				return nil
 			}
 
-			writer := NewWriter(evaluation.LayerAggregatedInformation{})
+			writer := NewWriter(evaluation.SummaryLayerAggregatedInformation{})
 			defer writer.Close()
 
-			for _, lyr := range layerInfos {
+			for _, lyr := range summary {
 				writer.Row(lyr)
 			}
 			return nil

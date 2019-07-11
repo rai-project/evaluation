@@ -21,7 +21,8 @@ var (
 )
 
 //easyjson:json
-type LayerInformation struct {
+type SummaryLayerInformation struct {
+	SummaryBase        `json:",inline"`
 	Index              int       `json:"index,omitempty"`
 	Name               string    `json:"name,omitempty"`
 	Type               string    `json:"type,omitempty"`
@@ -33,24 +34,18 @@ type LayerInformation struct {
 	DeviceTempMemSizes []int64   `json:"device_temp_mem_sizes,omitempty"`
 }
 
-type MeanLayerInformation struct {
-	LayerInformation
+type SummaryMeanLayerInformation struct {
+	SummaryLayerInformation
 }
 
 //easyjson:json
-type LayerInformations []LayerInformation
+type SummaryMeanLayerInformations []SummaryMeanLayerInformation
 
 //easyjson:json
-type MeanLayerInformations []MeanLayerInformation
+type SummaryLayerInformations []SummaryLayerInformation
 
-//easyjson:json
-type SummaryLayerInformation struct {
-	SummaryBase       `json:",inline"`
-	LayerInformations LayerInformations `json:"layer_informations,omitempty"`
-}
-
-func (LayerInformation) Header(opts ...writer.Option) []string {
-	return []string{
+func (SummaryLayerInformation) Header(iopts ...writer.Option) []string {
+	extra := []string{
 		"layer_index",
 		"layer_name",
 		"layer_type",
@@ -60,55 +55,48 @@ func (LayerInformation) Header(opts ...writer.Option) []string {
 		"layer_host_temp_mem_size",
 		"layer_device_temp_mem_size",
 	}
+	opts := writer.NewOptions(iopts...)
+	if opts.ShowSummaryBase {
+		return append(SummaryBase{}.Header(iopts...), extra...)
+	}
+	return extra
 }
 
-func (info LayerInformation) Row(opts ...writer.Option) []string {
+func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
+	extra := []string{
+		cast.ToString(s.Index),
+		s.Name,
+		s.Type,
+		s.Shape,
+		strings.Join(float64SliceToStringSlice(s.Durations), ","),
+		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), ","),
+		strings.Join(int64SliceToStringSlice(s.HostTempMemSizes), ","),
+		strings.Join(int64SliceToStringSlice(s.DeviceTempMemSizes), ","),
+	}
+	opts := writer.NewOptions(iopts...)
+	if opts.ShowSummaryBase {
+		return append(s.SummaryBase.Row(iopts...), extra...)
+	}
+	return extra
+}
+
+func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
-		cast.ToString(info.Index),
-		info.Name,
-		info.Type,
-		info.Shape,
-		strings.Join(float64SliceToStringSlice(info.Durations), ","),
-		strings.Join(int64SliceToStringSlice(info.AllocatedBytes), ","),
-		strings.Join(int64SliceToStringSlice(info.HostTempMemSizes), ","),
-		strings.Join(int64SliceToStringSlice(info.DeviceTempMemSizes), ","),
+		cast.ToString(s.Index),
+		s.Name,
+		s.Type,
+		s.Shape,
+		cast.ToString(TrimmedMean(s.Durations, 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.AllocatedBytes), 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.HostTempMemSizes), 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.DeviceTempMemSizes), 0)),
 	}
 }
 
-func (info MeanLayerInformation) Row(opts ...writer.Option) []string {
-	return []string{
-		cast.ToString(info.Index),
-		info.Name,
-		info.Type,
-		info.Shape,
-		cast.ToString(TrimmedMean(info.Durations, 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.AllocatedBytes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.HostTempMemSizes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(info.DeviceTempMemSizes), 0)),
-	}
-}
-
-func (LayerInformations) Header(opts ...writer.Option) []string {
-	return LayerInformation{}.Header(opts...)
-}
-
-func (s LayerInformations) Rows(opts ...writer.Option) [][]string {
-	rows := [][]string{}
-	for _, e := range s {
-		rows = append(rows, e.Row(opts...))
-	}
-	return rows
-}
-
-func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformation, error) {
-	summary := SummaryLayerInformation{}
+func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformations, error) {
+	summary := SummaryLayerInformations{}
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
-	}
-
-	summary = SummaryLayerInformation{
-		SummaryBase:       es[0].summaryBase(),
-		LayerInformations: LayerInformations{},
 	}
 
 	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
@@ -121,10 +109,10 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 		return summary, errors.New("no group of spans is found")
 	}
 
-	groupedLayerInfos := make([][]LayerInformation, numGroups)
+	groupedLayerInfos := make([][]SummaryLayerInformation, numGroups)
 	for ii, spans := range groupedLayerSpans {
 		if groupedLayerInfos[ii] == nil {
-			groupedLayerInfos[ii] = []LayerInformation{}
+			groupedLayerInfos[ii] = []SummaryLayerInformation{}
 		}
 		for _, span := range spans {
 			idx, err := getTagValueAsString(span, "layer_sequence_index")
@@ -136,7 +124,7 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 			allocation := getAllocationBytes(span)
 			hostTempMemSize, _ := getTagValueAsString(span, "temp_memory_size")
 			deviceTempMemSize, _ := getTagValueAsString(span, "device_temp_memory_size")
-			layerInfo := LayerInformation{
+			layerInfo := SummaryLayerInformation{
 				Index:      cast.ToInt(idx),
 				Name:       span.OperationName,
 				Type:       getOpName(span),
@@ -159,7 +147,6 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 		}
 	}
 
-	layerInfos := []LayerInformation{}
 	for ii, span := range groupedLayerSpans[0] {
 		durations := []float64{}
 		allocations := []int64{}
@@ -192,8 +179,9 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 		}
 		shape, _ := getTagValueAsString(span, "shape")
 		staticType, _ := getTagValueAsString(span, "static_type")
-		layerInfos = append(layerInfos,
-			LayerInformation{
+		summary = append(summary,
+			SummaryLayerInformation{
+				SummaryBase:        es[0].summaryBase(),
 				Index:              cast.ToInt(idx),
 				Name:               span.OperationName,
 				Type:               getOpName(span),
@@ -206,13 +194,11 @@ func layerInformationSummary(es Evaluations, spans Spans) (SummaryLayerInformati
 			})
 	}
 
-	summary.LayerInformations = layerInfos
-
 	return summary, nil
 }
 
-func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (SummaryLayerInformation, error) {
-	summary := SummaryLayerInformation{}
+func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
+	summary := SummaryLayerInformations{}
 	spans := []model.Span{}
 	for _, e := range es {
 		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
@@ -229,7 +215,7 @@ func (es Evaluations) LayerInformationSummary(perfCol *PerformanceCollection) (S
 		return summary, errors.New("no span is found for the evaluation")
 	}
 
-	return layerInformationSummary(es, spans)
+	return summaryLayerInformations(es, spans)
 }
 
 func sortByLayerIndex(spans Spans) {
@@ -278,16 +264,16 @@ func getGroupedLayerSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, e
 	return groupedLayerSpans, nil
 }
 
-func (s SummaryLayerInformation) GetLayerInfoByName(name string) LayerInformation {
-	for _, info := range s.LayerInformations {
+func (s SummaryLayerInformations) GetLayerInfoByName(name string) SummaryLayerInformation {
+	for _, info := range s {
 		if info.Name == name {
 			return info
 		}
 	}
-	return LayerInformation{}
+	return SummaryLayerInformation{}
 }
 
-func (o LayerInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryLayerInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -297,110 +283,16 @@ func (o LayerInformations) BarPlot(title string) *charts.Bar {
 	return bar
 }
 
-func (o LayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+func (o SummaryLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	timeUnit := time.Microsecond
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
 	}
-
-	bar.AddXAxis(labels)
-	durations := make([][]time.Duration, len(o[1].Durations))
-	for ii := range o[1].Durations {
-		durations[ii] = make([]time.Duration, len(o))
-	}
-	for ii, elem := range o {
-		for jj, duration := range elem.Durations {
-			durations[jj][ii] = time.Duration(duration)
-		}
-	}
-	for ii, duration := range durations {
-		bar.AddYAxis(cast.ToString(ii), duration)
-	}
-
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
-	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
-	)
-	return bar
-}
-
-func (o LayerInformations) BoxPlot(title string) *charts.BoxPlot {
-	box := charts.NewBoxPlot()
-	box.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
-	)
-	box = o.BoxPlotAdd(box)
-	return box
-}
-
-func (o LayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
-	timeUnit := time.Microsecond
-	labels := []string{}
-	for _, elem := range o {
-		labels = append(labels, elem.Name)
-	}
-	box.AddXAxis(labels)
-
-	durations := make([][]time.Duration, len(o))
-	for ii, elem := range o {
-		ts := make([]time.Duration, len(elem.Durations))
-		for jj, t := range ts {
-			ts[jj] = time.Duration(t)
-		}
-		durations[ii] = ts
-	}
-	box.AddYAxis("", durations)
-	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
-	box.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Name"},
-		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
-	)
-	return box
-}
-
-func (o LayerInformations) Name() string {
-	return "Layer Informations"
-}
-
-func (o LayerInformations) WriteBarPlot(path string) error {
-	return writeBarPlot(o, path)
-}
-
-func (o LayerInformations) WriteBoxPlot(path string) error {
-	return writeBoxPlot(o, path)
-}
-
-func (o LayerInformations) OpenBoxPlot() error {
-	return openBoxPlot(o)
-}
-
-func (o LayerInformations) OpenBarPlot() error {
-	return openBarPlot(o)
-}
-
-func (o SummaryLayerInformation) BarPlot(title string) *charts.Bar {
-	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
-	)
-	bar = o.BarPlotAdd(bar)
-	return bar
-}
-
-func (o SummaryLayerInformation) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Microsecond
-	labels := []string{}
-	for _, elem := range o.LayerInformations {
-		labels = append(labels, elem.Name)
-	}
 	bar.AddXAxis(labels)
 
-	durations := make([]time.Duration, len(o.LayerInformations))
-	for ii, elem := range o.LayerInformations {
+	durations := make([]time.Duration, len(o))
+	for ii, elem := range o {
 		val := TrimmedMean(elem.Durations, 0)
 		durations[ii] = time.Duration(val)
 	}
@@ -413,7 +305,7 @@ func (o SummaryLayerInformation) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	return bar
 }
 
-func (o SummaryLayerInformation) BoxPlot(title string) *charts.BoxPlot {
+func (o SummaryLayerInformations) BoxPlot(title string) *charts.BoxPlot {
 	box := charts.NewBoxPlot()
 	box.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -423,15 +315,15 @@ func (o SummaryLayerInformation) BoxPlot(title string) *charts.BoxPlot {
 	return box
 }
 
-func (o SummaryLayerInformation) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
+func (o SummaryLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	timeUnit := time.Microsecond
 
-	isPrivate := func(info LayerInformation) bool {
+	isPrivate := func(info SummaryLayerInformation) bool {
 		return strings.HasPrefix(info.Name, "_")
 	}
 
 	labels := []string{}
-	for _, elem := range o.LayerInformations {
+	for _, elem := range o {
 		if isPrivate(elem) {
 			continue
 		}
@@ -439,8 +331,8 @@ func (o SummaryLayerInformation) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot
 	}
 	box.AddXAxis(labels)
 
-	durations := make([][]time.Duration, 0, len(o.LayerInformations))
-	for _, elem := range o.LayerInformations {
+	durations := make([][]time.Duration, 0, len(o))
+	for _, elem := range o {
 		if isPrivate(elem) {
 			continue
 		}
@@ -497,22 +389,25 @@ func prepareBoxplotData(ds []time.Duration) []time.Duration {
 	return []time.Duration{min, q1, q2, q3, max}
 }
 
-func (o SummaryLayerInformation) Name() string {
-	return o.ModelName + " Layer Latency"
+func (o SummaryLayerInformations) Name() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer Latency"
 }
 
-func (o SummaryLayerInformation) WriteBarPlot(path string) error {
+func (o SummaryLayerInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o SummaryLayerInformation) WriteBoxPlot(path string) error {
+func (o SummaryLayerInformations) WriteBoxPlot(path string) error {
 	return writeBoxPlot(o, path)
 }
 
-func (o SummaryLayerInformation) OpenBarPlot() error {
+func (o SummaryLayerInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 
-func (o SummaryLayerInformation) OpenBoxPlot() error {
+func (o SummaryLayerInformations) OpenBoxPlot() error {
 	return openBoxPlot(o)
 }

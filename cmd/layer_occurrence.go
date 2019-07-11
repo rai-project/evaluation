@@ -40,18 +40,15 @@ var layerOcurrenceCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.LayerAggregatedInformationSummary(performanceCollection)
+			summary0, err := evals.SummaryLayerAggregatedInformation(performanceCollection)
 			if err != nil {
 				return err
 			}
-
-			summary := evaluation.SummaryLayerOccurenceInformation{summary0}
-
-			layerInfos := summary.LayerAggregatedInformations
+			summary := evaluation.SummaryLayerOccurrenceInformations(summary0)
 
 			if sortLayer {
-				sort.Slice(layerInfos, func(ii, jj int) bool {
-					return layerInfos[ii].Duration > layerInfos[jj].Duration
+				sort.Slice(summary, func(ii, jj int) bool {
+					return summary[ii].Duration > summary[jj].Duration
 				})
 			}
 
@@ -68,10 +65,10 @@ var layerOcurrenceCmd = &cobra.Command{
 				return nil
 			}
 
-			writer := NewWriter(evaluation.LayerAggregatedInformation{})
+			writer := NewWriter(evaluation.SummaryLayerAggregatedInformation{})
 			defer writer.Close()
 
-			for _, lyr := range layerInfos {
+			for _, lyr := range summary {
 				writer.Row(lyr)
 			}
 			return nil

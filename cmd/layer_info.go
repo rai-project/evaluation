@@ -48,25 +48,47 @@ var layerInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.LayerInformationSummary(performanceCollection)
+			summary, err := evals.SummaryLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
-			layers := summary.LayerInformations
-
 			if listRuns {
-				writer := NewWriter(evaluation.LayerInformation{})
+				writer := NewWriter(evaluation.SummaryLayerInformation{})
 				defer writer.Close()
-				for _, lyr := range layers {
+				for _, lyr := range summary {
 					writer.Row(lyr)
 				}
 				return nil
 			}
 
-			meanLayers := make(evaluation.MeanLayerInformations, len(layers))
-			for ii, layer := range layers {
-				meanLayers[ii] = evaluation.MeanLayerInformation{LayerInformation: layer}
+			if boxPlot {
+				if openPlot {
+					return summary.OpenBoxPlot()
+				}
+				err := summary.WriteBoxPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
+
+			if barPlot {
+				if openPlot {
+					return summary.OpenBarPlot()
+				}
+				err := summary.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
+
+			meanLayers := make(evaluation.SummaryMeanLayerInformations, len(summary))
+			for ii, layer := range summary {
+				meanLayers[ii] = evaluation.SummaryMeanLayerInformation{SummaryLayerInformation: layer}
 			}
 
 			if sortLayer || topLayers != -1 {
@@ -81,36 +103,8 @@ var layerInfoCmd = &cobra.Command{
 				}
 			}
 
-			if openPlot {
-				if boxPlot {
-					return summary.OpenBoxPlot()
-				}
-				if barPlot {
-					return summary.OpenBarPlot()
-				}
-			}
-
-			if boxPlot {
-				err := summary.WriteBoxPlot(plotPath)
-				if err != nil {
-					return err
-				}
-				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
-
-			if barPlot {
-				err := summary.WriteBarPlot(plotPath)
-				if err != nil {
-					return err
-				}
-				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
-
-			writer := NewWriter(evaluation.MeanLayerInformation{})
+			writer := NewWriter(evaluation.SummaryMeanLayerInformation{})
 			defer writer.Close()
-
 			for _, lyr := range meanLayers {
 				writer.Row(lyr)
 			}

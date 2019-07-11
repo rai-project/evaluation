@@ -2,6 +2,7 @@ package writer
 
 type Options struct {
 	FilterKernelNames []string
+	ShowSummaryBase   bool
 }
 
 type Option func(*Options)
@@ -12,6 +13,12 @@ func FilterKernelNames(kernels []string) Option {
 			kernels = []string{}
 		}
 		w.FilterKernelNames = kernels
+	}
+}
+
+func ShowSummaryBase(b bool) Option {
+	return func(w *Options) {
+		w.ShowSummaryBase = b
 	}
 }
 

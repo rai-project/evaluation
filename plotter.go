@@ -90,7 +90,7 @@ func writePiePlot(o PiePlotter, path string) error {
 	pie.SetGlobalOptions(
 		charts.TitleOpts{
 			Title: o.Name(),
-			Right: "center",
+			Right: "right",
 			Top:   "top",
 		},
 		charts.LegendOpts{

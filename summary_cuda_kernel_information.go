@@ -30,8 +30,8 @@ type CUDAKernelInformation struct {
 type CUDAKernelInformations []CUDAKernelInformation
 
 type LayerCUDAKernelInformation struct {
-	LayerInformation       `json:",inline"`
-	CUDAKernelInformations CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
+	SummaryLayerInformation `json:",inline"`
+	CUDAKernelInformations  CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
 }
 
 func (p CUDAKernelInformations) Len() int { return len(p) }
@@ -62,7 +62,7 @@ type LayerCUDAKernelInformations []LayerCUDAKernelInformation
 
 func (p LayerCUDAKernelInformations) Len() int { return len(p) }
 func (p LayerCUDAKernelInformations) Less(i, j int) bool {
-	return p[i].LayerInformation.Index < p[j].LayerInformation.Index
+	return p[i].SummaryLayerInformation.Index < p[j].SummaryLayerInformation.Index
 }
 func (p LayerCUDAKernelInformations) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
@@ -80,7 +80,7 @@ func (info LayerCUDAKernelInformations) Header(opts ...writer.Option) []string {
 	if kernelLogKeys := getKernelLogKeys(info); len(kernelLogKeys) != 0 {
 		extraHeader = append(extraHeader, kernelLogKeys...)
 	}
-	return append(LayerInformation{}.Header(opts...), extraHeader...)
+	return append(SummaryLayerInformation{}.Header(opts...), extraHeader...)
 }
 
 func (info0 LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
@@ -132,7 +132,7 @@ func getMetaDataValuesAsString(lg Metadata) []string {
 // Rows ...
 func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 	cudaKernelInfos := info.CUDAKernelInformations
-	layerInfo := info.LayerInformation
+	layerInfo := info.SummaryLayerInformation
 	layerInfoRow := layerInfo.Row(iopts...)
 
 	opts := writer.NewOptions(iopts...)
@@ -265,7 +265,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		LayerCUDAKernelInformations: []LayerCUDAKernelInformation{},
 	}
 
-	layerInfoSummary, err := es.LayerInformationSummary(perfCol) //(es, []model.Span{cPredictSpans[ii], sp})
+	layerInfoSummary, err := es.SummaryLayerInformations(perfCol)
 	if err != nil {
 		log.WithError(err).Fatal("failed to get layerInformationSummary")
 	}
@@ -318,8 +318,8 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
 			layerCUDAKernelInformation := LayerCUDAKernelInformation{
-				LayerInformation:       layerInfoSummary.GetLayerInfoByName(layerSpan.OperationName),
-				CUDAKernelInformations: []CUDAKernelInformation{},
+				SummaryLayerInformation: layerInfoSummary.GetLayerInfoByName(layerSpan.OperationName),
+				CUDAKernelInformations:  []CUDAKernelInformation{},
 			}
 
 			for _, childInterval := range layerChildren {

@@ -12,6 +12,7 @@ var modelInfoCmd = &cobra.Command{
 	Use: "info",
 	Aliases: []string{
 		"durations",
+		"duration",
 	},
 	Short: "Get evaluation model information summary from model traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -10,9 +10,6 @@ var layerCmd = &cobra.Command{
 		"layers",
 	},
 	Short: "Get evaluation model layer analysis from framework traces in a database",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return nil
-	},
 }
 
 func init() {

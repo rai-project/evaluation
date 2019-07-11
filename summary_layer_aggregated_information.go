@@ -1,65 +1,77 @@
 package evaluation
 
 import (
+	"math"
+
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/spf13/cast"
 )
 
-type LayerAggregatedInformation struct {
+//easyjson:json
+type SummaryLayerAggregatedInformation struct {
+	SummaryBase         `json:",inline"`
 	Type                string  `json:"type,omitempty"`
 	Occurence           int     `json:"occurrence,omitempty"`
-	OccurencePercentage float32 `json:"occurrence_percentage,omitempty"`
+	OccurencePercentage float64 `json:"occurrence_percentage,omitempty"`
 	Duration            float64 `json:"duration,omitempty"`
-	DurationPercentage  float32 `json:"duration_percentage,omitempty"`
+	DurationPercentage  float64 `json:"duration_percentage,omitempty"`
 }
-
-type LayerAggregatedInformations []LayerAggregatedInformation
 
 //easyjson:json
-type SummaryLayerDruationInformation struct {
-	SummaryBase                 `json:",inline"`
-	LayerAggregatedInformations LayerAggregatedInformations `json:"layer_aggregated_informations,omitempty"`
-}
+type SummaryLayerAggregatedInformations []SummaryLayerAggregatedInformation
 
-type SummaryLayerOccurenceInformation struct {
-	SummaryLayerDruationInformation `json:",inline"`
-}
+//easyjson:json
+type SummaryLayerDruationInformation SummaryLayerAggregatedInformation
 
-func (LayerAggregatedInformation) Header(opts ...writer.Option) []string {
-	return []string{
+//easyjson:json
+type SummaryLayerOccurenceInformation SummaryLayerAggregatedInformation
+
+//easyjson:json
+type SummaryLayerDruationInformations SummaryLayerAggregatedInformations
+
+//easyjson:json
+type SummaryLayerOccurrenceInformations SummaryLayerAggregatedInformations
+
+func (SummaryLayerAggregatedInformation) Header(iopts ...writer.Option) []string {
+	extra := []string{
 		"type",
 		"occurrences",
 		"occurrence percentage (%)",
 		"duration (us)",
 		"duration percentage (%)",
 	}
-}
-
-func (info LayerAggregatedInformation) Row(opts ...writer.Option) []string {
-	return []string{
-		info.Type,
-		cast.ToString(info.Occurence),
-		cast.ToString(info.OccurencePercentage),
-		cast.ToString(info.Duration),
-		cast.ToString(info.DurationPercentage),
+	opts := writer.NewOptions(iopts...)
+	if opts.ShowSummaryBase {
+		return append(SummaryBase{}.Header(iopts...), extra...)
 	}
+	return extra
 }
 
-func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceCollection) (SummaryLayerDruationInformation, error) {
-	summary := SummaryLayerDruationInformation{}
-	layerinfoSum, err := es.LayerInformationSummary(perfCol)
+func (s SummaryLayerAggregatedInformation) Row(iopts ...writer.Option) []string {
+	extra := []string{
+		s.Type,
+		cast.ToString(s.Occurence),
+		cast.ToString(s.OccurencePercentage),
+		cast.ToString(s.Duration),
+		cast.ToString(s.DurationPercentage),
+	}
+	opts := writer.NewOptions(iopts...)
+	if opts.ShowSummaryBase {
+		return append(s.SummaryBase.Header(iopts...), extra...)
+	}
+	return extra
+}
+
+func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceCollection) (SummaryLayerAggregatedInformations, error) {
+	summary := SummaryLayerAggregatedInformations{}
+	layerInfos, err := es.SummaryLayerInformations(perfCol)
 	if err != nil {
 		return summary, err
 	}
-	layerInfos := layerinfoSum.LayerInformations
+	summaryBase := layerInfos[0].SummaryBase
 
-	summary = SummaryLayerDruationInformation{
-		SummaryBase:                 es[0].summaryBase(),
-		LayerAggregatedInformations: LayerAggregatedInformations{},
-	}
-
-	exsistedLayers := make(map[string]LayerAggregatedInformation)
+	exsistedLayers := make(map[string]SummaryLayerAggregatedInformation)
 	totalOcurrences := 0
 	totalDuration := float64(0)
 	for _, info := range layerInfos {
@@ -67,10 +79,11 @@ func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceColl
 		duration := TrimmedMean(info.Durations, DefaultTrimmedMeanFraction)
 		v, ok := exsistedLayers[layerType]
 		if !ok {
-			exsistedLayers[layerType] = LayerAggregatedInformation{
-				Type:      layerType,
-				Occurence: 1,
-				Duration:  duration,
+			exsistedLayers[layerType] = SummaryLayerAggregatedInformation{
+				SummaryBase: summaryBase,
+				Type:        layerType,
+				Occurence:   1,
+				Duration:    duration,
 			}
 		} else {
 			v.Occurence += 1
@@ -81,23 +94,23 @@ func (es Evaluations) LayerAggregatedInformationSummary(perfCol *PerformanceColl
 		totalDuration += duration
 	}
 
-	layerAggreInfos := []LayerAggregatedInformation{}
 	for _, info := range exsistedLayers {
-		info.DurationPercentage = 100 * float32(info.Duration/totalDuration)
-		info.OccurencePercentage = 100 * float32(info.Occurence) / float32(totalOcurrences)
-		layerAggreInfos = append(layerAggreInfos, info)
+		info.DurationPercentage = math.Round(100*100*info.Duration/totalDuration) / 100
+		info.OccurencePercentage = math.Round(100*100*float64(info.Occurence)/float64(totalOcurrences)) / 100
+		summary = append(summary, info)
 	}
-
-	summary.LayerAggregatedInformations = layerAggreInfos
 
 	return summary, nil
 }
 
-func (o SummaryLayerDruationInformation) Name() string {
-	return o.ModelName + " Layer Duration"
+func (o SummaryLayerDruationInformations) Name() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer Duration Percentage"
 }
 
-func (o SummaryLayerDruationInformation) PiePlot(title string) *charts.Pie {
+func (o SummaryLayerDruationInformations) PiePlot(title string) *charts.Pie {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -106,11 +119,14 @@ func (o SummaryLayerDruationInformation) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-func (o SummaryLayerOccurenceInformation) Name() string {
-	return o.ModelName + " Layer Occurrence"
+func (o SummaryLayerOccurrenceInformations) Name() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer Occurrence Percentage"
 }
 
-func (o SummaryLayerOccurenceInformation) PiePlot(title string) *charts.Pie {
+func (o SummaryLayerOccurrenceInformations) PiePlot(title string) *charts.Pie {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -119,44 +135,43 @@ func (o SummaryLayerOccurenceInformation) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-type LayerAggregatedInformationSelector func(elem LayerAggregatedInformation) interface{}
+type LayerAggregatedInformationSelector func(elem SummaryLayerAggregatedInformation) interface{}
 
-func (o SummaryLayerDruationInformation) piePlotAdd(pie *charts.Pie, elemSelector LayerAggregatedInformationSelector) *charts.Pie {
+func (o SummaryLayerAggregatedInformations) piePlotAdd(pie *charts.Pie, elemSelector LayerAggregatedInformationSelector) *charts.Pie {
 	labels := []string{}
 	data := make(map[string]interface{})
-	for _, elem := range o.LayerAggregatedInformations {
+	for _, elem := range o {
 		label := cast.ToString(elem.Type)
 		data[label] = elemSelector(elem)
 		labels = append(labels, label)
 	}
-	pie.AddSorted("", data, charts.LabelTextOpts{Show: true})
+	pie.AddSorted("", data, charts.LabelTextOpts{Show: true, Formatter: "{b}: {c}"})
 	return pie
 }
 
-func (o SummaryLayerDruationInformation) PiePlotAdd(pie *charts.Pie) *charts.Pie {
-	return o.piePlotAdd(pie, func(elem LayerAggregatedInformation) interface{} {
-		return elem.Duration
+func (o SummaryLayerDruationInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+	return SummaryLayerAggregatedInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggregatedInformation) interface{} {
+		return elem.DurationPercentage
+	})
+}
+func (o SummaryLayerOccurrenceInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+	return SummaryLayerAggregatedInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggregatedInformation) interface{} {
+		return elem.OccurencePercentage
 	})
 }
 
-func (o SummaryLayerOccurenceInformation) PiePlotAdd(pie *charts.Pie) *charts.Pie {
-	return o.piePlotAdd(pie, func(elem LayerAggregatedInformation) interface{} {
-		return elem.Occurence
-	})
-}
-
-func (o SummaryLayerOccurenceInformation) WritePiePlot(path string) error {
+func (o SummaryLayerOccurrenceInformations) WritePiePlot(path string) error {
 	return writePiePlot(o, path)
 }
 
-func (o SummaryLayerOccurenceInformation) OpenPiePlot() error {
+func (o SummaryLayerOccurrenceInformations) OpenPiePlot() error {
 	return openPiePlot(o)
 }
 
-func (o SummaryLayerDruationInformation) WritePiePlot(path string) error {
+func (o SummaryLayerDruationInformations) WritePiePlot(path string) error {
 	return writePiePlot(o, path)
 }
 
-func (o SummaryLayerDruationInformation) OpenPiePlot() error {
+func (o SummaryLayerDruationInformations) OpenPiePlot() error {
 	return openPiePlot(o)
 }
