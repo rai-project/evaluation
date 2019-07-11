@@ -2158,7 +2158,7 @@ func (v *SummaryLayerInformation) UnmarshalJSON(data []byte) error {
 func (v *SummaryLayerInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation8(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out *SummaryLayerAggregatedInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out *SummaryLayerDruationInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -2242,7 +2242,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation9(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, in SummaryLayerAggregatedInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, in SummaryLayerDruationInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -2325,26 +2325,26 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation9(out *jwriter.Writer, i
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryLayerAggregatedInformation) MarshalJSON() ([]byte, error) {
+func (v SummaryLayerDruationInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryLayerAggregatedInformation) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryLayerDruationInformation) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation9(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformation) UnmarshalJSON(data []byte) error {
+func (v *SummaryLayerDruationInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryLayerDruationInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation9(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in *jlexer.Lexer, out *LayerAggregatedInformation) {
@@ -2369,7 +2369,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation10(in *jlexer.Lexer, out
 		case "type":
 			out.Type = string(in.String())
 		case "occurences":
-			out.Occurences = int(in.Int())
+			out.Occurence = int(in.Int())
 		case "occurence_percentage":
 			out.OccurencePercentage = float32(in.Float32())
 		case "duration":
@@ -2400,7 +2400,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
 		out.RawString(prefix[1:])
 		out.String(string(in.Type))
 	}
-	if in.Occurences != 0 {
+	if in.Occurence != 0 {
 		const prefix string = ",\"occurences\":"
 		if first {
 			first = false
@@ -2408,7 +2408,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation10(out *jwriter.Writer, 
 		} else {
 			out.RawString(prefix)
 		}
-		out.Int(int(in.Occurences))
+		out.Int(int(in.Occurence))
 	}
 	if in.OccurencePercentage != 0 {
 		const prefix string = ",\"occurence_percentage\":"

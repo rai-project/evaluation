@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var modelLatencyCmd = &cobra.Command{
-	Use: "latency",
+var modelInfoCmd = &cobra.Command{
+	Use: "info",
 	Aliases: []string{
-		"throughput",
+		"durations",
 	},
-	Short: "Get model inference latency or throughput information from model traces in a database. Specify model name as `all` to list information of all the models.",
+	Short: "Get evaluation model information summary from model traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["model"]
@@ -23,7 +23,7 @@ var modelLatencyCmd = &cobra.Command{
 			return err
 		}
 		if modelName == "all" && outputFormat == "json" && outputFileName == "" {
-			outputFileName = filepath.Join(mlArcWebAssetsPath, "latency_throughput")
+			outputFileName = filepath.Join(mlArcWebAssetsPath, "duration")
 		}
 		if overwrite && isExists(outputFileName) {
 			os.RemoveAll(outputFileName)
@@ -36,22 +36,23 @@ var modelLatencyCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-
-			lats, err := durs.ThroughputLatencySummary()
-			if err != nil {
-				return err
-			}
-
-			writer := NewWriter(evaluation.SummaryModelLatencyInformation{})
+			writer := NewWriter(evaluation.SummaryModelInformation{})
 			defer writer.Close()
 
-			for _, lat := range lats {
-				writer.Row(lat)
+			for _, dur := range durs {
+				writer.Row(dur)
 			}
 
 			return nil
 		}
-
 		return forallmodels(run)
 	},
+}
+
+func predictDurationInformationSummary() (evaluation.SummaryModelInformations, error) {
+	evals, err := getEvaluations()
+	if err != nil {
+		return nil, err
+	}
+	return evals.PredictDurationInformationSummary(performanceCollection)
 }

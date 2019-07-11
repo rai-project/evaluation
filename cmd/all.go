@@ -16,10 +16,10 @@ func runAll(cmd *cobra.Command, args []string) error {
 		//pcmd.SilenceUsage = true
 		if originalDatabaseName == "" {
 			switch pcmd.Name() {
-			case latencyCmd.Name(),
-				durationCmd.Name():
+			case modelLatencyCmd.Name(),
+				modelInfoCmd.Name():
 				databaseName = "carml_model_trace"
-			case layerCmd.Name(),
+			case layerInfoCmd.Name(),
 				cudaKernelCmd.Name(),
 				eventflowCmd.Name():
 				databaseName = "carml_full_trace"

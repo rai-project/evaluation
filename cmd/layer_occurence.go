@@ -10,17 +10,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	piePlot bool
-)
-
-var layerAggregatedCmd = &cobra.Command{
-	Use:     "aggregated",
+var layerOcurrenceCmd = &cobra.Command{
+	Use:     "occurrence",
 	Aliases: []string{},
-	Short:   "Get model layer aggregated information from framework traces in a database",
+	Short:   "Get model layer occurrence information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
-			databaseName = defaultDatabaseName[cmd.Name()]
+			databaseName = defaultDatabaseName["layer"]
 		}
 		err := rootSetup()
 		if err != nil {
@@ -33,7 +29,7 @@ var layerAggregatedCmd = &cobra.Command{
 			os.RemoveAll(outputFileName)
 		}
 		if plotPath == "" {
-			plotPath = evaluation.TempFile("", "layer_aggre_plot_*.html")
+			plotPath = evaluation.TempFile("", "layer_occurrence_plot_*.html")
 		}
 		return nil
 	},
@@ -49,7 +45,7 @@ var layerAggregatedCmd = &cobra.Command{
 				return err
 			}
 
-			summary := evaluation.SummaryLayerAggregatedInformationOccurrences{summary0}
+			summary := evaluation.SummaryLayerOccurenceInformation{summary0}
 
 			layerInfos := summary.LayerAggregatedInformations
 
@@ -83,8 +79,4 @@ var layerAggregatedCmd = &cobra.Command{
 
 		return forallmodels(run)
 	},
-}
-
-func init() {
-	layerAggregatedCmd.PersistentFlags().BoolVar(&piePlot, "pie_plot", false, "generates a pie plot of the layers")
 }
