@@ -29,14 +29,15 @@ type TensorDescription struct {
 	AllocationDescription AllocationDescription `json:"allocation_description"`
 }
 
-func getAllocationBytes(span model.Span) int64 {
+func getAllocationDescription(span model.Span) AllocationDescription {
+	ret := AllocationDescription{}
 	output, err := getTagValueAsString(span, "output")
 	if err != nil {
 		log.WithError(err).Info("fail to get output value in the tags")
-		return int64(0)
+		return ret
 	}
 	if output == "" {
-		return int64(0)
+		return ret
 	}
 	output = strings.Replace(output, "\\", "", -1)
 
@@ -44,8 +45,43 @@ func getAllocationBytes(span model.Span) int64 {
 	json.Unmarshal([]byte(output), &result)
 
 	if len(result) == 0 {
-		return 0
+		return ret
 	}
+	ret = result[0].TensorDescription.AllocationDescription
+	return ret
+}
 
-	return int64(result[0].TensorDescription.AllocationDescription.AllocatedBytes)
+type TensorFlowAllocatorMemoryUsed struct {
+	AllocatorName       string              `json:"allocator_name"`
+	TotalBytes          int                 `json:"total_bytes"`
+	PeakBytes           int                 `json:"peak_bytes"`
+	LiveBytes           int                 `json:"live_bytes"`
+	AllocationRecords   []AllocationRecords `json:"allocation_records"`
+	AllocatorBytesInUse int                 `json:"allocator_bytes_in_use"`
+}
+type AllocationRecords struct {
+	AllocMicros int64 `json:"alloc_micros"`
+	AllocBytes  int   `json:"alloc_bytes"`
+}
+
+func getTensorFlowAllocatorMemoryUsed(span model.Span) TensorFlowAllocatorMemoryUsed {
+	ret := TensorFlowAllocatorMemoryUsed{}
+	output, err := getTagValueAsString(span, "memory")
+	if err != nil {
+		log.WithError(err).Info("fail to get output value in the tags")
+		return ret
+	}
+	if output == "" {
+		return ret
+	}
+	output = strings.Replace(output, "\\", "", -1)
+
+	var result []TensorFlowAllocatorMemoryUsed
+	json.Unmarshal([]byte(output), &result)
+
+	if len(result) == 0 {
+		return ret
+	}
+	ret = result[0]
+	return ret
 }
