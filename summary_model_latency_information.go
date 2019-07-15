@@ -40,18 +40,6 @@ func (s SummaryModelLatencyInformation) Row(opts ...writer.Option) []string {
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-// func (SummaryModelLatencyInformations) Header(opts ...writer.Option) []string {
-// 	return SummaryModelLatencyInformation{}.Header(opts...)
-// }
-
-// func (s SummaryModelLatencyInformations) Rows(opts ...writer.Option) [][]string {
-// 	rows := [][]string{}
-// 	for _, e := range s {
-// 		rows = append(rows, e.Row(opts...))
-// 	}
-// 	return rows
-// }
-
 func (info SummaryModelInformation) ThroughputLatencySummary() (SummaryModelLatencyInformation, error) {
 	var trimmedMeanFraction = DefaultTrimmedMeanFraction
 	durations := toFloat64Slice(info.Durations)

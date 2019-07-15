@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -12,10 +11,6 @@ import (
 
 var (
 	listRuns bool
-	barPlot  bool
-	boxPlot  bool
-	openPlot bool
-	plotPath string
 )
 
 var layerInfoCmd = &cobra.Command{
@@ -48,7 +43,7 @@ var layerInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.SummaryLayerInformations(performanceCollection)
+			summary0, err := evals.SummaryLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -56,56 +51,29 @@ var layerInfoCmd = &cobra.Command{
 			if listRuns {
 				writer := NewWriter(evaluation.SummaryLayerInformation{})
 				defer writer.Close()
-				for _, lyr := range summary {
+				for _, lyr := range summary0 {
 					writer.Row(lyr)
 				}
 				return nil
 			}
 
-			if boxPlot {
-				if openPlot {
-					return summary.OpenBoxPlot()
-				}
-				err := summary.WriteBoxPlot(plotPath)
-				if err != nil {
-					return err
-				}
-				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
-
-			if barPlot {
-				if openPlot {
-					return summary.OpenBarPlot()
-				}
-				err := summary.WriteBarPlot(plotPath)
-				if err != nil {
-					return err
-				}
-				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
-
-			meanLayers := make(evaluation.SummaryMeanLayerInformations, len(summary))
-			for ii, layer := range summary {
-				meanLayers[ii] = evaluation.SummaryMeanLayerInformation{SummaryLayerInformation: layer}
-			}
+			summary := evaluation.SummaryMeanLayerInformations(summary0)
 
 			if sortLayer || topLayers != -1 {
-				sort.Slice(meanLayers, func(ii, jj int) bool {
-					return evaluation.TrimmedMean(meanLayers[ii].Durations, 0) > evaluation.TrimmedMean(meanLayers[jj].Durations, 0)
+				sort.Slice(summary, func(ii, jj int) bool {
+					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
 				})
 				if topLayers != -1 {
-					if topLayers >= len(meanLayers) {
-						topLayers = len(meanLayers)
+					if topLayers >= len(summary) {
+						topLayers = len(summary)
 					}
-					meanLayers = meanLayers[:topLayers]
+					summary = summary[:topLayers]
 				}
 			}
 
 			writer := NewWriter(evaluation.SummaryMeanLayerInformation{})
 			defer writer.Close()
-			for _, lyr := range meanLayers {
+			for _, lyr := range summary {
 				writer.Row(lyr)
 			}
 			return nil
@@ -119,13 +87,4 @@ func init() {
 	layerInfoCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
 	layerInfoCmd.PersistentFlags().BoolVar(&sortLayer, "sort_layer", false, "sort layer information by layer latency")
 	layerInfoCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
-
-	layerInfoCmd.PersistentFlags().BoolVar(&barPlot, "bar_plot", false, "generates a bar plot of the layers")
-	layerInfoCmd.PersistentFlags().BoolVar(&boxPlot, "box_plot", false, "generates a box plot of the layers")
-	layerInfoCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
-	layerInfoCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
-	layerInfoCmd.PersistentFlags().BoolVar(&piePlot, "pie_plot", false, "generates a pie plot of the layers")
-
-	layerInfoCmd.AddCommand(layerDurationCmd)
-	layerInfoCmd.AddCommand(layerOcurrenceCmd)
 }

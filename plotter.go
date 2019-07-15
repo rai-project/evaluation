@@ -8,12 +8,12 @@ import (
 	"github.com/rai-project/utils/browser"
 )
 
-type Named interface {
-	Name() string
+type PlotNamed interface {
+	PlotName() string
 }
 
 type BarPlotter interface {
-	Named
+	PlotNamed
 	BarPlot(string) *charts.Bar
 	BarPlotAdd(*charts.Bar) *charts.Bar
 	WriteBarPlot(string) error
@@ -21,7 +21,7 @@ type BarPlotter interface {
 }
 
 type BoxPlotter interface {
-	Named
+	PlotNamed
 	BoxPlot(string) *charts.BoxPlot
 	BoxPlotAdd(*charts.BoxPlot) *charts.BoxPlot
 	WriteBoxPlot(string) error
@@ -29,7 +29,7 @@ type BoxPlotter interface {
 }
 
 type PiePlotter interface {
-	Named
+	PlotNamed
 	PiePlot(string) *charts.Pie
 	PiePlotAdd(*charts.Pie) *charts.Pie
 	WritePiePlot(string) error
@@ -37,10 +37,10 @@ type PiePlotter interface {
 }
 
 func writeBarPlot(o BarPlotter, path string) error {
-	bar := o.BarPlot(o.Name())
+	bar := o.BarPlot(o.PlotName())
 	bar.SetGlobalOptions(
 		charts.TitleOpts{
-			Title: o.Name(),
+			Title: o.PlotName(),
 			Right: "center",
 			Top:   "top",
 		},
@@ -62,10 +62,10 @@ func writeBarPlot(o BarPlotter, path string) error {
 }
 
 func writeBoxPlot(o BoxPlotter, path string) error {
-	box := o.BoxPlot(o.Name())
+	box := o.BoxPlot(o.PlotName())
 	box.SetGlobalOptions(
 		charts.TitleOpts{
-			Title: o.Name(),
+			Title: o.PlotName(),
 			Right: "center",
 			Top:   "top",
 		},
@@ -86,10 +86,10 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 }
 
 func writePiePlot(o PiePlotter, path string) error {
-	pie := o.PiePlot(o.Name())
+	pie := o.PiePlot(o.PlotName())
 	pie.SetGlobalOptions(
 		charts.TitleOpts{
-			Title: o.Name(),
+			Title: o.PlotName(),
 			Right: "right",
 			Top:   "top",
 		},

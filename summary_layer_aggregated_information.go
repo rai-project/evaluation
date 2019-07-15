@@ -14,8 +14,10 @@ type SummaryLayerAggregatedInformation struct {
 	Type                string  `json:"type,omitempty"`
 	Occurence           int     `json:"occurrence,omitempty"`
 	OccurencePercentage float64 `json:"occurrence_percentage,omitempty"`
-	Duration            float64 `json:"duration,omitempty"`
+	Duration            int64   `json:"duration,omitempty"`
 	DurationPercentage  float64 `json:"duration_percentage,omitempty"`
+	Memory              int64   `json:"memory,omitempty"`
+	MemoryPercentage    float64 `json:"memory_percentage,omitempty"`
 }
 
 //easyjson:json
@@ -73,10 +75,10 @@ func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceColl
 
 	exsistedLayers := make(map[string]SummaryLayerAggregatedInformation)
 	totalOcurrences := 0
-	totalDuration := float64(0)
+	totalDuration := int64(0)
 	for _, info := range layerInfos {
 		layerType := info.Type
-		duration := TrimmedMean(info.Durations, DefaultTrimmedMeanFraction)
+		duration := TrimmedMeanInt64Slice(info.Durations, DefaultTrimmedMeanFraction)
 		v, ok := exsistedLayers[layerType]
 		if !ok {
 			exsistedLayers[layerType] = SummaryLayerAggregatedInformation{
@@ -95,7 +97,7 @@ func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceColl
 	}
 
 	for _, info := range exsistedLayers {
-		info.DurationPercentage = math.Round(100*100*info.Duration/totalDuration) / 100
+		info.DurationPercentage = math.Round(100*100*float64(info.Duration)/float64(totalDuration)) / 100
 		info.OccurencePercentage = math.Round(100*100*float64(info.Occurence)/float64(totalOcurrences)) / 100
 		summary = append(summary, info)
 	}
@@ -103,7 +105,7 @@ func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceColl
 	return summary, nil
 }
 
-func (o SummaryLayerDruationInformations) Name() string {
+func (o SummaryLayerDruationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
@@ -119,7 +121,7 @@ func (o SummaryLayerDruationInformations) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-func (o SummaryLayerOccurrenceInformations) Name() string {
+func (o SummaryLayerOccurrenceInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}

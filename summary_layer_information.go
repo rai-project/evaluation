@@ -23,30 +23,41 @@ var (
 //easyjson:json
 type SummaryLayerInformation struct {
 	SummaryBase              `json:",inline"`
-	Index                    int       `json:"index,omitempty"`
-	Name                     string    `json:"name,omitempty"`
-	Type                     string    `json:"type,omitempty"`
-	StaticType               string    `json:"static_type,omitempty"`
-	Shape                    string    `json:"shap,omitempty"`
-	Durations                []float64 `json:"durations,omitempty"`
-	AllocatedBytes           []int64   `json:"allocated_bytes,omitempty"`      // Total number of bytes allocated if known
-	PeakAllocatedBytes       []int64   `json:"peak_allocated_bytes,omitempty"` // Total number of ebytes allocated if known
-	AllocatorName            string    `json:"allocator_name,omitempty"`       // Name of the allocator used
-	HostTempMemSizes         []int64   `json:"host_temp_mem_sizes,omitempty"`
-	DeviceTempMemSizes       []int64   `json:"device_temp_mem_sizes,omitempty"`
-	HostPersistentMemSizes   []int64   `json:"host_persistent_mem_sizes,omitempty"`
-	DevicePersistentMemSizes []int64   `json:"device_persistent_mem_sizes,omitempty"`
+	Index                    int     `json:"index,omitempty"`
+	Name                     string  `json:"layer_name,omitempty"`
+	Type                     string  `json:"type,omitempty"`
+	StaticType               string  `json:"static_type,omitempty"`
+	Shape                    string  `json:"shap,omitempty"`
+	Durations                []int64 `json:"durations,omitempty"`
+	AllocatedBytes           []int64 `json:"allocated_bytes,omitempty"`      // Total number of bytes allocated if known
+	PeakAllocatedBytes       []int64 `json:"peak_allocated_bytes,omitempty"` // Total number of ebytes allocated if known
+	AllocatorName            string  `json:"allocator_name,omitempty"`       // Name of the allocator used
+	HostTempMemSizes         []int64 `json:"host_temp_mem_sizes,omitempty"`
+	DeviceTempMemSizes       []int64 `json:"device_temp_mem_sizes,omitempty"`
+	HostPersistentMemSizes   []int64 `json:"host_persistent_mem_sizes,omitempty"`
+	DevicePersistentMemSizes []int64 `json:"device_persistent_mem_sizes,omitempty"`
 }
-
-type SummaryMeanLayerInformation struct {
-	SummaryLayerInformation
-}
-
-//easyjson:json
-type SummaryMeanLayerInformations []SummaryMeanLayerInformation
 
 //easyjson:json
 type SummaryLayerInformations []SummaryLayerInformation
+
+//easyjson:json
+type SummaryMeanLayerInformation SummaryLayerInformation
+
+//easyjson:json
+type SummaryMeanLayerInformations SummaryLayerInformations
+
+//easyjson:json
+type SummaryLayerMemoryInformation SummaryLayerInformation
+
+//easyjson:json
+type SummaryLayerMemoryInformations SummaryLayerInformations
+
+//easyjson:json
+type SummaryLayerLatencyInformation SummaryLayerInformation
+
+//easyjson:json
+type SummaryLayerLatencyInformations SummaryLayerInformations
 
 func (SummaryLayerInformation) Header(iopts ...writer.Option) []string {
 	extra := []string{
@@ -76,7 +87,7 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		strings.Join(float64SliceToStringSlice(s.Durations), ","),
+		strings.Join(int64SliceToStringSlice(s.Durations), ","),
 		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), ","),
 		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), ","),
 		s.AllocatorName,
@@ -92,13 +103,17 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 	return extra
 }
 
+func (s SummaryMeanLayerInformation) Header(opts ...writer.Option) []string {
+	return SummaryLayerInformation(s).Header()
+}
+
 func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 	return []string{
 		cast.ToString(s.Index),
 		s.Name,
 		s.Type,
 		s.Shape,
-		cast.ToString(TrimmedMean(s.Durations, 0)),
+		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.Durations), 0)),
 		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.AllocatedBytes), 0)),
 		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.PeakAllocatedBytes), 0)),
 		s.AllocatorName,
@@ -147,8 +162,8 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 				Index: cast.ToInt(idx),
 				Name:  span.OperationName,
 				Type:  getOpName(span),
-				Durations: []float64{
-					cast.ToFloat64(span.Duration),
+				Durations: []int64{
+					cast.ToInt64(span.Duration),
 				},
 				AllocatedBytes: []int64{
 					cast.ToInt64(allocationBytes),
@@ -174,7 +189,7 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 	}
 
 	for ii, span := range groupedLayerSpans[0] {
-		durations := []float64{}
+		durations := []int64{}
 		allocationBytes := []int64{}
 		peakAllocationBytes := []int64{}
 		hostTempMems := []int64{}
@@ -189,7 +204,7 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 			if len(infos) <= ii {
 				continue
 			}
-			durationToAppend := []float64{}
+			durationToAppend := []int64{}
 			allocationBytesToAppend := []int64{}
 			peakAllocationBytesToAppend := []int64{}
 			hostTemMemToAppend := []int64{}
@@ -319,7 +334,21 @@ func (s SummaryLayerInformations) GetLayerInfoByName(name string) SummaryLayerIn
 	return SummaryLayerInformation{}
 }
 
-func (o SummaryLayerInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryLayerLatencyInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer Latency"
+}
+
+func (o SummaryLayerMemoryInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer Allocated Memory"
+}
+
+func (o SummaryLayerLatencyInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -329,29 +358,75 @@ func (o SummaryLayerInformations) BarPlot(title string) *charts.Bar {
 	return bar
 }
 
-func (o SummaryLayerInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
-	timeUnit := time.Microsecond
+func (o SummaryLayerMemoryInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+type LayerInformationSelector func(elem SummaryLayerInformation) int64
+
+func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector LayerInformationSelector) *charts.Bar {
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, elem.Name)
 	}
 	bar.AddXAxis(labels)
 
-	durations := make([]time.Duration, len(o))
+	data := make([]int64, len(o))
 	for ii, elem := range o {
-		val := TrimmedMean(elem.Durations, 0)
-		durations[ii] = time.Duration(val)
+		data[ii] = elemSelector(elem)
 	}
-	bar.AddYAxis("", durations)
+	bar.AddYAxis("", data)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Index"},
-		charts.YAxisOpts{Name: "Latency(" + unitName(timeUnit) + ")"},
 	)
 	return bar
 }
 
-func (o SummaryLayerInformations) BoxPlot(title string) *charts.BoxPlot {
+func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) int64 {
+		return TrimmedMeanInt64Slice(elem.Durations, 0)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "Latency(" + unitName(time.Microsecond) + ")"},
+	)
+	return bar
+}
+
+func (o SummaryLayerMemoryInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) int64 {
+		return TrimmedMeanInt64Slice(elem.AllocatedBytes, 0)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "Allocated Memory(Bytes)"},
+	)
+	return bar
+
+}
+
+func (o SummaryLayerLatencyInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryLayerMemoryInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryLayerLatencyInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryLayerMemoryInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryLayerLatencyInformations) BoxPlot(title string) *charts.BoxPlot {
 	box := charts.NewBoxPlot()
 	box.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -361,7 +436,7 @@ func (o SummaryLayerInformations) BoxPlot(title string) *charts.BoxPlot {
 	return box
 }
 
-func (o SummaryLayerInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
+func (o SummaryLayerLatencyInformations) BoxPlotAdd(box *charts.BoxPlot) *charts.BoxPlot {
 	timeUnit := time.Microsecond
 
 	isPrivate := func(info SummaryLayerInformation) bool {
@@ -435,25 +510,10 @@ func prepareBoxplotData(ds []time.Duration) []time.Duration {
 	return []time.Duration{min, q1, q2, q3, max}
 }
 
-func (o SummaryLayerInformations) Name() string {
-	if len(o) == 0 {
-		return ""
-	}
-	return o[0].ModelName + " Layer Latency"
-}
-
-func (o SummaryLayerInformations) WriteBarPlot(path string) error {
-	return writeBarPlot(o, path)
-}
-
-func (o SummaryLayerInformations) WriteBoxPlot(path string) error {
+func (o SummaryLayerLatencyInformations) WriteBoxPlot(path string) error {
 	return writeBoxPlot(o, path)
 }
 
-func (o SummaryLayerInformations) OpenBarPlot() error {
-	return openBarPlot(o)
-}
-
-func (o SummaryLayerInformations) OpenBoxPlot() error {
+func (o SummaryLayerLatencyInformations) OpenBoxPlot() error {
 	return openBoxPlot(o)
 }
