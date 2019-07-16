@@ -45,16 +45,7 @@ type SummaryLayerInformations []SummaryLayerInformation
 type SummaryMeanLayerInformation SummaryLayerInformation
 
 //easyjson:json
-type SummaryMeanLayerInformations SummaryLayerInformations
-
-//easyjson:json
-type SummaryLayerMemoryInformation SummaryLayerInformation
-
-//easyjson:json
 type SummaryLayerMemoryInformations SummaryLayerInformations
-
-//easyjson:json
-type SummaryLayerLatencyInformation SummaryLayerInformation
 
 //easyjson:json
 type SummaryLayerLatencyInformations SummaryLayerInformations
@@ -104,7 +95,7 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 }
 
 func (s SummaryMeanLayerInformation) Header(opts ...writer.Option) []string {
-	return SummaryLayerInformation(s).Header()
+	return SummaryLayerInformation(s).Header(opts...)
 }
 
 func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
@@ -113,14 +104,14 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.Durations), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.AllocatedBytes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.PeakAllocatedBytes), 0)),
+		cast.ToString(TrimmedMeanInt64Slice(s.Durations, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.AllocatedBytes, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.PeakAllocatedBytes, DefaultTrimmedMeanFraction)),
 		s.AllocatorName,
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.HostTempMemSizes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.DeviceTempMemSizes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.HostPersistentMemSizes), 0)),
-		cast.ToString(TrimmedMean(convertInt64SliceToFloat64Slice(s.DevicePersistentMemSizes), 0)),
+		cast.ToString(TrimmedMeanInt64Slice(s.HostTempMemSizes, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.DeviceTempMemSizes, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.HostPersistentMemSizes, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.DevicePersistentMemSizes, DefaultTrimmedMeanFraction)),
 	}
 }
 
@@ -152,8 +143,8 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 			}
 			allocationDesc := getAllocationDescription(span)
 			memoryUsed := getTensorFlowAllocatorMemoryUsed(span)
-			allocationBytes := int64(allocationDesc.AllocatedBytes)
-			peakAllocationBytes := int64(memoryUsed.PeakBytes)
+			allocationBytes := allocationDesc.AllocatedBytes
+			peakAllocationBytes := memoryUsed.PeakBytes
 			hostTempMemSize, _ := getTagValueAsString(span, "temp_memory_size")
 			deviceTempMemSize, _ := getTagValueAsString(span, "device_temp_memory_size")
 			hostPersistentMemSize, _ := getTagValueAsString(span, "persistent_memory_size")
@@ -368,7 +359,7 @@ func (o SummaryLayerMemoryInformations) BarPlot(title string) *charts.Bar {
 	return bar
 }
 
-type LayerInformationSelector func(elem SummaryLayerInformation) int64
+type LayerInformationSelector func(elem SummaryLayerInformation) float64
 
 func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector LayerInformationSelector) *charts.Bar {
 	labels := []string{}
@@ -377,7 +368,7 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 	}
 	bar.AddXAxis(labels)
 
-	data := make([]int64, len(o))
+	data := make([]float64, len(o))
 	for ii, elem := range o {
 		data[ii] = elemSelector(elem)
 	}
@@ -390,7 +381,7 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 }
 
 func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
-	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) int64 {
+	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) float64 {
 		return TrimmedMeanInt64Slice(elem.Durations, 0)
 	})
 	bar.SetGlobalOptions(
@@ -400,7 +391,7 @@ func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Ba
 }
 
 func (o SummaryLayerMemoryInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
-	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) int64 {
+	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) float64 {
 		return TrimmedMeanInt64Slice(elem.AllocatedBytes, 0)
 	})
 	bar.SetGlobalOptions(

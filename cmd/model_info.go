@@ -33,27 +33,22 @@ var modelInfoCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		run := func() error {
-			durs, err := predictDurationInformationSummary()
+			evals, err := getEvaluations()
+			if err != nil {
+				return err
+			}
+
+			summary, err := evals.SummaryModelInformation(performanceCollection)
 			if err != nil {
 				return err
 			}
 			writer := NewWriter(evaluation.SummaryModelInformation{})
 			defer writer.Close()
 
-			for _, dur := range durs {
-				writer.Row(dur)
-			}
+			writer.Row(summary)
 
 			return nil
 		}
 		return forallmodels(run)
 	},
-}
-
-func predictDurationInformationSummary() (evaluation.SummaryModelInformations, error) {
-	evals, err := getEvaluations()
-	if err != nil {
-		return nil, err
-	}
-	return evals.PredictDurationInformationSummary(performanceCollection)
 }

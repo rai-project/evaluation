@@ -6,88 +6,77 @@ import (
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/tracer"
+	"github.com/spf13/cast"
+	model "github.com/uber/jaeger/model/json"
 	db "upper.io/db.v3"
 )
 
 //easyjson:json
 type SummaryModelInformation struct {
 	SummaryBase `json:",inline,omitempty"`
-	Durations   []uint64 `json:"durations,omitempty"`
+	Durations   []int64 `json:"durations,omitempty"`
+	Duration    float64 `json:"duration,omitempty"`
+	Latency     float64 `json:"latency,omitempty"`
+	Throughput  float64 `json:"throughput,omitempty"`
 }
-
-type SummaryModelInformations []SummaryModelInformation
 
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"durations (us)",
+		"duration (us)",
+		"latency (ms)",
+		"throughput (input/s)",
 	}
 	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
 func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
-		strings.Join(uint64SliceToStringSlice(s.Durations), ";"),
+		strings.Join(int64SliceToStringSlice(s.Durations), ","),
+		cast.ToString(s.Duration),
+		cast.ToString(s.Latency),
+		cast.ToString(s.Throughput),
 	}
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (SummaryModelInformations) Header(opts ...writer.Option) []string {
-	return SummaryModelInformation{}.Header(opts...)
-}
-
-func (s SummaryModelInformations) Rows(opts ...writer.Option) [][]string {
-	rows := [][]string{}
-	for _, e := range s {
-		rows = append(rows, e.Row(opts...))
+func summaryModelInformation(es Evaluations, spans Spans) (SummaryModelInformation, error) {
+	summary := SummaryModelInformation{}
+	if len(es) == 0 {
+		return summary, errors.New("no evaluation is found in the database")
 	}
-	return rows
-}
 
-func (p Performance) PredictDurationInformationSummary(e Evaluation) (*SummaryModelInformation, error) {
-	cPredictSpans := p.Spans().FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
-	return &SummaryModelInformation{
-		SummaryBase: e.summaryBase(),
-		Durations:   cPredictSpans.Duration(),
-	}, nil
-}
-
-func (ps Performances) PredictDurationInformationSummary(e Evaluation) ([]*SummaryModelInformation, error) {
-	res := []*SummaryModelInformation{}
-	for _, p := range ps {
-		s, err := p.PredictDurationInformationSummary(e)
-		if err != nil {
-			log.WithError(err).Error("failed to get duration information summary")
-			continue
-		}
-		res = append(res, s)
+	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
+	durations := []int64{}
+	for _, span := range cPredictSpans {
+		durations = append(durations, cast.ToInt64(span.Duration))
 	}
-	return res, nil
+	duration := TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction)
+	base := es[0].summaryBase()
+	batchSize := base.BatchSize
+	summary = SummaryModelInformation{
+		SummaryBase: base,
+		Durations:   durations,
+		Duration:    duration,
+		Throughput:  float64(1000000*batchSize) / duration,
+		Latency:     duration / float64(batchSize*1000),
+	}
+	return summary, nil
 }
 
-func (e Evaluation) PredictDurationInformationSummary(perfCol *PerformanceCollection) (*SummaryModelInformation, error) {
-	perfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-	if err != nil {
-		return nil, err
-	}
-	if len(perfs) != 1 {
-		return nil, errors.New("expecting on performance output")
-	}
-	perf := perfs[0]
-	return perf.PredictDurationInformationSummary(e)
-}
-
-func (es Evaluations) PredictDurationInformationSummary(perfCol *PerformanceCollection) (SummaryModelInformations, error) {
-	res := []SummaryModelInformation{}
+func (es Evaluations) SummaryModelInformation(perfCol *PerformanceCollection) (SummaryModelInformation, error) {
+	summary := SummaryModelInformation{}
+	spans := []model.Span{}
 	for _, e := range es {
-		s, err := e.PredictDurationInformationSummary(perfCol)
+		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
 		if err != nil {
-			log.WithError(err).Error("failed to get duration information summary")
-			continue
+			return summary, err
 		}
-		if s == nil {
-			continue
+		if len(foundPerfs) != 1 {
+			return summary, errors.New("no performance is found for the evaluation")
 		}
-		res = append(res, *s)
+		perf := foundPerfs[0]
+		spans = append(spans, perf.Spans()...)
 	}
-	return res, nil
+	return summaryModelInformation(es, spans)
 }

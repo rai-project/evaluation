@@ -12,5 +12,4 @@ var modelCmd = &cobra.Command{
 
 func init() {
 	modelCmd.AddCommand(modelInfoCmd)
-	modelCmd.AddCommand(modelLatencyCmd)
 }

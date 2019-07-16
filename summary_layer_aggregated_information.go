@@ -14,7 +14,7 @@ type SummaryLayerAggregatedInformation struct {
 	Type                string  `json:"type,omitempty"`
 	Occurence           int     `json:"occurrence,omitempty"`
 	OccurencePercentage float64 `json:"occurrence_percentage,omitempty"`
-	Duration            int64   `json:"duration,omitempty"`
+	Duration            float64 `json:"duration,omitempty"`
 	DurationPercentage  float64 `json:"duration_percentage,omitempty"`
 	Memory              int64   `json:"memory,omitempty"`
 	MemoryPercentage    float64 `json:"memory_percentage,omitempty"`
@@ -75,7 +75,7 @@ func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceColl
 
 	exsistedLayers := make(map[string]SummaryLayerAggregatedInformation)
 	totalOcurrences := 0
-	totalDuration := int64(0)
+	totalDuration := float64(0)
 	for _, info := range layerInfos {
 		layerType := info.Type
 		duration := TrimmedMeanInt64Slice(info.Durations, DefaultTrimmedMeanFraction)

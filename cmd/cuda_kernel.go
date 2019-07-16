@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
 )
 
@@ -56,12 +57,10 @@ var cudaKernelCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
+			layerCUDAKernelInfos, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
 			if err != nil {
 				return err
 			}
-
-			layerCUDAKernelInfos := summary.LayerCUDAKernelInformations
 
 			if sortOutput || topLayers != -1 {
 				sort.Sort(layerCUDAKernelInfos)
@@ -80,7 +79,7 @@ var cudaKernelCmd = &cobra.Command{
 				}
 			}
 
-			writer := NewWriter(layerCUDAKernelInfos)
+			writer := NewWriter(evaluation.SummaryLayerCUDAKernelInformation{})
 			defer writer.Close()
 
 			for _, elem := range layerCUDAKernelInfos {

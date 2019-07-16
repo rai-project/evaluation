@@ -43,7 +43,7 @@ var layerInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryLayerInformations(performanceCollection)
+			summary, err := evals.SummaryLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -51,13 +51,11 @@ var layerInfoCmd = &cobra.Command{
 			if listRuns {
 				writer := NewWriter(evaluation.SummaryLayerInformation{})
 				defer writer.Close()
-				for _, lyr := range summary0 {
+				for _, lyr := range summary {
 					writer.Row(lyr)
 				}
 				return nil
 			}
-
-			summary := evaluation.SummaryMeanLayerInformations(summary0)
 
 			if sortLayer || topLayers != -1 {
 				sort.Slice(summary, func(ii, jj int) bool {
@@ -74,7 +72,7 @@ var layerInfoCmd = &cobra.Command{
 			writer := NewWriter(evaluation.SummaryMeanLayerInformation{})
 			defer writer.Close()
 			for _, lyr := range summary {
-				writer.Row(lyr)
+				writer.Row(evaluation.SummaryMeanLayerInformation(lyr))
 			}
 			return nil
 		}

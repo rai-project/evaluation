@@ -14,11 +14,9 @@ import (
 	db "upper.io/db.v3"
 )
 
-var summaryCUDAKernelInformationShowSummaryBase = false
-
 type Metadata map[string]interface{}
 
-type CUDAKernelInformation struct {
+type SummaryCUDAKernelInformation struct {
 	Name          string     `json:"name,omitempty"`
 	MangledName   string     `json:"mangled_name,omitempty"`
 	Tags          []Metadata `json:"tags,omitempty"`
@@ -27,71 +25,60 @@ type CUDAKernelInformation struct {
 	CorrelationId int64      `json:"correlation_id,omitempty"`
 }
 
-type CUDAKernelInformations []CUDAKernelInformation
+type SummaryCUDAKernelInformations []SummaryCUDAKernelInformation
 
-type LayerCUDAKernelInformation struct {
-	SummaryLayerInformation `json:",inline"`
-	CUDAKernelInformations  CUDAKernelInformations `json:"kernel_launch_information,omitempty"`
+type SummaryLayerCUDAKernelInformation struct {
+	SummaryLayerInformation       `json:",inline"`
+	SummaryCUDAKernelInformations SummaryCUDAKernelInformations `json:"kernel_launch_information,omitempty"`
 }
 
-func (p CUDAKernelInformations) Len() int { return len(p) }
-func (p CUDAKernelInformations) Less(i, j int) bool {
+func (p SummaryCUDAKernelInformations) Len() int { return len(p) }
+func (p SummaryCUDAKernelInformations) Less(i, j int) bool {
 	x := p[i]
 	y := p[j]
 	xDuration := TrimmedMean(x.Durations, DefaultTrimmedMeanFraction)
 	yDuration := TrimmedMean(y.Durations, DefaultTrimmedMeanFraction)
 	return xDuration > yDuration
 }
-func (p CUDAKernelInformations) Swap(i, j int) {
+func (p SummaryCUDAKernelInformations) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
-func (p LayerCUDAKernelInformation) Len() int { return len(p.CUDAKernelInformations) }
-func (p LayerCUDAKernelInformation) Less(i, j int) bool {
-	x := p.CUDAKernelInformations[i]
-	y := p.CUDAKernelInformations[j]
+func (p SummaryLayerCUDAKernelInformation) Len() int { return len(p.SummaryCUDAKernelInformations) }
+func (p SummaryLayerCUDAKernelInformation) Less(i, j int) bool {
+	x := p.SummaryCUDAKernelInformations[i]
+	y := p.SummaryCUDAKernelInformations[j]
 	xDuration := TrimmedMean(x.Durations, DefaultTrimmedMeanFraction)
 	yDuration := TrimmedMean(y.Durations, DefaultTrimmedMeanFraction)
 	return xDuration > yDuration
 }
-func (p LayerCUDAKernelInformation) Swap(i, j int) {
-	p.CUDAKernelInformations[i], p.CUDAKernelInformations[j] = p.CUDAKernelInformations[j], p.CUDAKernelInformations[i]
+func (p SummaryLayerCUDAKernelInformation) Swap(i, j int) {
+	p.SummaryCUDAKernelInformations[i], p.SummaryCUDAKernelInformations[j] = p.SummaryCUDAKernelInformations[j], p.SummaryCUDAKernelInformations[i]
 }
 
-type LayerCUDAKernelInformations []LayerCUDAKernelInformation
+type SummaryLayerCUDAKernelInformations []SummaryLayerCUDAKernelInformation
 
-func (p LayerCUDAKernelInformations) Len() int { return len(p) }
-func (p LayerCUDAKernelInformations) Less(i, j int) bool {
+func (p SummaryLayerCUDAKernelInformations) Len() int { return len(p) }
+func (p SummaryLayerCUDAKernelInformations) Less(i, j int) bool {
 	return p[i].SummaryLayerInformation.Index < p[j].SummaryLayerInformation.Index
 }
-func (p LayerCUDAKernelInformations) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p SummaryLayerCUDAKernelInformations) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
-type SummaryLayerCUDAKernelInformation struct {
-	SummaryBase                 `json:",inline"`
-	LayerCUDAKernelInformations LayerCUDAKernelInformations `json:"layer_informations,omitempty"`
-}
-
-func (info LayerCUDAKernelInformations) Header(opts ...writer.Option) []string {
+func (info SummaryLayerCUDAKernelInformations) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
 		"kernel_durations (us)",
 	}
-
 	if kernelLogKeys := getKernelLogKeys(info); len(kernelLogKeys) != 0 {
 		extraHeader = append(extraHeader, kernelLogKeys...)
 	}
 	return append(SummaryLayerInformation{}.Header(opts...), extraHeader...)
 }
 
-func (info0 LayerCUDAKernelInformation) Header(opts ...writer.Option) []string {
-	info := LayerCUDAKernelInformations([]LayerCUDAKernelInformation{info0})
-	return info.Header(opts...)
-}
-
-func getKernelLogKeys(infos LayerCUDAKernelInformations) []string {
+func getKernelLogKeys(infos SummaryLayerCUDAKernelInformations) []string {
 	kernelLogs := []Metadata{}
 	for _, info := range infos {
-		for _, cudaKernelInformation := range info.CUDAKernelInformations {
+		for _, cudaKernelInformation := range info.SummaryCUDAKernelInformations {
 			if len(cudaKernelInformation.Logs) == 0 {
 				continue
 			}
@@ -130,8 +117,8 @@ func getMetaDataValuesAsString(lg Metadata) []string {
 }
 
 // Rows ...
-func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
-	cudaKernelInfos := info.CUDAKernelInformations
+func (info SummaryLayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
+	cudaKernelInfos := info.SummaryCUDAKernelInformations
 	layerInfo := info.SummaryLayerInformation
 	layerInfoRow := layerInfo.Row(iopts...)
 
@@ -139,9 +126,9 @@ func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 
 	rows := [][]string{}
 
-	kernelLogKeys := getKernelLogKeys([]LayerCUDAKernelInformation{info})
+	kernelLogKeys := getKernelLogKeys([]SummaryLayerCUDAKernelInformation{info})
 
-	isFilteredKernel := func(kernelInfo CUDAKernelInformation) bool {
+	isFilteredKernel := func(kernelInfo SummaryCUDAKernelInformation) bool {
 		if len(opts.FilterKernelNames) == 0 {
 			return true
 		}
@@ -181,18 +168,12 @@ func (info LayerCUDAKernelInformation) Rows(iopts ...writer.Option) [][]string {
 			}
 			extra = append(extra, strings.Join(kernelLogs, "\t"))
 		}
-
 		rows = append(rows, append(layerInfoRow, extra...))
 	}
 	return rows
 }
 
-func (LayerCUDAKernelInformations) Row(opts ...writer.Option) []string {
-	panic("does not mean anything.... make it satisfy the rower type")
-	return nil
-}
-
-func (k *CUDAKernelInformation) addLogs(spanLogs []model.Log) {
+func (k *SummaryCUDAKernelInformation) addLogs(spanLogs []model.Log) {
 	if k.Logs == nil {
 		k.Logs = []Metadata{}
 	}
@@ -208,7 +189,7 @@ func (k *CUDAKernelInformation) addLogs(spanLogs []model.Log) {
 	k.Logs = append(k.Logs, logs)
 }
 
-func (k *CUDAKernelInformation) addTags(spanTags []model.KeyValue) {
+func (k *SummaryCUDAKernelInformation) addTags(spanTags []model.KeyValue) {
 	if k.Tags == nil {
 		k.Tags = []Metadata{}
 	}
@@ -222,8 +203,8 @@ func (k *CUDAKernelInformation) addTags(spanTags []model.KeyValue) {
 	k.Tags = append(k.Tags, tags)
 }
 
-func toKernelInformation(span model.Span) CUDAKernelInformation {
-	info := &CUDAKernelInformation{
+func toKernelInformation(span model.Span) SummaryCUDAKernelInformation {
+	info := &SummaryCUDAKernelInformation{
 		Name:          mustGetTagValueAsString(span, "kernel_name"),
 		MangledName:   mustGetTagValueAsString(span, "name"),
 		Tags:          []Metadata{},
@@ -254,15 +235,10 @@ func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceColl
 	return spans, nil
 }
 
-func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryLayerCUDAKernelInformation, error) {
-	summary := SummaryLayerCUDAKernelInformation{}
+func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryLayerCUDAKernelInformations, error) {
+	summary := SummaryLayerCUDAKernelInformations{}
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
-	}
-
-	summary = SummaryLayerCUDAKernelInformation{
-		SummaryBase:                 es[0].summaryBase(),
-		LayerCUDAKernelInformations: []LayerCUDAKernelInformation{},
 	}
 
 	layerInfoSummary, err := es.SummaryLayerInformations(perfCol)
@@ -288,10 +264,10 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 		return summary, errors.New("no group of spans is found")
 	}
 
-	groupedLayerCUDAKernelInfos := make([][]LayerCUDAKernelInformation, numGroups)
+	groupedLayerCUDAKernelInfos := make([][]SummaryLayerCUDAKernelInformation, numGroups)
 	for ii, grsp := range groupedSpans {
 		if groupedLayerCUDAKernelInfos[ii] == nil {
-			groupedLayerCUDAKernelInfos[ii] = []LayerCUDAKernelInformation{}
+			groupedLayerCUDAKernelInfos[ii] = []SummaryLayerCUDAKernelInformation{}
 		}
 
 		trace := model.Trace{
@@ -317,9 +293,9 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 			layerSpan := trace_tree.ToInterval(sp)
 			layerChildren := tree.ChildrenOf(layerSpan)
-			layerCUDAKernelInformation := LayerCUDAKernelInformation{
-				SummaryLayerInformation: layerInfoSummary.GetLayerInfoByName(layerSpan.OperationName),
-				CUDAKernelInformations:  []CUDAKernelInformation{},
+			layerCUDAKernelInformation := SummaryLayerCUDAKernelInformation{
+				SummaryLayerInformation:       layerInfoSummary.GetLayerInfoByName(layerSpan.OperationName),
+				SummaryCUDAKernelInformations: []SummaryCUDAKernelInformation{},
 			}
 
 			for _, childInterval := range layerChildren {
@@ -341,7 +317,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					Type:  model.StringType,
 					Value: demangleName(mustGetTagValueAsString(child, "name")),
 				})
-				layerCUDAKernelInformation.CUDAKernelInformations = append(layerCUDAKernelInformation.CUDAKernelInformations, toKernelInformation(child))
+				layerCUDAKernelInformation.SummaryCUDAKernelInformations = append(layerCUDAKernelInformation.SummaryCUDAKernelInformations, toKernelInformation(child))
 			}
 
 			for _, childInterval := range layerChildren {
@@ -361,14 +337,14 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
 					continue
 				}
-				for infoIdx := range layerCUDAKernelInformation.CUDAKernelInformations {
-					info := layerCUDAKernelInformation.CUDAKernelInformations[infoIdx]
+				for infoIdx := range layerCUDAKernelInformation.SummaryCUDAKernelInformations {
+					info := layerCUDAKernelInformation.SummaryCUDAKernelInformations[infoIdx]
 					if info.CorrelationId != childCorrelationId {
 						continue
 					}
 					info.addTags(child.Tags)
 					info.addLogs(child.Logs)
-					layerCUDAKernelInformation.CUDAKernelInformations[infoIdx] = info
+					layerCUDAKernelInformation.SummaryCUDAKernelInformations[infoIdx] = info
 				}
 			}
 
@@ -378,17 +354,17 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 	}
 
-	layerCUDAKernelInfos := []LayerCUDAKernelInformation{}
+	layerCUDAKernelInfos := []SummaryLayerCUDAKernelInformation{}
 	for _, li := range groupedLayerCUDAKernelInfos[0] {
 		layerCUDAKernelInfo := li
-		for ii := range layerCUDAKernelInfo.CUDAKernelInformations {
-			cki := layerCUDAKernelInfo.CUDAKernelInformations[ii]
+		for ii := range layerCUDAKernelInfo.SummaryCUDAKernelInformations {
+			cki := layerCUDAKernelInfo.SummaryCUDAKernelInformations[ii]
 			for _, lis := range groupedLayerCUDAKernelInfos[1:] {
 				for _, lli := range lis {
 					if lli.Name != li.Name || li.Index != li.Index {
 						continue
 					}
-					for _, ccki := range lli.CUDAKernelInformations {
+					for _, ccki := range lli.SummaryCUDAKernelInformations {
 						if cki.Name == ccki.Name {
 							cki.Tags = append(cki.Tags, ccki.Tags...)
 							cki.Logs = append(cki.Logs, ccki.Logs...)
@@ -397,46 +373,14 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					}
 				}
 			}
-			layerCUDAKernelInfo.CUDAKernelInformations[ii] = cki
+			layerCUDAKernelInfo.SummaryCUDAKernelInformations[ii] = cki
 		}
 		layerCUDAKernelInfos = append(layerCUDAKernelInfos, layerCUDAKernelInfo)
 	}
 
-	summary.LayerCUDAKernelInformations = layerCUDAKernelInfos
+	summary = layerCUDAKernelInfos
 
 	return summary, nil
-}
-
-func getGroupedCUDAKernelSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, error) {
-	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
-	if err != nil {
-		return nil, err
-	}
-	numPredictSpans := len(groupedSpans)
-
-	groupedCUDAKernelSpans := make([]Spans, numPredictSpans)
-	for ii, grsp := range groupedSpans {
-		if len(grsp) == 0 {
-			continue
-		}
-
-		groupedCUDAKernelSpans[ii] = Spans{}
-		for _, sp := range grsp {
-			traceLevel, err := getTagValueAsString(sp, "trace_level")
-			if err != nil || traceLevel == "" {
-				continue
-			}
-			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-				continue
-			}
-			if strings.ToLower(sp.OperationName) != "gpu_kernel" {
-				continue
-			}
-			groupedCUDAKernelSpans[ii] = append(groupedCUDAKernelSpans[ii], sp)
-		}
-	}
-
-	return groupedCUDAKernelSpans, nil
 }
 
 func dummyPP() {

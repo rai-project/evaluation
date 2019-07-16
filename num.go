@@ -6,13 +6,13 @@ import (
 )
 
 var (
-	DefaultTrimmedMeanFraction = 0.2
+	DefaultTrimmedMeanFraction = 0.1
 )
 
-func TrimmedMeanInt64Slice(data []int64, frac float64) int64 {
-
-	return int64(TrimmedMean(convertInt64SliceToFloat64Slice(data), frac))
+func TrimmedMeanInt64Slice(data []int64, frac float64) float64 {
+	return TrimmedMean(convertInt64SliceToFloat64Slice(data), frac)
 }
+
 func TrimmedMean(data []float64, frac float64) float64 {
 
 	// Sum returns the sum of the elements of the slice.

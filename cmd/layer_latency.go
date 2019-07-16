@@ -76,10 +76,10 @@ var layerLatencyCmd = &cobra.Command{
 				return nil
 			}
 
-			writer := NewWriter(evaluation.SummaryLayerLatencyInformation{})
+			writer := NewWriter(evaluation.SummaryLayerInformation{})
 			defer writer.Close()
 
-			for _, lyr := range summary {
+			for _, lyr := range summary0 {
 				writer.Row(lyr)
 			}
 			return nil
