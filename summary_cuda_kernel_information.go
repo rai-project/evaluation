@@ -207,7 +207,7 @@ func (k *SummaryCUDAKernelInformation) addTags(spanTags []model.KeyValue) {
 	k.Tags = append(k.Tags, tags)
 }
 
-func toKernelInformation(span model.Span) SummaryCUDAKernelInformation {
+func GPUKernelSpantoCUDAKernelInformation(span model.Span) SummaryCUDAKernelInformation {
 	info := &SummaryCUDAKernelInformation{
 		Name:          mustGetTagValueAsString(span, "kernel_name"),
 		MangledName:   mustGetTagValueAsString(span, "name"),
@@ -223,6 +223,20 @@ func toKernelInformation(span model.Span) SummaryCUDAKernelInformation {
 	return *info
 }
 
+func CUDALaunchSpantoCUDAKernelInformation(span model.Span) SummaryCUDAKernelInformation {
+	kernelName := mustGetTagValueAsString(span, "kernel")
+	info := &SummaryCUDAKernelInformation{
+		Name:          demangleName(kernelName),
+		MangledName:   kernelName,
+		Tags:          []Metadata{},
+		Logs:          []Metadata{},
+		CorrelationId: mustGetTagValueAsInt64(span, "correlation_id"),
+	}
+	info.addTags(span.Tags)
+	info.addLogs(span.Logs)
+	return *info
+}
+
 func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryLayerCUDAKernelInformations, error) {
 	summary := SummaryLayerCUDAKernelInformations{}
 	if len(es) == 0 {
@@ -231,7 +245,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 
 	layerInfos, err := es.SummaryLayerInformations(perfCol)
 	if err != nil {
-		log.WithError(err).Fatal("failed to get layerInformationSummary")
+		layerInfos = SummaryLayerInformations{}
 	}
 
 	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
@@ -267,21 +281,80 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 			panic(err)
 		}
 
-		cnt := 0
 		for _, sp := range grsp {
 			traceLevel, err := getTagValueAsString(sp, "trace_level")
 			if err != nil || traceLevel == "" {
 				continue
 			}
+
 			if tracer.LevelFromName(traceLevel) != tracer.FRAMEWORK_TRACE {
 				continue
 			}
 
-			layerSpan := trace_tree.ToInterval(sp)
-			layerChildren := tree.ChildrenOf(layerSpan)
+			layerInterval := trace_tree.ToInterval(sp)
+			layerSpan := *layerInterval.Span
+			layerChildren := tree.ChildrenOf(layerInterval)
+
+			layerInfo := SummaryLayerInformation{}
+			if len(layerInfos) == 0 {
+				idx, err := getTagValueAsString(layerSpan, "layer_sequence_index")
+				if err != nil || idx == "" {
+					return summary, errors.New("cannot find tag layer_sequence_index")
+				}
+				allocationDesc := getAllocationDescription(layerSpan)
+				memoryUsed := getTensorFlowAllocatorMemoryUsed(layerSpan)
+				allocationBytes := allocationDesc.AllocatedBytes
+				peakAllocationBytes := memoryUsed.PeakBytes
+				hostTempMemSize, _ := getTagValueAsString(layerSpan, "temp_memory_size")
+				deviceTempMemSize, _ := getTagValueAsString(layerSpan, "device_temp_memory_size")
+				hostPersistentMemSize, _ := getTagValueAsString(layerSpan, "persistent_memory_size")
+				devicePersistentMemSize, _ := getTagValueAsString(layerSpan, "device_persistent_memory_size")
+				layerInfo = SummaryLayerInformation{
+					Index:     cast.ToInt(idx),
+					Name:      layerSpan.OperationName,
+					Type:      getOpName(layerSpan),
+					Durations: []int64{},
+					AllocatedBytes: []int64{
+						cast.ToInt64(allocationBytes),
+					},
+					PeakAllocatedBytes: []int64{
+						cast.ToInt64(peakAllocationBytes),
+					},
+					HostTempMemSizes: []int64{
+						cast.ToInt64(hostTempMemSize),
+					},
+					DeviceTempMemSizes: []int64{
+						cast.ToInt64(deviceTempMemSize),
+					},
+					HostPersistentMemSizes: []int64{
+						cast.ToInt64(hostPersistentMemSize),
+					},
+					DevicePersistentMemSizes: []int64{
+						cast.ToInt64(devicePersistentMemSize),
+					},
+				}
+			} else {
+				layerInfo = layerInfos.GetLayerInfoByName(layerSpan.OperationName)
+			}
+
 			layerCUDAKernelInformation := SummaryLayerCUDAKernelInformation{
-				SummaryLayerInformation:       layerInfos.GetLayerInfoByName(layerSpan.OperationName),
+				SummaryLayerInformation:       layerInfo,
 				SummaryCUDAKernelInformations: []SummaryCUDAKernelInformation{},
+			}
+
+			for _, childInterval := range layerChildren {
+				child := *childInterval.Span
+				traceLevel, err := getTagValueAsString(child, "trace_level")
+				if err != nil || traceLevel == "" {
+					continue
+				}
+				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+					continue
+				}
+				if strings.ToLower(child.OperationName) != "cuda_launch" {
+					continue
+				}
+				layerCUDAKernelInformation.SummaryCUDAKernelInformations = append(layerCUDAKernelInformation.SummaryCUDAKernelInformations, CUDALaunchSpantoCUDAKernelInformation(child))
 			}
 
 			for _, childInterval := range layerChildren {
@@ -297,31 +370,7 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 				if strings.ToLower(child.OperationName) != "gpu_kernel" {
 					continue
 				}
-				if strings.ToLower(demangleName(mustGetTagValueAsString(child, "name"))) == "volta_scudnn_128x64_relu_interior_nn_v1" {
-					cnt++
-				}
 
-				child.Tags = append(child.Tags, model.KeyValue{
-					Key:   "kernel_name",
-					Type:  model.StringType,
-					Value: demangleName(mustGetTagValueAsString(child, "name")),
-				})
-
-				layerCUDAKernelInformation.SummaryCUDAKernelInformations = append(layerCUDAKernelInformation.SummaryCUDAKernelInformations, toKernelInformation(child))
-			}
-
-			for _, childInterval := range layerChildren {
-				child := *childInterval.Span
-				traceLevel, err := getTagValueAsString(child, "trace_level")
-				if err != nil || traceLevel == "" {
-					continue
-				}
-				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-					continue
-				}
-				if strings.ToLower(child.OperationName) != "cuda_launch" {
-					continue
-				}
 				childCorrelationId, err := getTagValueAsInt64(child, "correlation_id")
 				if err != nil {
 					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
@@ -332,15 +381,17 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 					if info.CorrelationId != childCorrelationId {
 						continue
 					}
-					info.addTags(child.Tags)
-					info.addLogs(child.Logs)
+					// only record kernel duration when no gpu metrics are captured
+					if len(info.Logs) == 0 {
+						info.Durations = []float64{
+							cast.ToFloat64(child.Duration),
+						}
+					}
 					layerCUDAKernelInformation.SummaryCUDAKernelInformations[infoIdx] = info
 				}
 			}
-
 			groupedLayerCUDAKernelInfos[ii] = append(groupedLayerCUDAKernelInfos[ii], layerCUDAKernelInformation)
 		}
-		pp.Println("cnt = ", cnt)
 	}
 
 	layerCUDAKernelInfos := []SummaryLayerCUDAKernelInformation{}
@@ -373,6 +424,6 @@ func (es Evaluations) LayerCUDAKernelInformationSummary(perfCol *PerformanceColl
 }
 
 func dummyPP() {
-	// for import pp
+	// for importing pp
 	pp.Println("dummy")
 }
