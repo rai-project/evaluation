@@ -11,13 +11,16 @@ import (
 type Metadata map[string]interface{}
 
 type SummaryCUDAKernelInformation struct {
-	Name          string     `json:"name,omitempty"`
-	MangledName   string     `json:"mangled_name,omitempty"`
-	Tags          []Metadata `json:"tags,omitempty"`
-	Logs          []Metadata `json:"logs,omitempty"`
-	Durations     []int64    `json:"durations,omitempty"`
-	MeanDuration  float64    `json:"mean_duration,omitempty"`
-	CorrelationId int64      `json:"correlation_id,omitempty"`
+	Name               string     `json:"name,omitempty"`
+	MangledName        string     `json:"mangled_name,omitempty"`
+	Durations          []int64    `json:"durations,omitempty"`
+	Tags               []Metadata `json:"tags,omitempty"`
+	Logs               []Metadata `json:"logs,omitempty"`
+	CorrelationId      int64      `json:"correlation_id,omitempty"`
+	MeanDuration       float64    `json:"mean_duration,omitempty"`
+	MeanFlops          float64    `json:"mean_flops,omitempty"`
+	MeanDramReadBytes  float64    `json:"mean_dram_read_bytes,omitempty"`
+	MeanDramWriteBytes float64    `json:"mean_dram_write_bytes,omitempty"`
 }
 
 type SummaryCUDAKernelInformations []SummaryCUDAKernelInformation
@@ -66,8 +69,11 @@ func (infos SummaryCUDAKernelInformations) GetKernelLogKeys() []string {
 func (info SummaryCUDAKernelInformation) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
-		"kernel_durations (us)",
 		"kernel_mean_duration (us)",
+		"kernel_mean_flops",
+		"kernel_mean_dram_read_bytes",
+		"kernel_mean_dram_write_bytes",
+		"kernel_durations (us)",
 	}
 	kernelLogKeys := SummaryCUDAKernelInformations{info}.GetKernelLogKeys()
 	if len(kernelLogKeys) != 0 {
@@ -77,11 +83,13 @@ func (info SummaryCUDAKernelInformation) Header(opts ...writer.Option) []string 
 }
 
 func (info SummaryCUDAKernelInformation) Row(opts ...writer.Option) []string {
-	trimmedMeanFraction := DefaultTrimmedMeanFraction
 	extra := []string{
 		info.Name,
+		cast.ToString(info.MeanDuration),
+		cast.ToString(info.MeanFlops),
+		cast.ToString(info.MeanDramReadBytes),
+		cast.ToString(info.MeanDramWriteBytes),
 		strings.Join(int64SliceToStringSlice(info.Durations), DefaultDimiter),
-		cast.ToString(TrimmedMeanInt64Slice(info.Durations, trimmedMeanFraction)),
 	}
 	kernelLogKeys := SummaryCUDAKernelInformations{info}.GetKernelLogKeys()
 	for _, kernelLogKey := range kernelLogKeys {
@@ -126,6 +134,21 @@ func (k *SummaryCUDAKernelInformation) addTags(spanTags []model.KeyValue) {
 		return
 	}
 	k.Tags = append(k.Tags, tags)
+}
+
+func GetMeanLogValue(info SummaryCUDAKernelInformation, name string, trimmedMeanFraction float64) float64 {
+	if info.Logs == nil {
+		info.Logs = []Metadata{}
+	}
+	kernelLogs := []int64{}
+	for _, kernelLog := range info.Logs {
+		for kernelLogKeyName, keryeLogValue := range kernelLog {
+			if kernelLogKeyName == name {
+				kernelLogs = append(kernelLogs, cast.ToInt64(keryeLogValue))
+			}
+		}
+	}
+	return TrimmedMeanInt64Slice(kernelLogs, trimmedMeanFraction)
 }
 
 func GPUKernelSpantoCUDAKernelInformation(span model.Span) SummaryCUDAKernelInformation {

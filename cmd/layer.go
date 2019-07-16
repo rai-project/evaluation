@@ -5,12 +5,11 @@ import (
 )
 
 var (
-	barPlot    bool
-	boxPlot    bool
-	openPlot   bool
-	plotPath   string
-	sortOutput bool
-	topLayers  int
+	barPlot   bool
+	boxPlot   bool
+	openPlot  bool
+	plotPath  string
+	topLayers int
 )
 
 var layerCmd = &cobra.Command{

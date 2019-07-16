@@ -49,6 +49,8 @@ var (
 	divergenceCollection      *evaluation.DivergenceCollection
 
 	sourcePath = sourcepath.MustAbsoluteDir()
+
+	sortOutput bool
 )
 
 func rootSetup() error {
