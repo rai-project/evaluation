@@ -76,14 +76,14 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		strings.Join(int64SliceToStringSlice(s.Durations), ","),
-		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), ","),
-		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), ","),
+		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), DefaultDimiter),
 		s.AllocatorName,
-		strings.Join(int64SliceToStringSlice(s.HostTempMemSizes), ","),
-		strings.Join(int64SliceToStringSlice(s.DeviceTempMemSizes), ","),
-		strings.Join(int64SliceToStringSlice(s.HostPersistentMemSizes), ","),
-		strings.Join(int64SliceToStringSlice(s.DevicePersistentMemSizes), ","),
+		strings.Join(int64SliceToStringSlice(s.HostTempMemSizes), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.DeviceTempMemSizes), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.HostPersistentMemSizes), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.DevicePersistentMemSizes), DefaultDimiter),
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {

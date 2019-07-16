@@ -46,7 +46,7 @@ var layerOcurrenceCmd = &cobra.Command{
 			}
 			summary := evaluation.SummaryLayerOccurrenceInformations(summary0)
 
-			if sortLayer {
+			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {
 					return summary[ii].Duration > summary[jj].Duration
 				})

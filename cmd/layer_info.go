@@ -57,7 +57,7 @@ var layerInfoCmd = &cobra.Command{
 				return nil
 			}
 
-			if sortLayer || topLayers != -1 {
+			if sortOutput || topLayers != -1 {
 				sort.Slice(summary, func(ii, jj int) bool {
 					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
 				})
@@ -83,6 +83,5 @@ var layerInfoCmd = &cobra.Command{
 
 func init() {
 	layerInfoCmd.PersistentFlags().BoolVar(&listRuns, "list_runs", false, "list evaluations")
-	layerInfoCmd.PersistentFlags().BoolVar(&sortLayer, "sort_layer", false, "sort layer information by layer latency")
 	layerInfoCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers")
 }

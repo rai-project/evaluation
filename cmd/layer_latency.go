@@ -46,7 +46,7 @@ var layerLatencyCmd = &cobra.Command{
 			}
 			summary := evaluation.SummaryLayerLatencyInformations(summary0)
 
-			if sortLayer {
+			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {
 					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
 				})

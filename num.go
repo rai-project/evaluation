@@ -7,6 +7,7 @@ import (
 
 var (
 	DefaultTrimmedMeanFraction = 0.1
+	DefaultDimiter             = ";"
 )
 
 func TrimmedMeanInt64Slice(data []int64, frac float64) float64 {

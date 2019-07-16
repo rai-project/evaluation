@@ -163,6 +163,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().BoolVar(&noHeader, "no_header", false, "show header labels for output")
 	EvaluationCmd.PersistentFlags().BoolVar(&appendOutput, "append", false, "append the output")
 	EvaluationCmd.PersistentFlags().StringVarP(&outputFormat, "format", "f", "table", "print format to use")
+	EvaluationCmd.PersistentFlags().BoolVar(&sortOutput, "sort_output", false, "sort output summary information")
 
 	EvaluationCmd.AddCommand(AllCmds...)
 	EvaluationCmd.AddCommand(allCmd)
