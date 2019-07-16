@@ -1,11 +1,9 @@
 package evaluation
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/rai-project/evaluation/writer"
-	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 	model "github.com/uber/jaeger/model/json"
 )
@@ -162,96 +160,13 @@ func CUDALaunchSpantoCUDAKernelInformation(span model.Span) SummaryCUDAKernelInf
 
 func (es Evaluations) CUDAKernelInformationSummary(perfCol *PerformanceCollection) (SummaryCUDAKernelInformations, error) {
 	summary := SummaryCUDAKernelInformations{}
-	if len(es) == 0 {
-		return summary, errors.New("no evaluation is found in the database")
-	}
 
-	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	layerCUDAKernelInfos, err := es.LayerCUDAKernelInformationSummary(perfCol)
 	if err != nil {
 		return summary, err
 	}
-	if len(spans) == 0 {
-		return summary, errors.New("no span is found for the evaluation")
+	for _, info := range layerCUDAKernelInfos {
+		summary = append(summary, info.SummaryCUDAKernelInformations...)
 	}
-
-	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.SYSTEM_LIBRARY_TRACE.String())
-	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
-	if err != nil {
-		return summary, err
-	}
-	numGroups := len(groupedSpans)
-	if numGroups == 0 {
-		return summary, errors.New("no group of spans is found")
-	}
-
-	groupedCUDAKernelInfos := make([]SummaryCUDAKernelInformations, numGroups)
-	for ii, grsp := range groupedSpans {
-		CUDAKernelInformations := SummaryCUDAKernelInformations{}
-		for _, sp := range grsp {
-			traceLevel, err := getTagValueAsString(sp, "trace_level")
-			if err != nil || traceLevel == "" {
-				continue
-			}
-			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-				continue
-			}
-			if strings.ToLower(sp.OperationName) != "cuda_launch" {
-				continue
-			}
-			CUDAKernelInformations = append(CUDAKernelInformations, CUDALaunchSpantoCUDAKernelInformation(sp))
-		}
-
-		for _, sp := range grsp {
-			traceLevel, err := getTagValueAsString(sp, "trace_level")
-			if err != nil || traceLevel == "" {
-				continue
-			}
-			if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-				continue
-			}
-
-			if strings.ToLower(sp.OperationName) != "gpu_kernel" {
-				continue
-			}
-
-			kernelCorrelationId, err := getTagValueAsInt64(sp, "correlation_id")
-			if err != nil {
-				log.WithError(err).Error("expecting cuda launch to have a correlation_id")
-				continue
-			}
-			for infoIdx := range CUDAKernelInformations {
-				info := CUDAKernelInformations[infoIdx]
-				if info.CorrelationId != kernelCorrelationId {
-					continue
-				}
-				// only record kernel duration when no gpu metrics are captured
-				if len(info.Logs) == 0 {
-					info.Durations = []int64{
-						cast.ToInt64(sp.Duration),
-					}
-				}
-				CUDAKernelInformations[infoIdx] = info
-			}
-		}
-		groupedCUDAKernelInfos[ii] = CUDAKernelInformations
-	}
-
-	CUDAKernelInfos := SummaryCUDAKernelInformations{}
-	for infoIdx := range groupedCUDAKernelInfos[0] {
-		info := groupedCUDAKernelInfos[0][infoIdx]
-		for _, ckis := range groupedCUDAKernelInfos[1:] {
-			for _, cki := range ckis {
-				if info.Name == cki.Name {
-					info.Tags = append(info.Tags, cki.Tags...)
-					info.Logs = append(info.Logs, cki.Logs...)
-					info.Durations = append(info.Durations, cki.Durations...)
-				}
-			}
-			CUDAKernelInfos = append(CUDAKernelInfos, info)
-		}
-	}
-
-	summary = CUDAKernelInfos
-
 	return summary, nil
 }
