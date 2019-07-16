@@ -7,8 +7,6 @@ import (
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
-	model "github.com/uber/jaeger/model/json"
-	db "upper.io/db.v3"
 )
 
 //easyjson:json
@@ -46,7 +44,7 @@ func summaryModelInformation(es Evaluations, spans Spans) (SummaryModelInformati
 		return summary, errors.New("no evaluation is found in the database")
 	}
 
-	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
+	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
 	durations := []int64{}
 	for _, span := range cPredictSpans {
 		durations = append(durations, cast.ToInt64(span.Duration))
@@ -66,17 +64,12 @@ func summaryModelInformation(es Evaluations, spans Spans) (SummaryModelInformati
 
 func (es Evaluations) SummaryModelInformation(perfCol *PerformanceCollection) (SummaryModelInformation, error) {
 	summary := SummaryModelInformation{}
-	spans := []model.Span{}
-	for _, e := range es {
-		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-		if err != nil {
-			return summary, err
-		}
-		if len(foundPerfs) != 1 {
-			return summary, errors.New("no performance is found for the evaluation")
-		}
-		perf := foundPerfs[0]
-		spans = append(spans, perf.Spans()...)
+	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	if err != nil {
+		return summary, err
+	}
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
 	}
 	return summaryModelInformation(es, spans)
 }

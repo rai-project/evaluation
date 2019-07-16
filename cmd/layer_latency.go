@@ -52,10 +52,14 @@ var layerLatencyCmd = &cobra.Command{
 				})
 			}
 
-			if barPlot {
-				if openPlot {
+			if openPlot {
+				if boxPlot {
+					return summary.OpenBoxPlot()
+				} else {
 					return summary.OpenBarPlot()
 				}
+			}
+			if barPlot {
 				err := summary.WriteBarPlot(plotPath)
 				if err != nil {
 					return err
@@ -65,9 +69,6 @@ var layerLatencyCmd = &cobra.Command{
 			}
 
 			if boxPlot {
-				if openPlot {
-					return summary.OpenBoxPlot()
-				}
 				err := summary.WriteBoxPlot(plotPath)
 				if err != nil {
 					return err

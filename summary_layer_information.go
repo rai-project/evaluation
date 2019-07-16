@@ -12,8 +12,6 @@ import (
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
-	model "github.com/uber/jaeger/model/json"
-	db "upper.io/db.v3"
 )
 
 var (
@@ -251,17 +249,9 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 
 func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
 	summary := SummaryLayerInformations{}
-	spans := []model.Span{}
-	for _, e := range es {
-		foundPerfs, err := perfCol.Find(db.Cond{"_id": e.PerformanceID})
-		if err != nil {
-			return summary, err
-		}
-		if len(foundPerfs) != 1 {
-			return summary, errors.New("no performance is found for the evaluation")
-		}
-		perf := foundPerfs[0]
-		spans = append(spans, perf.Spans()...)
+	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	if err != nil {
+		return summary, err
 	}
 	if len(spans) == 0 {
 		return summary, errors.New("no span is found for the evaluation")
@@ -392,10 +382,10 @@ func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Ba
 
 func (o SummaryLayerMemoryInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) float64 {
-		return TrimmedMeanInt64Slice(elem.AllocatedBytes, 0)
+		return TrimmedMeanInt64Slice(elem.AllocatedBytes, 0) / float64(1048576)
 	})
 	bar.SetGlobalOptions(
-		charts.YAxisOpts{Name: "Allocated Memory(Bytes)"},
+		charts.YAxisOpts{Name: "Allocated Memory(MB)"},
 	)
 	return bar
 
