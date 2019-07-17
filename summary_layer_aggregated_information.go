@@ -10,14 +10,14 @@ import (
 
 //easyjson:json
 type SummaryLayerAggregatedInformation struct {
-	SummaryBase         `json:",inline"`
-	Type                string  `json:"type,omitempty"`
-	Occurence           int     `json:"occurrence,omitempty"`
-	OccurencePercentage float64 `json:"occurrence_percentage,omitempty"`
-	Duration            float64 `json:"duration,omitempty"`
-	DurationPercentage  float64 `json:"duration_percentage,omitempty"`
-	Memory              int64   `json:"memory,omitempty"`
-	MemoryPercentage    float64 `json:"memory_percentage,omitempty"`
+	SummaryModelInformation `json:",inline"`
+	Type                    string  `json:"type,omitempty"`
+	Occurence               int     `json:"occurrence,omitempty"`
+	OccurencePercentage     float64 `json:"occurrence_percentage,omitempty"`
+	Duration                float64 `json:"duration,omitempty"`
+	DurationPercentage      float64 `json:"duration_percentage,omitempty"`
+	Memory                  int64   `json:"memory,omitempty"`
+	MemoryPercentage        float64 `json:"memory_percentage,omitempty"`
 }
 
 //easyjson:json
@@ -65,13 +65,17 @@ func (s SummaryLayerAggregatedInformation) Row(iopts ...writer.Option) []string 
 	return extra
 }
 
-func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceCollection) (SummaryLayerAggregatedInformations, error) {
+func (es Evaluations) SummaryLayerAggregatedInformations(perfCol *PerformanceCollection) (SummaryLayerAggregatedInformations, error) {
 	summary := SummaryLayerAggregatedInformations{}
 	layerInfos, err := es.SummaryLayerInformations(perfCol)
 	if err != nil {
 		return summary, err
 	}
-	summaryBase := layerInfos[0].SummaryBase
+
+	modelInfo, err := es.SummaryModelInformation(perfCol)
+	if err != nil {
+		modelInfo = SummaryModelInformation{}
+	}
 
 	exsistedLayers := make(map[string]SummaryLayerAggregatedInformation)
 	totalOcurrences := 0
@@ -82,10 +86,10 @@ func (es Evaluations) SummaryLayerAggregatedInformation(perfCol *PerformanceColl
 		v, ok := exsistedLayers[layerType]
 		if !ok {
 			exsistedLayers[layerType] = SummaryLayerAggregatedInformation{
-				SummaryBase: summaryBase,
-				Type:        layerType,
-				Occurence:   1,
-				Duration:    duration,
+				SummaryModelInformation: modelInfo,
+				Type:                    layerType,
+				Occurence:               1,
+				Duration:                duration,
 			}
 		} else {
 			v.Occurence += 1

@@ -33,5 +33,5 @@ func init() {
 	layerCmd.AddCommand(layerOcurrenceCmd)
 	layerCmd.AddCommand(layerLatencyCmd)
 	layerCmd.AddCommand(layerMemoryCmd)
-	layerCmd.AddCommand(layerCUDAKernelCmd)
+	layerCmd.AddCommand(layerGPUCmd)
 }

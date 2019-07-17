@@ -14,7 +14,7 @@ var (
 	kernelNameFilterList   = []string{}
 )
 
-var layerCUDAKernelCmd = &cobra.Command{
+var layerGPUCmd = &cobra.Command{
 	Use: "cuda_kernel",
 	Aliases: []string{
 		"cuda",
@@ -52,30 +52,30 @@ var layerCUDAKernelCmd = &cobra.Command{
 				return err
 			}
 
-			layerCUDAKernelInfos, err := evals.LayerCUDAKernelInformationSummary(performanceCollection)
+			layerGPUInfos, err := evals.SummaryGPULayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
 			if sortOutput || topLayers != -1 {
-				sort.Sort(layerCUDAKernelInfos)
+				sort.Sort(layerGPUInfos)
 				if topLayers != -1 {
-					if topLayers >= len(layerCUDAKernelInfos) {
-						topLayers = len(layerCUDAKernelInfos)
+					if topLayers >= len(layerGPUInfos) {
+						topLayers = len(layerGPUInfos)
 					}
-					layerCUDAKernelInfos = layerCUDAKernelInfos[:topLayers]
+					layerGPUInfos = layerGPUInfos[:topLayers]
 				}
-				for ii := range layerCUDAKernelInfos {
-					kernelInfo := layerCUDAKernelInfos[ii]
+				for ii := range layerGPUInfos {
+					kernelInfo := layerGPUInfos[ii]
 					sort.Sort(kernelInfo)
-					layerCUDAKernelInfos[ii] = kernelInfo
+					layerGPUInfos[ii] = kernelInfo
 				}
 			}
 
-			writer := NewWriter(layerCUDAKernelInfos)
+			writer := NewWriter(layerGPUInfos)
 			defer writer.Close()
 
-			for _, elem := range layerCUDAKernelInfos {
+			for _, elem := range layerGPUInfos {
 				writer.Rows(elem)
 			}
 
@@ -87,5 +87,5 @@ var layerCUDAKernelCmd = &cobra.Command{
 }
 
 func init() {
-	layerCUDAKernelCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
+	layerGPUCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
 }

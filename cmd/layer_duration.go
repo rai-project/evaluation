@@ -44,7 +44,7 @@ var layerDurationCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryLayerAggregatedInformation(performanceCollection)
+			summary0, err := evals.SummaryLayerAggregatedInformations(performanceCollection)
 			if err != nil {
 				return err
 			}

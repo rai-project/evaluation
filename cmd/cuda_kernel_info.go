@@ -42,7 +42,7 @@ var cudaKernelInfoCmd = &cobra.Command{
 				return err
 			}
 
-			cudaKernelInfos, err := evals.CUDAKernelInformationSummary(performanceCollection)
+			cudaKernelInfos, err := evals.GPUInformationSummary(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -59,7 +59,7 @@ var cudaKernelInfoCmd = &cobra.Command{
 
 			var writer *Writer
 			if len(cudaKernelInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryCUDAKernelInformation{})
+				writer = NewWriter(evaluation.SummaryGPUInformation{})
 				defer writer.Close()
 			}
 			writer = NewWriter(cudaKernelInfos[0])

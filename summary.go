@@ -10,6 +10,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+var (
+	cntkLogMessageShown = false
+)
+
 //easyjson:json
 type SummaryBase struct {
 	ID                  bson.ObjectId `json:"id" bson:"_id"`

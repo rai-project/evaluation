@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	DefaultTrimmedMeanFraction = 0.0
+	DefaultTrimmedMeanFraction = 0.2
 	DefaultDimiter             = ";"
 )
 

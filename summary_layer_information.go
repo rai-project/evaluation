@@ -14,19 +14,16 @@ import (
 	"github.com/spf13/cast"
 )
 
-var (
-	cntkLogMessageShown = false
-)
-
 //easyjson:json
 type SummaryLayerInformation struct {
-	SummaryBase              `json:",inline"`
+	SummaryModelInformation  `json:",inline"`
 	Index                    int     `json:"index,omitempty"`
 	Name                     string  `json:"layer_name,omitempty"`
 	Type                     string  `json:"type,omitempty"`
 	StaticType               string  `json:"static_type,omitempty"`
 	Shape                    string  `json:"shap,omitempty"`
 	Durations                []int64 `json:"durations,omitempty"`
+	MeanDuration             float64 `json:"mean_duration,omitempty"`
 	AllocatedBytes           []int64 `json:"allocated_bytes,omitempty"`      // Total number of bytes allocated if known
 	PeakAllocatedBytes       []int64 `json:"peak_allocated_bytes,omitempty"` // Total number of ebytes allocated if known
 	AllocatorName            string  `json:"allocator_name,omitempty"`       // Name of the allocator used
@@ -54,7 +51,8 @@ func (SummaryLayerInformation) Header(iopts ...writer.Option) []string {
 		"layer_name",
 		"layer_type",
 		"layer_shape",
-		"layer_duration (us)",
+		"layer_mean_duration (us)",
+		"layer_durations (us)",
 		"layer_allocated_bytes",
 		"layer_peak_allocated_bytes",
 		"layer_allocator_name",
@@ -76,6 +74,7 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
+		cast.ToString(s.MeanDuration),
 		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), DefaultDimiter),
@@ -102,7 +101,8 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		cast.ToString(TrimmedMeanInt64Slice(s.Durations, DefaultTrimmedMeanFraction)),
+		cast.ToString(s.MeanDuration),
+		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		cast.ToString(TrimmedMeanInt64Slice(s.AllocatedBytes, DefaultTrimmedMeanFraction)),
 		cast.ToString(TrimmedMeanInt64Slice(s.PeakAllocatedBytes, DefaultTrimmedMeanFraction)),
 		s.AllocatorName,
@@ -113,8 +113,16 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 	}
 }
 
-func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformations, error) {
+func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
 	summary := SummaryLayerInformations{}
+	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	if err != nil {
+		return summary, err
+	}
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
+	}
+
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
 	}
@@ -225,14 +233,19 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 		allocationDesc := getAllocationDescription(span)
 		allocatorName := allocationDesc.AllocatorName
 
+		modelInfo, err := es.SummaryModelInformation(perfCol)
+		if err != nil {
+			modelInfo = SummaryModelInformation{}
+		}
 		summary = append(summary,
 			SummaryLayerInformation{
-				SummaryBase:              es[0].summaryBase(),
+				SummaryModelInformation:  modelInfo,
 				Index:                    cast.ToInt(idx),
 				Name:                     span.OperationName,
 				Type:                     getOpName(span),
 				StaticType:               staticType,
 				Shape:                    shape,
+				MeanDuration:             TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction),
 				Durations:                durations,
 				AllocatedBytes:           allocationBytes,
 				PeakAllocatedBytes:       peakAllocationBytes,
@@ -245,19 +258,6 @@ func summaryLayerInformations(es Evaluations, spans Spans) (SummaryLayerInformat
 	}
 
 	return summary, nil
-}
-
-func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
-	summary := SummaryLayerInformations{}
-	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
-	if err != nil {
-		return summary, err
-	}
-	if len(spans) == 0 {
-		return summary, errors.New("no span is found for the evaluation")
-	}
-
-	return summaryLayerInformations(es, spans)
 }
 
 func sortByLayerIndex(spans Spans) {

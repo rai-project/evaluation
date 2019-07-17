@@ -12,6 +12,7 @@ var cudaKernelCmd = &cobra.Command{
 	Use: "cuda_kernel",
 	Aliases: []string{
 		"cuda",
+		"gpu",
 		"kernel",
 		"kernels",
 		"gpu_kernel",
