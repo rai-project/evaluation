@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cudaKernelDurationCmd = &cobra.Command{
-	Use:     "aggregated",
+var gpuKernelLayerAggreCmd = &cobra.Command{
+	Use:     "layer_aggre",
 	Aliases: []string{},
-	Short:   "Get model cuda kernel information from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get gpu information aggregated within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -42,30 +42,30 @@ var cudaKernelDurationCmd = &cobra.Command{
 				return err
 			}
 
-			cudaKernelInfos, err := evals.SummaryGPUAggregatedInformations(performanceCollection)
+			gpuInfos, err := evals.SummaryGPUKernelLayerAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
 			if sortOutput || topKernels != -1 {
-				sort.Sort(cudaKernelInfos)
+				sort.Sort(gpuInfos)
 				if topKernels != -1 {
-					if topKernels >= len(cudaKernelInfos) {
-						topKernels = len(cudaKernelInfos)
+					if topKernels >= len(gpuInfos) {
+						topKernels = len(gpuInfos)
 					}
-					cudaKernelInfos = cudaKernelInfos[:topKernels]
+					gpuInfos = gpuInfos[:topKernels]
 				}
 			}
 
 			var writer *Writer
-			if len(cudaKernelInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUAggregatedInformation{})
+			if len(gpuInfos) == 0 {
+				writer = NewWriter(evaluation.SummaryGPUKernelModelAggreInformation{})
 				defer writer.Close()
 			}
-			writer = NewWriter(cudaKernelInfos[0])
+			writer = NewWriter(gpuInfos[0])
 			defer writer.Close()
 
-			for _, elem := range cudaKernelInfos {
+			for _, elem := range gpuInfos {
 				writer.Row(elem)
 			}
 
@@ -77,7 +77,7 @@ var cudaKernelDurationCmd = &cobra.Command{
 }
 
 func init() {
-	cudaKernelDurationCmd.PersistentFlags().BoolVar(&sortOutput, "sort_output", false, "sort cuda kernel information by kernel duration")
-	cudaKernelDurationCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
-	cudaKernelDurationCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
+	gpuKernelLayerAggreCmd.PersistentFlags().BoolVar(&sortOutput, "sort_output", false, "sort cuda kernel information by kernel duration")
+	gpuKernelLayerAggreCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
+	gpuKernelLayerAggreCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
 }

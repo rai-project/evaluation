@@ -37,7 +37,7 @@ var accuracyCmd = &cobra.Command{
 				return err
 			}
 
-			writer := NewWriter(evaluation.SummaryPredictAccuracyInformation{})
+			writer := NewWriter(evaluation.SummaryModelAccuracyInformation{})
 			defer writer.Close()
 
 			for _, acc := range accs {
@@ -50,7 +50,7 @@ var accuracyCmd = &cobra.Command{
 	},
 }
 
-func predictAccuracyInformationSummary() (evaluation.SummaryPredictAccuracyInformations, error) {
+func predictAccuracyInformationSummary() (evaluation.SummaryModelAccuracyInformations, error) {
 	evals, err := getEvaluations()
 	if err != nil {
 		return nil, err

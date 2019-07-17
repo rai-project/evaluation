@@ -40,7 +40,7 @@ var layerOcurrenceCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryLayerAggregatedInformations(performanceCollection)
+			summary0, err := evals.SummaryLayerAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -65,7 +65,7 @@ var layerOcurrenceCmd = &cobra.Command{
 				return nil
 			}
 
-			writer := NewWriter(evaluation.SummaryLayerAggregatedInformation{})
+			writer := NewWriter(evaluation.SummaryLayerAggreInformation{})
 			defer writer.Close()
 
 			for _, lyr := range summary {

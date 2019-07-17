@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cudaKernelInfoCmd = &cobra.Command{
-	Use:     "info",
+var gpuKernelModelAggreCmd = &cobra.Command{
+	Use:     "model_info",
 	Aliases: []string{},
-	Short:   "Get model cuda kernel information from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get gpu information aggregated within the model from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -42,7 +42,7 @@ var cudaKernelInfoCmd = &cobra.Command{
 				return err
 			}
 
-			cudaKernelInfos, err := evals.GPUInformationSummary(performanceCollection)
+			cudaKernelInfos, err := evals.SummaryGPUKernelModelAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -59,7 +59,7 @@ var cudaKernelInfoCmd = &cobra.Command{
 
 			var writer *Writer
 			if len(cudaKernelInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUInformation{})
+				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
 				defer writer.Close()
 			}
 			writer = NewWriter(cudaKernelInfos[0])
@@ -77,6 +77,6 @@ var cudaKernelInfoCmd = &cobra.Command{
 }
 
 func init() {
-	cudaKernelInfoCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
-	cudaKernelInfoCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
+	gpuKernelModelAggreCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
+	gpuKernelModelAggreCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
 }

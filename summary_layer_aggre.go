@@ -9,7 +9,7 @@ import (
 )
 
 //easyjson:json
-type SummaryLayerAggregatedInformation struct {
+type SummaryLayerAggreInformation struct {
 	SummaryModelInformation `json:",inline"`
 	Type                    string  `json:"type,omitempty"`
 	Occurence               int     `json:"occurrence,omitempty"`
@@ -21,21 +21,21 @@ type SummaryLayerAggregatedInformation struct {
 }
 
 //easyjson:json
-type SummaryLayerAggregatedInformations []SummaryLayerAggregatedInformation
+type SummaryLayerAggreInformations []SummaryLayerAggreInformation
 
 //easyjson:json
-type SummaryLayerDruationInformation SummaryLayerAggregatedInformation
+type SummaryLayerDruationInformation SummaryLayerAggreInformation
 
 //easyjson:json
-type SummaryLayerOccurenceInformation SummaryLayerAggregatedInformation
+type SummaryLayerOccurenceInformation SummaryLayerAggreInformation
 
 //easyjson:json
-type SummaryLayerDruationInformations SummaryLayerAggregatedInformations
+type SummaryLayerDruationInformations SummaryLayerAggreInformations
 
 //easyjson:json
-type SummaryLayerOccurrenceInformations SummaryLayerAggregatedInformations
+type SummaryLayerOccurrenceInformations SummaryLayerAggreInformations
 
-func (SummaryLayerAggregatedInformation) Header(iopts ...writer.Option) []string {
+func (SummaryLayerAggreInformation) Header(iopts ...writer.Option) []string {
 	extra := []string{
 		"type",
 		"occurrences",
@@ -50,7 +50,7 @@ func (SummaryLayerAggregatedInformation) Header(iopts ...writer.Option) []string
 	return extra
 }
 
-func (s SummaryLayerAggregatedInformation) Row(iopts ...writer.Option) []string {
+func (s SummaryLayerAggreInformation) Row(iopts ...writer.Option) []string {
 	extra := []string{
 		s.Type,
 		cast.ToString(s.Occurence),
@@ -65,8 +65,8 @@ func (s SummaryLayerAggregatedInformation) Row(iopts ...writer.Option) []string 
 	return extra
 }
 
-func (es Evaluations) SummaryLayerAggregatedInformations(perfCol *PerformanceCollection) (SummaryLayerAggregatedInformations, error) {
-	summary := SummaryLayerAggregatedInformations{}
+func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollection) (SummaryLayerAggreInformations, error) {
+	summary := SummaryLayerAggreInformations{}
 	layerInfos, err := es.SummaryLayerInformations(perfCol)
 	if err != nil {
 		return summary, err
@@ -77,7 +77,7 @@ func (es Evaluations) SummaryLayerAggregatedInformations(perfCol *PerformanceCol
 		modelInfo = SummaryModelInformation{}
 	}
 
-	exsistedLayers := make(map[string]SummaryLayerAggregatedInformation)
+	exsistedLayers := make(map[string]SummaryLayerAggreInformation)
 	totalOcurrences := 0
 	totalDuration := float64(0)
 	for _, info := range layerInfos {
@@ -85,7 +85,7 @@ func (es Evaluations) SummaryLayerAggregatedInformations(perfCol *PerformanceCol
 		duration := TrimmedMeanInt64Slice(info.Durations, DefaultTrimmedMeanFraction)
 		v, ok := exsistedLayers[layerType]
 		if !ok {
-			exsistedLayers[layerType] = SummaryLayerAggregatedInformation{
+			exsistedLayers[layerType] = SummaryLayerAggreInformation{
 				SummaryModelInformation: modelInfo,
 				Type:                    layerType,
 				Occurence:               1,
@@ -141,9 +141,9 @@ func (o SummaryLayerOccurrenceInformations) PiePlot(title string) *charts.Pie {
 	return pie
 }
 
-type LayerAggregatedInformationSelector func(elem SummaryLayerAggregatedInformation) interface{}
+type LayerAggregatedInformationSelector func(elem SummaryLayerAggreInformation) interface{}
 
-func (o SummaryLayerAggregatedInformations) piePlotAdd(pie *charts.Pie, elemSelector LayerAggregatedInformationSelector) *charts.Pie {
+func (o SummaryLayerAggreInformations) piePlotAdd(pie *charts.Pie, elemSelector LayerAggregatedInformationSelector) *charts.Pie {
 	labels := []string{}
 	data := make(map[string]interface{})
 	for _, elem := range o {
@@ -156,12 +156,12 @@ func (o SummaryLayerAggregatedInformations) piePlotAdd(pie *charts.Pie, elemSele
 }
 
 func (o SummaryLayerDruationInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
-	return SummaryLayerAggregatedInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggregatedInformation) interface{} {
+	return SummaryLayerAggreInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggreInformation) interface{} {
 		return elem.DurationPercentage
 	})
 }
 func (o SummaryLayerOccurrenceInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
-	return SummaryLayerAggregatedInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggregatedInformation) interface{} {
+	return SummaryLayerAggreInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggreInformation) interface{} {
 		return elem.OccurencePercentage
 	})
 }

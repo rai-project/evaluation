@@ -10,15 +10,15 @@ import (
 )
 
 //easyjson:json
-type SummaryPredictAccuracyInformation struct {
+type SummaryModelAccuracyInformation struct {
 	SummaryBase  `json:",inline"`
 	Top1Accuracy float64 `json:"top1_accuracy,omitempty"`
 	Top5Accuracy float64 `json:"top5_accuracy,omitempty"`
 }
 
-type SummaryPredictAccuracyInformations []SummaryPredictAccuracyInformation
+type SummaryModelAccuracyInformations []SummaryModelAccuracyInformation
 
-func (SummaryPredictAccuracyInformation) Header(opts ...writer.Option) []string {
+func (SummaryModelAccuracyInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"top1_accuracy",
 		"top5_accuracy",
@@ -26,7 +26,7 @@ func (SummaryPredictAccuracyInformation) Header(opts ...writer.Option) []string 
 	return append(SummaryBase{}.Header(opts...), extra...)
 }
 
-func (s SummaryPredictAccuracyInformation) Row(opts ...writer.Option) []string {
+func (s SummaryModelAccuracyInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		cast.ToString(s.Top1Accuracy),
 		cast.ToString(s.Top5Accuracy),
@@ -34,7 +34,7 @@ func (s SummaryPredictAccuracyInformation) Row(opts ...writer.Option) []string {
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (s SummaryPredictAccuracyInformation) key() string {
+func (s SummaryModelAccuracyInformation) key() string {
 	return strings.Join(
 		[]string{
 			s.ModelName,
@@ -49,11 +49,11 @@ func (s SummaryPredictAccuracyInformation) key() string {
 	)
 }
 
-func (SummaryPredictAccuracyInformations) Header(opts ...writer.Option) []string {
-	return SummaryPredictAccuracyInformation{}.Header(opts...)
+func (SummaryModelAccuracyInformations) Header(opts ...writer.Option) []string {
+	return SummaryModelAccuracyInformation{}.Header(opts...)
 }
 
-func (s SummaryPredictAccuracyInformations) Rows(opts ...writer.Option) [][]string {
+func (s SummaryModelAccuracyInformations) Rows(opts ...writer.Option) [][]string {
 	rows := [][]string{}
 	for _, e := range s {
 		rows = append(rows, e.Row(opts...))
@@ -61,21 +61,21 @@ func (s SummaryPredictAccuracyInformations) Rows(opts ...writer.Option) [][]stri
 	return rows
 }
 
-func (s SummaryPredictAccuracyInformations) Group() (SummaryPredictAccuracyInformations, error) {
-	groups := map[string]SummaryPredictAccuracyInformations{}
+func (s SummaryModelAccuracyInformations) Group() (SummaryModelAccuracyInformations, error) {
+	groups := map[string]SummaryModelAccuracyInformations{}
 
 	for _, v := range s {
 		k := v.key()
 		if _, ok := groups[k]; !ok {
-			groups[k] = SummaryPredictAccuracyInformations{}
+			groups[k] = SummaryModelAccuracyInformations{}
 		}
 		groups[k] = append(groups[k], v)
 	}
 
-	res := []SummaryPredictAccuracyInformation{}
+	res := []SummaryModelAccuracyInformation{}
 	for _, v := range groups {
 		if len(v) == 0 {
-			log.Error("expecting more more than one input in SummaryPredictAccuracyInformations")
+			log.Error("expecting more more than one input in SummaryModelAccuracyInformations")
 			continue
 		}
 		for _, vv := range v {
@@ -89,16 +89,16 @@ func (s SummaryPredictAccuracyInformations) Group() (SummaryPredictAccuracyInfor
 	return res, nil
 }
 
-func (a ModelAccuracy) PredictAccuracyInformationSummary(e Evaluation) (*SummaryPredictAccuracyInformation, error) {
-	return &SummaryPredictAccuracyInformation{
+func (a ModelAccuracy) PredictAccuracyInformationSummary(e Evaluation) (*SummaryModelAccuracyInformation, error) {
+	return &SummaryModelAccuracyInformation{
 		SummaryBase:  e.summaryBase(),
 		Top1Accuracy: a.Top1,
 		Top5Accuracy: a.Top5,
 	}, nil
 }
 
-func (as ModelAccuracies) PredictAccuracyInformationSummary(e Evaluation) ([]*SummaryPredictAccuracyInformation, error) {
-	res := []*SummaryPredictAccuracyInformation{}
+func (as ModelAccuracies) PredictAccuracyInformationSummary(e Evaluation) ([]*SummaryModelAccuracyInformation, error) {
+	res := []*SummaryModelAccuracyInformation{}
 	for _, a := range as {
 		s, err := a.PredictAccuracyInformationSummary(e)
 		if err != nil {
@@ -110,7 +110,7 @@ func (as ModelAccuracies) PredictAccuracyInformationSummary(e Evaluation) ([]*Su
 	return res, nil
 }
 
-func (e Evaluation) PredictAccuracyInformationSummary(accCol *ModelAccuracyCollection) (*SummaryPredictAccuracyInformation, error) {
+func (e Evaluation) PredictAccuracyInformationSummary(accCol *ModelAccuracyCollection) (*SummaryModelAccuracyInformation, error) {
 	accs, err := accCol.Find(db.Cond{"_id": e.ModelAccuracyID})
 	if err != nil {
 		return nil, err
@@ -122,8 +122,8 @@ func (e Evaluation) PredictAccuracyInformationSummary(accCol *ModelAccuracyColle
 	return acc.PredictAccuracyInformationSummary(e)
 }
 
-func (es Evaluations) PredictAccuracyInformationSummary(accCol *ModelAccuracyCollection) (SummaryPredictAccuracyInformations, error) {
-	res := []SummaryPredictAccuracyInformation{}
+func (es Evaluations) PredictAccuracyInformationSummary(accCol *ModelAccuracyCollection) (SummaryModelAccuracyInformations, error) {
+	res := []SummaryModelAccuracyInformation{}
 	for _, e := range es {
 		s, err := e.PredictAccuracyInformationSummary(accCol)
 		if err != nil {

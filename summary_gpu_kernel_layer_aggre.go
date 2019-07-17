@@ -8,7 +8,7 @@ import (
 )
 
 //easyjson:json
-type SummayGPULayerAggregatedInformation struct {
+type SummayGPUKernelLayerAggreInformation struct {
 	SummaryLayerInformation `json:",inline"`
 	GPUDuration             float64 `json:"gpu_duration,omitempty"`
 	CPUDuration             float64 `json:"cpu_duration,omitempty"`
@@ -18,9 +18,19 @@ type SummayGPULayerAggregatedInformation struct {
 }
 
 //easyjson:json
-type SummayGPULayerAggregatedInformations []SummayGPULayerAggregatedInformation
+type SummayGPUKernelLayerAggreInformations []SummayGPUKernelLayerAggreInformation
 
-func (SummayGPULayerAggregatedInformation) Header(iopts ...writer.Option) []string {
+func (p SummayGPUKernelLayerAggreInformations) Len() int { return len(p) }
+func (p SummayGPUKernelLayerAggreInformations) Less(i, j int) bool {
+	x := p[i]
+	y := p[j]
+	return x.GPUDuration > y.GPUDuration
+}
+func (p SummayGPUKernelLayerAggreInformations) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+func (SummayGPUKernelLayerAggreInformation) Header(iopts ...writer.Option) []string {
 	extra := []string{
 		"layer_index",
 		"layer_name",
@@ -39,7 +49,7 @@ func (SummayGPULayerAggregatedInformation) Header(iopts ...writer.Option) []stri
 	return extra
 }
 
-func (s SummayGPULayerAggregatedInformation) Row(iopts ...writer.Option) []string {
+func (s SummayGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []string {
 	extra := []string{
 		cast.ToString(s.Index),
 		s.Name,
@@ -58,16 +68,16 @@ func (s SummayGPULayerAggregatedInformation) Row(iopts ...writer.Option) []strin
 	return extra
 }
 
-func (es Evaluations) SummayGPULayerAggregatedInformations(perfCol *PerformanceCollection) (SummayGPULayerAggregatedInformations, error) {
-	summary := SummayGPULayerAggregatedInformations{}
-	gpuLayerInfos, err := es.SummaryGPULayerInformations(perfCol)
+func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *PerformanceCollection) (SummayGPUKernelLayerAggreInformations, error) {
+	summary := SummayGPUKernelLayerAggreInformations{}
+	gpuLayerInfos, err := es.SummaryGPUKernelLayerInformations(perfCol)
 	if err != nil {
 		return summary, errors.New("no span is found for the evaluation")
 	}
 
 	for _, gpuLayerInfo := range gpuLayerInfos {
 		layerInfo := gpuLayerInfo.SummaryLayerInformation
-		gpuInfos := gpuLayerInfo.SummaryGPUInformations
+		gpuInfos := gpuLayerInfo.SummaryGPUKernelInformations
 		duration := float64(0)
 		flops := float64(0)
 		readBytes := float64(0)
@@ -79,7 +89,7 @@ func (es Evaluations) SummayGPULayerAggregatedInformations(perfCol *PerformanceC
 			writeBytes += gpuInfo.MeanDramWriteBytes
 		}
 
-		summary = append(summary, SummayGPULayerAggregatedInformation{
+		summary = append(summary, SummayGPUKernelLayerAggreInformation{
 			SummaryLayerInformation: layerInfo,
 			GPUDuration:             duration,
 			CPUDuration:             layerInfo.MeanDuration - duration,

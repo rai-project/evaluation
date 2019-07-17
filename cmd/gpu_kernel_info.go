@@ -14,16 +14,10 @@ var (
 	kernelNameFilterList   = []string{}
 )
 
-var layerGPUCmd = &cobra.Command{
-	Use: "cuda_kernel",
-	Aliases: []string{
-		"cuda",
-		"kernel",
-		"kernels",
-		"gpu_kernel",
-		"gpu_kernels",
-	},
-	Short: "Get evaluation kernel launch information from system library traces in a database. Specify model name as `all` to list information of all the models.",
+var gpuKernelInfoCmd = &cobra.Command{
+	Use:     "info",
+	Aliases: []string{},
+	Short:   "Get evaluation gpu kernel information from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName[cmd.Name()]
@@ -52,7 +46,7 @@ var layerGPUCmd = &cobra.Command{
 				return err
 			}
 
-			layerGPUInfos, err := evals.SummaryGPULayerInformations(performanceCollection)
+			layerGPUInfos, err := evals.SummaryGPUKernelLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -87,5 +81,5 @@ var layerGPUCmd = &cobra.Command{
 }
 
 func init() {
-	layerGPUCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
+	gpuKernelInfoCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
 }

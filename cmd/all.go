@@ -16,12 +16,8 @@ func runAll(cmd *cobra.Command, args []string) error {
 		//pcmd.SilenceUsage = true
 		if originalDatabaseName == "" {
 			switch pcmd.Name() {
-			case modelInfoCmd.Name():
-				databaseName = "carml_model_trace"
-			case layerInfoCmd.Name(),
-				cudaKernelCmd.Name(),
-				eventflowCmd.Name():
-				databaseName = "carml_full_trace"
+			default:
+				databaseName = "carml"
 			}
 		}
 		pargs := append([]string{pcmd.Name()}, os.Args[2:]...)

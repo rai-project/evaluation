@@ -10,14 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	piePlot bool
-)
-
 var layerDurationCmd = &cobra.Command{
 	Use:     "duration",
 	Aliases: []string{},
-	Short:   "Get model layer aggregated duration information from framework traces in a database",
+	Short:   "Get model layer latency information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["layer"]
@@ -33,7 +29,7 @@ var layerDurationCmd = &cobra.Command{
 			os.RemoveAll(outputFileName)
 		}
 		if plotPath == "" {
-			plotPath = evaluation.TempFile("", "layer_duration_plot_*.html")
+			plotPath = evaluation.TempFile("", "layer_latency_plot_*.html")
 		}
 		return nil
 	},
@@ -44,24 +40,27 @@ var layerDurationCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryLayerAggregatedInformations(performanceCollection)
+			summary0, err := evals.SummaryLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryLayerDruationInformations(summary0)
+			summary := evaluation.SummaryLayerLatencyInformations(summary0)
 
 			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {
-					return summary[ii].Duration > summary[jj].Duration
+					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
 				})
 			}
 
 			if openPlot {
-				return summary.OpenPiePlot()
+				if boxPlot {
+					return summary.OpenBoxPlot()
+				} else {
+					return summary.OpenBarPlot()
+				}
 			}
-
-			if piePlot {
-				err := summary.WritePiePlot(plotPath)
+			if barPlot {
+				err := summary.WriteBarPlot(plotPath)
 				if err != nil {
 					return err
 				}
@@ -69,10 +68,19 @@ var layerDurationCmd = &cobra.Command{
 				return nil
 			}
 
-			writer := NewWriter(evaluation.SummaryLayerAggregatedInformation{})
+			if boxPlot {
+				err := summary.WriteBoxPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
+
+			writer := NewWriter(evaluation.SummaryLayerInformation{})
 			defer writer.Close()
 
-			for _, lyr := range summary {
+			for _, lyr := range summary0 {
 				writer.Row(lyr)
 			}
 			return nil

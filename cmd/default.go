@@ -17,7 +17,7 @@ var (
 	AllCmds = []*cobra.Command{
 		modelCmd,
 		layerCmd,
-		cudaKernelCmd,
+		gpuKernelCmd,
 		eventflowCmd,
 		accuracyCmd,
 	}

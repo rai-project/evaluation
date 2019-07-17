@@ -1159,7 +1159,7 @@ func (v *SystemMemoryInformation) UnmarshalJSON(data []byte) error {
 func (v *SystemMemoryInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation2(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation3(in *jlexer.Lexer, out *SummaryPredictAccuracyInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation3(in *jlexer.Lexer, out *SummaryModelAccuracyInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -1224,7 +1224,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation3(in *jlexer.Lexer, out 
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation3(out *jwriter.Writer, in SummaryPredictAccuracyInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation3(out *jwriter.Writer, in SummaryModelAccuracyInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -1308,26 +1308,26 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation3(out *jwriter.Writer, i
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryPredictAccuracyInformation) MarshalJSON() ([]byte, error) {
+func (v SummaryModelAccuracyInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryPredictAccuracyInformation) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryModelAccuracyInformation) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryPredictAccuracyInformation) UnmarshalJSON(data []byte) error {
+func (v *SummaryModelAccuracyInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryPredictAccuracyInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryModelAccuracyInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation3(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluation4(in *jlexer.Lexer, out *SummaryModelInformation) {
@@ -2274,7 +2274,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation7(in *jlexer.Lexer, out 
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v60 SummaryLayerAggregatedInformation
+			var v60 SummaryLayerAggreInformation
 			(v60).UnmarshalEasyJSON(in)
 			*out = append(*out, v60)
 			in.WantComma()
@@ -3282,7 +3282,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation13(in *jlexer.Lexer, out
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v93 SummaryLayerAggregatedInformation
+			var v93 SummaryLayerAggreInformation
 			(v93).UnmarshalEasyJSON(in)
 			*out = append(*out, v93)
 			in.WantComma()
@@ -3562,7 +3562,7 @@ func (v *SummaryLayerDruationInformation) UnmarshalJSON(data []byte) error {
 func (v *SummaryLayerDruationInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation14(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out *SummaryLayerAggregatedInformations) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out *SummaryLayerAggreInformations) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -3571,15 +3571,15 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out
 		in.Delim('[')
 		if *out == nil {
 			if !in.IsDelim(']') {
-				*out = make(SummaryLayerAggregatedInformations, 0, 1)
+				*out = make(SummaryLayerAggreInformations, 0, 1)
 			} else {
-				*out = SummaryLayerAggregatedInformations{}
+				*out = SummaryLayerAggreInformations{}
 			}
 		} else {
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v96 SummaryLayerAggregatedInformation
+			var v96 SummaryLayerAggreInformation
 			(v96).UnmarshalEasyJSON(in)
 			*out = append(*out, v96)
 			in.WantComma()
@@ -3590,7 +3590,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation15(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, in SummaryLayerAggregatedInformations) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, in SummaryLayerAggreInformations) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
@@ -3606,29 +3606,29 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation15(out *jwriter.Writer, 
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryLayerAggregatedInformations) MarshalJSON() ([]byte, error) {
+func (v SummaryLayerAggreInformations) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryLayerAggregatedInformations) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryLayerAggreInformations) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation15(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformations) UnmarshalJSON(data []byte) error {
+func (v *SummaryLayerAggreInformations) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformations) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryLayerAggreInformations) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation15(l, v)
 }
-func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out *SummaryLayerAggregatedInformation) {
+func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out *SummaryLayerAggreInformation) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -3703,7 +3703,7 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation16(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, in SummaryLayerAggregatedInformation) {
+func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, in SummaryLayerAggreInformation) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -3837,26 +3837,26 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation16(out *jwriter.Writer, 
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v SummaryLayerAggregatedInformation) MarshalJSON() ([]byte, error) {
+func (v SummaryLayerAggreInformation) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v SummaryLayerAggregatedInformation) MarshalEasyJSON(w *jwriter.Writer) {
+func (v SummaryLayerAggreInformation) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson679db3deEncodeGithubComRaiProjectEvaluation16(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformation) UnmarshalJSON(data []byte) error {
+func (v *SummaryLayerAggreInformation) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *SummaryLayerAggregatedInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *SummaryLayerAggreInformation) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson679db3deDecodeGithubComRaiProjectEvaluation16(l, v)
 }
 func easyjson679db3deDecodeGithubComRaiProjectEvaluation17(in *jlexer.Lexer, out *SummaryEventFlow) {
