@@ -11,7 +11,7 @@ import (
 )
 
 var cudaKernelDurationCmd = &cobra.Command{
-	Use:     "info",
+	Use:     "duration",
 	Aliases: []string{},
 	Short:   "Get model cuda kernel information from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -42,12 +42,12 @@ var cudaKernelDurationCmd = &cobra.Command{
 				return err
 			}
 
-			cudaKernelInfos, err := evals.CUDAKernelInformationSummary(performanceCollection)
+			cudaKernelInfos, err := evals.CUDAKernelAggregatedInformationSummary(performanceCollection)
 			if err != nil {
 				return err
 			}
 
-			if sortOutput || topLayers != -1 {
+			if sortOutput || topKernels != -1 {
 				sort.Sort(cudaKernelInfos)
 				if topKernels != -1 {
 					if topKernels >= len(cudaKernelInfos) {
@@ -59,7 +59,7 @@ var cudaKernelDurationCmd = &cobra.Command{
 
 			var writer *Writer
 			if len(cudaKernelInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryCUDAKernelInformation{})
+				writer = NewWriter(evaluation.SummaryCUDAKernelAggregatedInformation{})
 				defer writer.Close()
 			}
 			writer = NewWriter(cudaKernelInfos[0])

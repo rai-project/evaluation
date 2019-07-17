@@ -48,7 +48,7 @@ func (info SummaryCUDAKernelAggregatedInformation) Row(opts ...writer.Option) []
 	}
 }
 
-func (es Evaluations) CUDAKernelAggregatedInformation(perfCol *PerformanceCollection) (SummaryCUDAKernelAggregatedInformations, error) {
+func (es Evaluations) CUDAKernelAggregatedInformationSummary(perfCol *PerformanceCollection) (SummaryCUDAKernelAggregatedInformations, error) {
 	summary := SummaryCUDAKernelAggregatedInformations{}
 
 	modelSummary, err := es.SummaryModelInformation(perfCol)
