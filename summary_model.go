@@ -2,9 +2,9 @@ package evaluation
 
 import (
 	"errors"
-	"strings"
 
 	"github.com/rai-project/evaluation/writer"
+	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
 )
@@ -23,9 +23,9 @@ type SummaryModelInformations []SummaryModelInformation
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"duration (us)",
-		"durations (us)",
 		"latency (ms)",
 		"throughput (input/s)",
+		// "durations (us)",
 	}
 	return append(SummaryBase{}.Header(opts...), extra...)
 }
@@ -33,9 +33,9 @@ func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		cast.ToString(s.Duration),
-		strings.Join(int64SliceToStringSlice(s.Durations), ","),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
+		// strings.Join(int64SliceToStringSlice(s.Durations), ","),
 	}
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
@@ -73,4 +73,49 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		})
 	}
 	return summary, nil
+}
+
+func (o SummaryModelInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Throughput"
+}
+
+func (o SummaryModelInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, cast.ToString(elem.BatchSize))
+	}
+	bar.AddXAxis(labels)
+
+	data := make([]float64, len(o))
+	for ii, elem := range o {
+		data[ii] = elem.Throughput
+	}
+	bar.AddYAxis("", data)
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetGlobalOptions(
+		charts.XAxisOpts{AxisLabel: Name: "Batch Size"},
+		charts.YAxisOpts{Name: "Throughput (inputs/second)"},
+	)
+	return bar
+}
+
+func (o SummaryModelInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryModelInformations) OpenBarPlot() error {
+	return openBarPlot(o)
 }

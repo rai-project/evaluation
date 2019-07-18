@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
@@ -41,6 +43,23 @@ var modelInfoCmd = &cobra.Command{
 			summary, err := evals.SummaryModelInformations(performanceCollection)
 			if err != nil {
 				return err
+			}
+
+			sort.Slice(summary, func(ii, jj int) bool {
+				return summary[ii].BatchSize < summary[jj].BatchSize
+			})
+
+			if openPlot {
+				return summary.OpenBarPlot()
+			}
+
+			if barPlot {
+				err := summary.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
 			}
 
 			writer := NewWriter(evaluation.SummaryModelInformation{})
