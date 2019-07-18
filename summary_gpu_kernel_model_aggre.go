@@ -1,6 +1,8 @@
 package evaluation
 
 import (
+	"errors"
+
 	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 )
@@ -51,9 +53,14 @@ func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []s
 func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *PerformanceCollection) (SummaryGPUKernelModelAggreInformations, error) {
 	summary := SummaryGPUKernelModelAggreInformations{}
 
-	modelSummary, err := es.SummaryModelInformation(perfCol)
+	if len(es.GroupByBatchSize()) != 1 {
+		return summary, errors.New("evaluations do not exsit or are not with the same batch size")
+	}
+
+	modelInfos, err := (es.SummaryModelInformations(perfCol))
+	modelInfo := modelInfos[0]
 	if err != nil {
-		modelSummary = SummaryModelInformation{}
+		modelInfo = SummaryModelInformation{}
 	}
 
 	infos := SummaryGPUKernelInformations{}
@@ -70,7 +77,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 		v, ok := infoMap[info.Name]
 		if !ok {
 			infoMap[info.Name] = SummaryGPUKernelModelAggreInformation{
-				SummaryModelInformation: modelSummary,
+				SummaryModelInformation: modelInfo,
 				Name:                    info.Name,
 				Duration:                info.Duration,
 				Flops:                   info.MeanFlops,
@@ -82,7 +89,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 			v.Flops += info.MeanFlops
 			v.DramReadBytes += info.MeanDramReadBytes
 			v.DramWriteBytes += info.MeanDramWriteBytes
-			v.SummaryModelInformation = modelSummary
+			v.SummaryModelInformation = modelInfo
 			infoMap[info.Name] = v
 		}
 	}

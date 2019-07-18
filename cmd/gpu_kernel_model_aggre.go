@@ -42,30 +42,30 @@ var gpuKernelModelAggreCmd = &cobra.Command{
 				return err
 			}
 
-			cudaKernelInfos, err := evals.SummaryGPUKernelModelAggreInformations(performanceCollection)
+			gpuKernelInfos, err := evals.SummaryGPUKernelModelAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
 			if sortOutput || topKernels != -1 {
-				sort.Sort(cudaKernelInfos)
+				sort.Sort(gpuKernelInfos)
 				if topKernels != -1 {
-					if topKernels >= len(cudaKernelInfos) {
-						topKernels = len(cudaKernelInfos)
+					if topKernels >= len(gpuKernelInfos) {
+						topKernels = len(gpuKernelInfos)
 					}
-					cudaKernelInfos = cudaKernelInfos[:topKernels]
+					gpuKernelInfos = gpuKernelInfos[:topKernels]
 				}
 			}
 
 			var writer *Writer
-			if len(cudaKernelInfos) == 0 {
+			if len(gpuKernelInfos) == 0 {
 				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
 				defer writer.Close()
 			}
-			writer = NewWriter(cudaKernelInfos[0])
+			writer = NewWriter(gpuKernelInfos[0])
 			defer writer.Close()
 
-			for _, elem := range cudaKernelInfos {
+			for _, elem := range gpuKernelInfos {
 				writer.Row(elem)
 			}
 

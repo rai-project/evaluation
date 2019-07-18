@@ -137,9 +137,10 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 		return summary, errors.New("no group of spans is found")
 	}
 
-	modelSummary, err := es.SummaryModelInformation(perfCol)
+	modelInfos, err := (es.SummaryModelInformations(perfCol))
+	modelInfo := modelInfos[0]
 	if err != nil {
-		modelSummary = SummaryModelInformation{}
+		modelInfo = SummaryModelInformation{}
 	}
 
 	groupedLayerInfos := make([][]SummaryLayerInformation, numGroups)
@@ -240,7 +241,7 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 
 		summary = append(summary,
 			SummaryLayerInformation{
-				SummaryModelInformation:  modelSummary,
+				SummaryModelInformation:  modelInfo,
 				Index:                    cast.ToInt(idx),
 				Name:                     span.OperationName,
 				Type:                     getOpName(span),

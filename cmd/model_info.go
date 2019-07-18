@@ -38,15 +38,16 @@ var modelInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.SummaryModelInformation(performanceCollection)
+			summary, err := evals.SummaryModelInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
+
 			writer := NewWriter(evaluation.SummaryModelInformation{})
 			defer writer.Close()
-
-			writer.Row(summary)
-
+			for _, v := range summary {
+				writer.Row(v)
+			}
 			return nil
 		}
 		return forallmodels(run)

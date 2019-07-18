@@ -51,8 +51,8 @@ var layerInfoCmd = &cobra.Command{
 			if listRuns {
 				writer := NewWriter(evaluation.SummaryLayerInformation{})
 				defer writer.Close()
-				for _, lyr := range summary {
-					writer.Row(lyr)
+				for _, v := range summary {
+					writer.Row(v)
 				}
 				return nil
 			}
@@ -71,8 +71,8 @@ var layerInfoCmd = &cobra.Command{
 
 			writer := NewWriter(evaluation.SummaryMeanLayerInformation{})
 			defer writer.Close()
-			for _, lyr := range summary {
-				writer.Row(evaluation.SummaryMeanLayerInformation(lyr))
+			for _, v := range summary {
+				writer.Row(evaluation.SummaryMeanLayerInformation(v))
 			}
 			return nil
 		}

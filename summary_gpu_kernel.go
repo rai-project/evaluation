@@ -156,11 +156,11 @@ func (infos SummaryGPUKernelInformations) GetKernelLogKeys() []string {
 func (infos SummaryGPUKernelLayerInformations) GetKernelLogKeys() []string {
 	kernelLogs := []Metadata{}
 	for _, info := range infos {
-		for _, cudaKernelInformation := range info.SummaryGPUKernelInformations {
-			if len(cudaKernelInformation.Logs) == 0 {
+		for _, gpuKernelInformation := range info.SummaryGPUKernelInformations {
+			if len(gpuKernelInformation.Logs) == 0 {
 				continue
 			}
-			kernelLogs = append(kernelLogs, cudaKernelInformation.Logs...)
+			kernelLogs = append(kernelLogs, gpuKernelInformation.Logs...)
 		}
 	}
 	return getMetaDataKeys(kernelLogs)
@@ -168,7 +168,7 @@ func (infos SummaryGPUKernelLayerInformations) GetKernelLogKeys() []string {
 
 // Rows ...
 func (info SummaryGPUKernelLayerInformation) Rows(iopts ...writer.Option) [][]string {
-	cudaKernelInfos := info.SummaryGPUKernelInformations
+	gpuKernelInfos := info.SummaryGPUKernelInformations
 	layerInfo := SummaryMeanLayerInformation(info.SummaryLayerInformation)
 	layerInfoRow := layerInfo.Row(iopts...)
 
@@ -191,7 +191,7 @@ func (info SummaryGPUKernelLayerInformation) Rows(iopts ...writer.Option) [][]st
 		return false
 	}
 
-	for _, cki := range cudaKernelInfos {
+	for _, cki := range gpuKernelInfos {
 		if !isFilteredKernel(cki) {
 			continue
 		}

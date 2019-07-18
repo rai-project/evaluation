@@ -72,8 +72,8 @@ var layerAggreDurationCmd = &cobra.Command{
 			writer := NewWriter(evaluation.SummaryLayerAggreInformation{})
 			defer writer.Close()
 
-			for _, lyr := range summary {
-				writer.Row(lyr)
+			for _, v := range summary {
+				writer.Row(v)
 			}
 			return nil
 		}

@@ -68,8 +68,8 @@ var layerMemoryCmd = &cobra.Command{
 			writer := NewWriter(evaluation.SummaryLayerInformation{})
 			defer writer.Close()
 
-			for _, lyr := range summary0 {
-				writer.Row(lyr)
+			for _, v := range summary0 {
+				writer.Row(v)
 			}
 			return nil
 		}

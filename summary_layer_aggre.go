@@ -72,9 +72,10 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 		return summary, err
 	}
 
-	modelSummary, err := es.SummaryModelInformation(perfCol)
+	modelInfos, err := (es.SummaryModelInformations(perfCol))
+	modelInfo := modelInfos[0]
 	if err != nil {
-		modelSummary = SummaryModelInformation{}
+		modelInfo = SummaryModelInformation{}
 	}
 
 	exsistedLayers := make(map[string]SummaryLayerAggreInformation)
@@ -86,7 +87,7 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 		v, ok := exsistedLayers[layerType]
 		if !ok {
 			exsistedLayers[layerType] = SummaryLayerAggreInformation{
-				SummaryModelInformation: modelSummary,
+				SummaryModelInformation: modelInfo,
 				Type:                    layerType,
 				Occurence:               1,
 				Duration:                duration,

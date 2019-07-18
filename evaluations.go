@@ -24,3 +24,16 @@ func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceColl
 	}
 	return spans, nil
 }
+
+func (es Evaluations) GroupByBatchSize() map[int]Evaluations {
+	ret := make(map[int]Evaluations)
+	for _, e := range es {
+		_, ok := ret[e.BatchSize]
+		if !ok {
+			ret[e.BatchSize] = Evaluations{e}
+		} else {
+			ret[e.BatchSize] = append(ret[e.BatchSize], e)
+		}
+	}
+	return ret
+}

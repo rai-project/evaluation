@@ -18,6 +18,8 @@ type SummaryModelInformation struct {
 	Throughput  float64 `json:"throughput,omitempty"`
 }
 
+type SummaryModelInformations []SummaryModelInformation
+
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
 		"duration (us)",
@@ -38,33 +40,37 @@ func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func (es Evaluations) SummaryModelInformation(perfCol *PerformanceCollection) (SummaryModelInformation, error) {
-	summary := SummaryModelInformation{}
+func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (SummaryModelInformations, error) {
+	summary := SummaryModelInformations{}
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
 	}
-	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
-	if err != nil {
-		return summary, err
-	}
-	if len(spans) == 0 {
-		return summary, errors.New("no span is found for the evaluation")
-	}
+	groupedEvals := es.GroupByBatchSize()
 
-	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
-	durations := []int64{}
-	for _, span := range cPredictSpans {
-		durations = append(durations, cast.ToInt64(span.Duration))
-	}
-	duration := TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction)
-	base := es[0].summaryBase()
-	batchSize := base.BatchSize
-	summary = SummaryModelInformation{
-		SummaryBase: base,
-		Durations:   durations,
-		Duration:    duration,
-		Throughput:  float64(1000000*batchSize) / duration,
-		Latency:     duration / float64(batchSize*1000),
+	for _, evals := range groupedEvals {
+		spans, err := evals.GetSpansFromPerformanceCollection(perfCol)
+		if err != nil {
+			return summary, err
+		}
+		if len(spans) == 0 {
+			return summary, errors.New("no span is found for the evaluation")
+		}
+
+		cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
+		durations := []int64{}
+		for _, span := range cPredictSpans {
+			durations = append(durations, cast.ToInt64(span.Duration))
+		}
+		duration := TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction)
+		base := evals[0].summaryBase()
+		batchSize := base.BatchSize
+		summary = append(summary, SummaryModelInformation{
+			SummaryBase: base,
+			Durations:   durations,
+			Duration:    duration,
+			Throughput:  float64(1000000*batchSize) / duration,
+			Latency:     duration / float64(batchSize*1000),
+		})
 	}
 	return summary, nil
 }

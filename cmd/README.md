@@ -9,37 +9,37 @@ To get help on a subcommand, accuracy for example, run `go run main.go accuracy 
 
 ## Model
 
-* model information across different batch sizes
+* Model information across different batch sizes
 
    ```./main model info --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --format=csv```
 
 ## Layer
 
-* layer information
+* Layer information
 
   ```./main layer info --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --format=csv```
 
-* layer duration
+* Layer duration
 
   ```./main layer duration --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --bar_plot```
 
-* layer duration variance
+* Layer duration variance
 
   ```./main layer duration --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --box_plot```
 
-* layer memory
+* Layer memory
 
   ```./main layer memory --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --bar_plot```
 
-* layer occurrence
+* Layer occurrence
 
   ```./main layer occurrence --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --pie_plot```
 
-* layer aggregated duration based on operator type
+* Layer aggregated duration based on operator type
 
   ```./main layer aggre_duration --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --pie_plot```
 
-* layer theoretical flops calculation using the layer operator type and shape
+* Layer theoretical flops calculation using the layer operator type and shape
 
   TODO
 
@@ -49,7 +49,6 @@ To get help on a subcommand, accuracy for example, run `go run main.go accuracy 
 
   ```./main gpu_kernel info --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --format=csv```
 
-  add ```--to
 * GPU kernel information aggregated within each layer
 
   ```./main gpu_kernel layer_aggre --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --format=csv```
@@ -70,18 +69,18 @@ To get help on a subcommand, accuracy for example, run `go run main.go accuracy 
 
   ```./main gpu_kernel layer_dram_write --database_name=$DATABASE_NAME --database_address=$DATABASE_ADDRESS --model_name=$MODEL_NAME --output=$OUTPUTFILE --batch_size=$BATCH_SIZE --bar_plot```
 
-* layer GPU vs CPU time
+* Layer GPU vs CPU time
 
-  TODO
+  Use the information from  ```gpu_kernel layer_aggre```
 
 * GPU kernel roofline analysis
 
   Use the information from  ```gpu_kernel info```
 
-* layer roofline analysis
+* Layer roofline analysis
 
   Use the information from  ```gpu_kernel layer_aggre```
 
-* model roofline analysis
+* Model roofline analysis
 
   Use the information from  ```gpu_kernel model_aggre```
