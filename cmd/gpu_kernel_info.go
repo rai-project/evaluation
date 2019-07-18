@@ -66,11 +66,16 @@ var gpuKernelInfoCmd = &cobra.Command{
 				}
 			}
 
-			writer := NewWriter(layerGPUInfos)
-			defer writer.Close()
+			formats := strings.Split(outputFormat, ",")
+			for _, f := range formats {
+				outputFormat = f
+				outputFileName = outputFileName[0:len(outputFileName)-len(outputFileExtension)] + "." + f
 
-			for _, elem := range layerGPUInfos {
-				writer.Rows(elem)
+				writer := NewWriter(layerGPUInfos)
+				defer writer.Close()
+				for _, elem := range layerGPUInfos {
+					writer.Rows(elem)
+				}
 			}
 
 			return nil

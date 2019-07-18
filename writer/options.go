@@ -3,6 +3,7 @@ package writer
 type Options struct {
 	FilterKernelNames []string
 	ShowSummaryBase   bool
+	Format            string
 }
 
 type Option func(*Options)
@@ -19,6 +20,12 @@ func FilterKernelNames(kernels []string) Option {
 func ShowSummaryBase(b bool) Option {
 	return func(w *Options) {
 		w.ShowSummaryBase = b
+	}
+}
+
+func Format(f string) Option {
+	return func(w *Options) {
+		w.Format = f
 	}
 }
 

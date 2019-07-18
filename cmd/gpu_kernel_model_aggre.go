@@ -11,7 +11,7 @@ import (
 )
 
 var gpuKernelModelAggreCmd = &cobra.Command{
-	Use:     model_aggre,
+	Use:     "model_aggre",
 	Aliases: []string{},
 	Short:   "Get gpu information aggregated within the model from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
