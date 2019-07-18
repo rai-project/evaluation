@@ -2,8 +2,10 @@ package evaluation
 
 import (
 	"errors"
+	"time"
 
 	"github.com/rai-project/evaluation/writer"
+	"github.com/rai-project/go-echarts/charts"
 	"github.com/spf13/cast"
 )
 
@@ -24,7 +26,7 @@ func (p SummayGPUKernelLayerAggreInformations) Len() int { return len(p) }
 func (p SummayGPUKernelLayerAggreInformations) Less(i, j int) bool {
 	x := p[i]
 	y := p[j]
-	return x.GPUDuration > y.GPUDuration
+	return x.Index < y.Index
 }
 func (p SummayGPUKernelLayerAggreInformations) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
@@ -54,7 +56,7 @@ func (s SummayGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []stri
 		cast.ToString(s.Index),
 		s.Name,
 		s.Type,
-		cast.ToString(s.MeanDuration),
+		cast.ToString(s.Duration),
 		cast.ToString(s.GPUDuration),
 		cast.ToString(s.CPUDuration),
 		cast.ToString(s.Flops),
@@ -83,7 +85,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 		readBytes := float64(0)
 		writeBytes := float64(0)
 		for _, gpuInfo := range gpuInfos {
-			duration += gpuInfo.MeanDuration
+			duration += gpuInfo.Duration
 			flops += gpuInfo.MeanFlops
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes
@@ -92,7 +94,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 		summary = append(summary, SummayGPUKernelLayerAggreInformation{
 			SummaryLayerInformation: layerInfo,
 			GPUDuration:             duration,
-			CPUDuration:             layerInfo.MeanDuration - duration,
+			CPUDuration:             layerInfo.Duration - duration,
 			Flops:                   flops,
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
@@ -100,4 +102,148 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 	}
 
 	return summary, nil
+}
+
+type SummaryGPUKernelLayerGPUCPUInformations SummayGPUKernelLayerAggreInformations
+
+type SummaryGPUKernelLayerFlopsInformations SummayGPUKernelLayerAggreInformations
+
+type SummaryGPUKernelLayerDramReadInformations SummayGPUKernelLayerAggreInformations
+
+type SummaryGPUKernelLayerDramWriteInformations SummayGPUKernelLayerAggreInformations
+
+func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer GPU Kernel Flops"
+}
+
+func (o SummaryGPUKernelLayerDramReadInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer GPU Kernel Dram Read Bytes"
+}
+
+func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer GPU Kernel Dram Write Bytes"
+}
+
+func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerDramReadInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+type GPUKernelLayerAggreInformationSelector func(elem SummayGPUKernelLayerAggreInformation) float64
+
+func (o SummayGPUKernelLayerAggreInformations) barPlotAdd(bar *charts.Bar, elemSelector GPUKernelLayerAggreInformationSelector) *charts.Bar {
+	labels := []string{}
+	for _, elem := range o {
+		labels = append(labels, elem.Name)
+	}
+	bar.AddXAxis(labels)
+
+	data := make([]float64, len(o))
+	for ii, elem := range o {
+		data[ii] = elemSelector(elem)
+	}
+	bar.AddYAxis("", data)
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetGlobalOptions(
+		charts.XAxisOpts{Name: "Layer Index"},
+	)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummayGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummayGPUKernelLayerAggreInformation) float64 {
+		return elem.Flops
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "Latency(" + unitName(time.Microsecond) + ")"},
+	)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerFlopsInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummayGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummayGPUKernelLayerAggreInformation) float64 {
+		return elem.Flops / float64(1000000000)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "GFlops"},
+	)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerDramReadInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummayGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummayGPUKernelLayerAggreInformation) float64 {
+		return elem.DramReadBytes / float64(1024*1024)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "MB"},
+	)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerDramWriteInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummayGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummayGPUKernelLayerAggreInformation) float64 {
+		return elem.DramWriteBytes / float64(1024*1024)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "MB"},
+	)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerFlopsInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryGPUKernelLayerDramReadInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryGPUKernelLayerDramWriteInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryGPUKernelLayerFlopsInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryGPUKernelLayerDramReadInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryGPUKernelLayerDramWriteInformations) OpenBarPlot() error {
+	return openBarPlot(o)
 }

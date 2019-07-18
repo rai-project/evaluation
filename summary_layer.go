@@ -22,8 +22,8 @@ type SummaryLayerInformation struct {
 	Type                     string  `json:"type,omitempty"`
 	StaticType               string  `json:"static_type,omitempty"`
 	Shape                    string  `json:"shap,omitempty"`
+	Duration                 float64 `json:"mean_duration,omitempty"`
 	Durations                []int64 `json:"durations,omitempty"`
-	MeanDuration             float64 `json:"mean_duration,omitempty"`
 	AllocatedBytes           []int64 `json:"allocated_bytes,omitempty"`      // Total number of bytes allocated if known
 	PeakAllocatedBytes       []int64 `json:"peak_allocated_bytes,omitempty"` // Total number of ebytes allocated if known
 	AllocatorName            string  `json:"allocator_name,omitempty"`       // Name of the allocator used
@@ -74,7 +74,7 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		cast.ToString(s.MeanDuration),
+		cast.ToString(s.Duration),
 		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), DefaultDimiter),
@@ -101,7 +101,7 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 		s.Name,
 		s.Type,
 		s.Shape,
-		cast.ToString(s.MeanDuration),
+		cast.ToString(s.Duration),
 		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		cast.ToString(TrimmedMeanInt64Slice(s.AllocatedBytes, DefaultTrimmedMeanFraction)),
 		cast.ToString(TrimmedMeanInt64Slice(s.PeakAllocatedBytes, DefaultTrimmedMeanFraction)),
@@ -135,6 +135,11 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 	numGroups := len(groupedLayerSpans)
 	if numGroups == 0 {
 		return summary, errors.New("no group of spans is found")
+	}
+
+	modelSummary, err := es.SummaryModelInformation(perfCol)
+	if err != nil {
+		modelSummary = SummaryModelInformation{}
 	}
 
 	groupedLayerInfos := make([][]SummaryLayerInformation, numGroups)
@@ -233,19 +238,15 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 		allocationDesc := getAllocationDescription(span)
 		allocatorName := allocationDesc.AllocatorName
 
-		modelInfo, err := es.SummaryModelInformation(perfCol)
-		if err != nil {
-			modelInfo = SummaryModelInformation{}
-		}
 		summary = append(summary,
 			SummaryLayerInformation{
-				SummaryModelInformation:  modelInfo,
+				SummaryModelInformation:  modelSummary,
 				Index:                    cast.ToInt(idx),
 				Name:                     span.OperationName,
 				Type:                     getOpName(span),
 				StaticType:               staticType,
 				Shape:                    shape,
-				MeanDuration:             TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction),
+				Duration:                 TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction),
 				Durations:                durations,
 				AllocatedBytes:           allocationBytes,
 				PeakAllocatedBytes:       peakAllocationBytes,

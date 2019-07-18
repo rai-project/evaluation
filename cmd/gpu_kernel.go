@@ -22,7 +22,10 @@ func init() {
 	gpuKernelCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
 	gpuKernelCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
 
-	gpuKernelCmd.AddCommand(gpuKernelModelAggreCmd)
 	gpuKernelCmd.AddCommand(gpuKernelInfoCmd)
+	gpuKernelCmd.AddCommand(gpuKernelModelAggreCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerAggreCmd)
+	gpuKernelCmd.AddCommand(gpuKernelLayerFlopsCmd)
+	gpuKernelCmd.AddCommand(gpuKernelLayerDramReadCmd)
+	gpuKernelCmd.AddCommand(gpuKernelLayerDramWriteCmd)
 }

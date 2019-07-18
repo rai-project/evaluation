@@ -72,13 +72,13 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 			infoMap[info.Name] = SummaryGPUKernelModelAggreInformation{
 				SummaryModelInformation: modelSummary,
 				Name:                    info.Name,
-				Duration:                info.MeanDuration,
+				Duration:                info.Duration,
 				Flops:                   info.MeanFlops,
 				DramReadBytes:           info.MeanDramReadBytes,
 				DramWriteBytes:          info.MeanDramWriteBytes,
 			}
 		} else {
-			v.Duration += info.MeanDuration
+			v.Duration += info.Duration
 			v.Flops += info.MeanFlops
 			v.DramReadBytes += info.MeanDramReadBytes
 			v.DramWriteBytes += info.MeanDramWriteBytes

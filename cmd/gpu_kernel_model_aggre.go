@@ -11,7 +11,7 @@ import (
 )
 
 var gpuKernelModelAggreCmd = &cobra.Command{
-	Use:     "model_info",
+	Use:     model_aggre,
 	Aliases: []string{},
 	Short:   "Get gpu information aggregated within the model from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -74,9 +74,4 @@ var gpuKernelModelAggreCmd = &cobra.Command{
 
 		return forallmodels(run)
 	},
-}
-
-func init() {
-	gpuKernelModelAggreCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
-	gpuKernelModelAggreCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
 }

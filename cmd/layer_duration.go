@@ -52,13 +52,6 @@ var layerDurationCmd = &cobra.Command{
 				})
 			}
 
-			if openPlot {
-				if boxPlot {
-					return summary.OpenBoxPlot()
-				} else {
-					return summary.OpenBarPlot()
-				}
-			}
 			if barPlot {
 				err := summary.WriteBarPlot(plotPath)
 				if err != nil {
@@ -75,6 +68,14 @@ var layerDurationCmd = &cobra.Command{
 				}
 				fmt.Println("Created plot in " + plotPath)
 				return nil
+			}
+
+			if openPlot {
+				if boxPlot {
+					return summary.OpenBoxPlot()
+				} else {
+					return summary.OpenBarPlot()
+				}
 			}
 
 			writer := NewWriter(evaluation.SummaryLayerInformation{})

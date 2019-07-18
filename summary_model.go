@@ -20,8 +20,8 @@ type SummaryModelInformation struct {
 
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
-		"durations (us)",
 		"duration (us)",
+		"durations (us)",
 		"latency (ms)",
 		"throughput (input/s)",
 	}
@@ -30,18 +30,25 @@ func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 
 func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
-		strings.Join(int64SliceToStringSlice(s.Durations), ","),
 		cast.ToString(s.Duration),
+		strings.Join(int64SliceToStringSlice(s.Durations), ","),
 		cast.ToString(s.Latency),
 		cast.ToString(s.Throughput),
 	}
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
 
-func summaryModelInformation(es Evaluations, spans Spans) (SummaryModelInformation, error) {
+func (es Evaluations) SummaryModelInformation(perfCol *PerformanceCollection) (SummaryModelInformation, error) {
 	summary := SummaryModelInformation{}
 	if len(es) == 0 {
 		return summary, errors.New("no evaluation is found in the database")
+	}
+	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
+	if err != nil {
+		return summary, err
+	}
+	if len(spans) == 0 {
+		return summary, errors.New("no span is found for the evaluation")
 	}
 
 	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
@@ -60,16 +67,4 @@ func summaryModelInformation(es Evaluations, spans Spans) (SummaryModelInformati
 		Latency:     duration / float64(batchSize*1000),
 	}
 	return summary, nil
-}
-
-func (es Evaluations) SummaryModelInformation(perfCol *PerformanceCollection) (SummaryModelInformation, error) {
-	summary := SummaryModelInformation{}
-	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
-	if err != nil {
-		return summary, err
-	}
-	if len(spans) == 0 {
-		return summary, errors.New("no span is found for the evaluation")
-	}
-	return summaryModelInformation(es, spans)
 }

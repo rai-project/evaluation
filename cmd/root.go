@@ -51,6 +51,10 @@ var (
 	sourcePath = sourcepath.MustAbsoluteDir()
 
 	sortOutput bool
+	barPlot    bool
+	boxPlot    bool
+	openPlot   bool
+	plotPath   string
 )
 
 func rootSetup() error {
@@ -170,6 +174,12 @@ func init() {
 	EvaluationCmd.AddCommand(AllCmds...)
 	EvaluationCmd.AddCommand(allCmd)
 	EvaluationCmd.AddCommand(databaseCmd)
+
+	EvaluationCmd.PersistentFlags().BoolVar(&barPlot, "bar_plot", false, "generates a bar plot of the layers")
+	EvaluationCmd.PersistentFlags().BoolVar(&boxPlot, "box_plot", false, "generates a box plot of the layers")
+	EvaluationCmd.PersistentFlags().BoolVar(&piePlot, "pie_plot", false, "generates a pie plot of the layers")
+	EvaluationCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
+	EvaluationCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
 
 	pp.WithLineInfo = true
 }

@@ -3,6 +3,7 @@ package evaluation
 import (
 	"encoding/json"
 	"errors"
+	"sort"
 	"strings"
 
 	"github.com/k0kubun/pp"
@@ -22,7 +23,7 @@ type SummaryGPUKernelInformation struct {
 	Tags               []Metadata `json:"tags,omitempty"`
 	Logs               []Metadata `json:"logs,omitempty"`
 	CorrelationId      int64      `json:"correlation_id,omitempty"`
-	MeanDuration       float64    `json:"mean_duration,omitempty"`
+	Duration           float64    `json:"mean_duration,omitempty"`
 	MeanFlops          float64    `json:"mean_flops,omitempty"`
 	MeanDramReadBytes  float64    `json:"mean_dram_read_bytes,omitempty"`
 	MeanDramWriteBytes float64    `json:"mean_dram_write_bytes,omitempty"`
@@ -61,7 +62,7 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		info.Name,
-		cast.ToString(info.MeanDuration),
+		cast.ToString(info.Duration),
 		cast.ToString(info.MeanFlops),
 		cast.ToString(info.MeanDramReadBytes),
 		cast.ToString(info.MeanDramWriteBytes),
@@ -474,7 +475,7 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 				}
 			}
 			trimmedMeanFraction := DefaultTrimmedMeanFraction
-			cki.MeanDuration = TrimmedMeanInt64Slice(cki.Durations, trimmedMeanFraction)
+			cki.Duration = TrimmedMeanInt64Slice(cki.Durations, trimmedMeanFraction)
 			cki.MeanFlops = GetMeanLogValue(cki, "flop_count_sp", trimmedMeanFraction)
 			cki.MeanDramReadBytes = GetMeanLogValue(cki, "dram_read_bytes", trimmedMeanFraction)
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
@@ -484,6 +485,8 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 	}
 
 	summary = layerGPUInfos
+
+	sort.Sort(summary)
 
 	return summary, nil
 }

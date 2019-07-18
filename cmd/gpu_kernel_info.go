@@ -79,7 +79,3 @@ var gpuKernelInfoCmd = &cobra.Command{
 		return forallmodels(run)
 	},
 }
-
-func init() {
-	gpuKernelInfoCmd.PersistentFlags().StringVar(&kernelNameFilterString, "kernel_names", "", "filter out certain kernel (input must be mangled and is comma seperated)")
-}
