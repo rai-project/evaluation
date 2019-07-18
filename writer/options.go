@@ -1,9 +1,15 @@
 package writer
 
+import (
+	"strings"
+
+	"github.com/getlantern/deepcopy"
+)
+
 type Options struct {
 	FilterKernelNames []string
 	ShowSummaryBase   bool
-	Format            string
+	Formats           []string
 }
 
 type Option func(*Options)
@@ -25,7 +31,24 @@ func ShowSummaryBase(b bool) Option {
 
 func Format(f string) Option {
 	return func(w *Options) {
-		w.Format = f
+		f := strings.ToLower(f)
+		w.Formats = strings.Split(f, ",")
+	}
+}
+
+func Formats(f string) Option {
+	return func(w *Options) {
+		f := strings.ToLower(f)
+		w.Formats = strings.Split(f, ",")
+	}
+}
+
+func FromOptions(os Options) Option {
+	return func(w *Options) {
+		err := deepcopy.Copy(w, os)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

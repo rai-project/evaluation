@@ -7,21 +7,20 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/Unknwon/com"
 	"github.com/olekukonko/tablewriter"
 	"github.com/rai-project/evaluation/writer"
 )
 
-//easyjson:json
 type Writer struct {
-	format         string
-	output         io.Writer
-	outputFileName string
-	tbl            *tablewriter.Table
-	csv            *csv.Writer
-	jsonRows       []interface{}
-	opts           []writer.Option
+	outputs         map[string]io.Writer
+	outputFileNames map[string]string
+	tbl             *tablewriter.Table
+	csv             *csv.Writer
+	jsonRows        []interface{}
+	opts            writer.Options
 }
 
 type Rower interface {
@@ -34,22 +33,40 @@ type Rowers interface {
 	Rows(...writer.Option) [][]string
 }
 
-func NewWriter(rower Rower, opts ...writer.Option) *Writer {
+func getOutput(outputFileName string) io.Writer {
 	var output io.Writer = os.Stdout
 	if outputFileName != "" {
 		output = &bytes.Buffer{}
 	}
+	return output
+}
+
+func NewWriter(rower Rower, opts ...writer.Option) *Writer {
+	baseOpts := []writer.Option{writer.Format(outputFormat)}
 	wr := &Writer{
-		format:         outputFormat,
-		output:         output,
-		outputFileName: outputFileName,
+		outputs:         make(map[string]io.Writer),
+		outputFileNames: make(map[string]string),
+		opts:            writer.NewOptions(append(baseOpts, opts...)...),
 	}
-	switch wr.format {
-	case "table":
+	if wr.hasFormat("table") {
+		tOutputFileName := outputFileName + ".tbl"
+		output := getOutput(tOutputFileName)
+		wr.outputs["table"] = output
+		wr.outputFileNames["table"] = tOutputFileName
 		wr.tbl = tablewriter.NewWriter(output)
-	case "csv":
+	}
+	if wr.hasFormat("csv") {
+		cOutputFileName := outputFileName + ".csv"
+		output := getOutput(cOutputFileName)
+		wr.outputs["csv"] = output
+		wr.outputFileNames["csv"] = cOutputFileName
 		wr.csv = csv.NewWriter(output)
-	case "json":
+	}
+	if wr.hasFormat("json") {
+		jOutputFileName := outputFileName + ".json"
+		output := getOutput(jOutputFileName)
+		wr.outputs["json"] = output
+		wr.outputFileNames["json"] = jOutputFileName
 		wr.jsonRows = []interface{}{}
 	}
 	if rower != nil && (!noHeader || appendOutput) {
@@ -59,39 +76,44 @@ func NewWriter(rower Rower, opts ...writer.Option) *Writer {
 }
 
 func (w *Writer) Header(rower Rower) error {
-	switch w.format {
-	case "table":
-		w.tbl.SetHeader(rower.Header(w.opts...))
-	case "csv":
-		w.csv.Write(rower.Header(w.opts...))
+	if w.hasFormat("table") {
+		w.tbl.SetHeader(rower.Header(writer.FromOptions(w.opts)))
+	}
+	if w.hasFormat("csv") {
+		w.csv.Write(rower.Header(writer.FromOptions(w.opts)))
 	}
 	return nil
 }
 
 func (w *Writer) Row(rower Rower) error {
-	switch w.format {
-	case "table":
-		w.tbl.Append(rower.Row(w.opts...))
-	case "csv":
-		w.csv.Write(rower.Row(w.opts...))
-	case "json":
+	if w.hasFormat("table") {
+		w.tbl.Append(rower.Row(writer.FromOptions(w.opts)))
+	}
+
+	if w.hasFormat("csv") {
+		w.csv.Write(rower.Row(writer.FromOptions(w.opts)))
+	}
+
+	if w.hasFormat("json") {
 		w.jsonRows = append(w.jsonRows, rower)
 	}
 	return nil
 }
 
 func (w *Writer) Rows(rower Rowers) error {
-	switch w.format {
-	case "table":
-		for _, r := range rower.Rows(w.opts...) {
+	if w.hasFormat("table") {
+		for _, r := range rower.Rows(writer.FromOptions(w.opts)) {
 			w.tbl.Append(r)
 		}
-	case "csv":
-		for _, r := range rower.Rows(w.opts...) {
+	}
+	if w.hasFormat("csv") {
+		for _, r := range rower.Rows(writer.FromOptions(w.opts)) {
 			w.csv.Write(r)
 		}
-	case "json":
-		for _, r := range rower.Rows(w.opts...) {
+	}
+
+	if w.hasFormat("json") {
+		for _, r := range rower.Rows(writer.FromOptions(w.opts)) {
 			w.jsonRows = append(w.jsonRows, r)
 		}
 	}
@@ -99,18 +121,20 @@ func (w *Writer) Rows(rower Rowers) error {
 }
 
 func (w *Writer) Flush() {
-	switch w.format {
-	case "table":
+	if w.hasFormat("table") {
 		w.tbl.Render()
-	case "csv":
+	}
+	if w.hasFormat("csv") {
 		w.csv.Flush()
-	case "json":
+	}
+	if w.hasFormat("json") {
 		data := []interface{}{}
-		if com.IsFile(w.outputFileName) && appendOutput {
-			buf, err := ioutil.ReadFile(w.outputFileName)
+		outputFileName := w.outputFileNames["json"]
+		if com.IsFile(outputFileName) && appendOutput {
+			buf, err := ioutil.ReadFile(outputFileName)
 			if err != nil {
 				log.WithError(err).
-					WithField("file", w.outputFileName).
+					WithField("file", outputFileName).
 					Error("failed to read output file")
 				return
 			}
@@ -132,14 +156,24 @@ func (w *Writer) Flush() {
 		b = bytes.Replace(b, []byte("\\u003e"), []byte(">"), -1)
 		b = bytes.Replace(b, []byte("\\u0026"), []byte("&"), -1)
 
-		w.output.Write(b)
+		w.outputs["json"].Write(b)
 	}
 }
 
 func (w *Writer) Close() {
 	w.Flush()
-	if w.outputFileName != "" {
-		com.WriteFile(w.outputFileName, w.output.(*bytes.Buffer).Bytes())
+	for format, output := range w.outputs {
+		com.WriteFile(w.outputFileNames[format], output.(*bytes.Buffer).Bytes())
 		//pp.Println("Finish writing = ", outputFileName)
 	}
+}
+
+func (w *Writer) hasFormat(name string) bool {
+	name = strings.ToLower(name)
+	for _, f := range w.opts.Formats {
+		if f == name {
+			return true
+		}
+	}
+	return false
 }
