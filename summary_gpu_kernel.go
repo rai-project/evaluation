@@ -33,11 +33,7 @@ type SummaryGPUKernelInformations []SummaryGPUKernelInformation
 
 func (p SummaryGPUKernelInformations) Len() int { return len(p) }
 func (p SummaryGPUKernelInformations) Less(i, j int) bool {
-	x := p[i]
-	y := p[j]
-	xDuration := TrimmedMeanInt64Slice(x.Durations, DefaultTrimmedMeanFraction)
-	yDuration := TrimmedMeanInt64Slice(y.Durations, DefaultTrimmedMeanFraction)
-	return xDuration > yDuration
+	return p[i].Duration > p[j].Duration
 }
 func (p SummaryGPUKernelInformations) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
@@ -46,7 +42,7 @@ func (p SummaryGPUKernelInformations) Swap(i, j int) {
 func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
-		"kernel_mean_duration (us)",
+		"kernel_duration (us)",
 		"kernel_mean_flops",
 		"kernel_mean_dram_read_bytes",
 		"kernel_mean_dram_write_bytes",
@@ -78,6 +74,13 @@ func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 				}
 			}
 		}
+
+		kernelTags, err := json.Marshal(info.Tags)
+		if err != nil {
+			kernelTags = []byte{}
+		}
+		_ = kernelTags
+
 		extra = append(extra, strings.Join(kernelLogs, DefaultDimiter))
 	}
 	return extra
@@ -92,9 +95,7 @@ func (p SummaryGPUKernelLayerInformation) Len() int { return len(p.SummaryGPUKer
 func (p SummaryGPUKernelLayerInformation) Less(i, j int) bool {
 	x := p.SummaryGPUKernelInformations[i]
 	y := p.SummaryGPUKernelInformations[j]
-	xDuration := TrimmedMeanInt64Slice(x.Durations, DefaultTrimmedMeanFraction)
-	yDuration := TrimmedMeanInt64Slice(y.Durations, DefaultTrimmedMeanFraction)
-	return xDuration > yDuration
+	return x.Duration > y.Duration
 }
 func (p SummaryGPUKernelLayerInformation) Swap(i, j int) {
 	p.SummaryGPUKernelInformations[i], p.SummaryGPUKernelInformations[j] = p.SummaryGPUKernelInformations[j], p.SummaryGPUKernelInformations[i]
@@ -109,10 +110,8 @@ func (p SummaryGPUKernelLayerInformations) Less(i, j int) bool {
 func (p SummaryGPUKernelLayerInformations) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
 func (infos SummaryGPUKernelLayerInformations) Header(opts ...writer.Option) []string {
-	extraHeader := []string{
-		"kernel_name",
-		"kernel_durations (us)",
-	}
+	extraHeader := SummaryGPUKernelInformation{}.Header()
+
 	kernelLogKeys := infos.GetKernelLogKeys()
 	if len(kernelLogKeys) != 0 {
 		extraHeader = append(extraHeader, kernelLogKeys...)
@@ -176,8 +175,6 @@ func (info SummaryGPUKernelLayerInformation) Rows(iopts ...writer.Option) [][]st
 
 	rows := [][]string{}
 
-	kernelLogKeys := SummaryGPUKernelLayerInformations{info}.GetKernelLogKeys()
-
 	isFilteredKernel := func(kernelInfo SummaryGPUKernelInformation) bool {
 		if len(opts.FilterKernelNames) == 0 {
 			return true
@@ -195,29 +192,7 @@ func (info SummaryGPUKernelLayerInformation) Rows(iopts ...writer.Option) [][]st
 		if !isFilteredKernel(cki) {
 			continue
 		}
-		kernelTags, err := json.Marshal(cki.Tags)
-		if err != nil {
-			kernelTags = []byte{}
-		}
-
-		_ = kernelTags
-
-		extra := []string{
-			cki.Name,
-			strings.Join(int64SliceToStringSlice(cki.Durations), DefaultDimiter),
-		}
-
-		for _, kernelLogKey := range kernelLogKeys {
-			kernelLogs := []string{}
-			for _, kernelLog := range cki.Logs {
-				for kernelLogKeyName, keryeLogValue := range kernelLog {
-					if kernelLogKeyName == kernelLogKey {
-						kernelLogs = append(kernelLogs, cast.ToString(keryeLogValue))
-					}
-				}
-			}
-			extra = append(extra, strings.Join(kernelLogs, DefaultDimiter))
-		}
+		extra := cki.Row()
 		rows = append(rows, append(layerInfoRow, extra...))
 	}
 	return rows
@@ -279,8 +254,6 @@ func GPUKernelSpantoGPUInformation(span model.Span) SummaryGPUKernelInformation 
 			cast.ToInt64(span.Duration),
 		},
 	}
-	info.addTags(span.Tags)
-	info.addLogs(span.Logs)
 	return *info
 }
 
@@ -328,11 +301,13 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 	}
 
 	groupedLayerGPUInfos := make([][]SummaryGPUKernelLayerInformation, numGroups)
-	for ii, grsp := range groupedSpans {
+	for ii := range groupedLayerGPUInfos {
 		if groupedLayerGPUInfos[ii] == nil {
 			groupedLayerGPUInfos[ii] = []SummaryGPUKernelLayerInformation{}
 		}
+	}
 
+	for ii, grsp := range groupedSpans {
 		trace := model.Trace{
 			TraceID: "0",
 			Spans:   grsp,
@@ -403,6 +378,8 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 				SummaryGPUKernelInformations: []SummaryGPUKernelInformation{},
 			}
 
+			measureGPUMetrics := false
+
 			for _, childInterval := range layerChildren {
 				child := *childInterval.Span
 				traceLevel, err := getTagValueAsString(child, "trace_level")
@@ -415,47 +392,48 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 				if strings.ToLower(child.OperationName) != "cuda_launch" {
 					continue
 				}
-				layerGPUInformation.SummaryGPUKernelInformations = append(layerGPUInformation.SummaryGPUKernelInformations, CUDALaunchSpantoGPUInformation(child))
+				info := CUDALaunchSpantoGPUInformation(child)
+				if len(info.Logs) != 0 {
+					measureGPUMetrics = true
+				}
+				layerGPUInformation.SummaryGPUKernelInformations = append(layerGPUInformation.SummaryGPUKernelInformations, info)
 			}
 
-			for _, childInterval := range layerChildren {
-				child := *childInterval.Span
-				traceLevel, err := getTagValueAsString(child, "trace_level")
-				if err != nil || traceLevel == "" {
-					continue
-				}
-				if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
-					continue
-				}
-
-				if strings.ToLower(child.OperationName) != "gpu_kernel" {
-					continue
-				}
-
-				childCorrelationId, err := getTagValueAsInt64(child, "correlation_id")
-				if err != nil {
-					log.WithError(err).Error("expecting cuda launch to have a correlation_id")
-					continue
-				}
-				for infoIdx := range layerGPUInformation.SummaryGPUKernelInformations {
-					info := layerGPUInformation.SummaryGPUKernelInformations[infoIdx]
-					if info.CorrelationId != childCorrelationId {
+			if !measureGPUMetrics {
+				for _, ssp := range grsp {
+					traceLevel, err := getTagValueAsString(ssp, "trace_level")
+					if err != nil || traceLevel == "" {
 						continue
 					}
-					// only record kernel duration when no gpu metrics are captured
-					if len(info.Logs) == 0 {
-						info.Durations = []int64{
-							cast.ToInt64(child.Duration),
-						}
+					if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
+						continue
 					}
-					layerGPUInformation.SummaryGPUKernelInformations[infoIdx] = info
+
+					if strings.ToLower(ssp.OperationName) != "gpu_kernel" {
+						continue
+					}
+					correlationId, err := getTagValueAsInt64(ssp, "correlation_id")
+					if err != nil {
+						log.WithError(err).Error("expecting cuda launch to have a correlation_id")
+						continue
+					}
+					for infoIdx, _ := range layerGPUInformation.SummaryGPUKernelInformations {
+						info := layerGPUInformation.SummaryGPUKernelInformations[infoIdx]
+						if info.CorrelationId != correlationId {
+							continue
+						}
+						info.Durations = []int64{
+							cast.ToInt64(ssp.Duration),
+						}
+						layerGPUInformation.SummaryGPUKernelInformations[infoIdx] = info
+					}
 				}
 			}
+
 			groupedLayerGPUInfos[ii] = append(groupedLayerGPUInfos[ii], layerGPUInformation)
 		}
 	}
 
-	layerGPUInfos := []SummaryGPUKernelLayerInformation{}
 	for _, li := range groupedLayerGPUInfos[0] {
 		layerGPUInfo := li
 		for ii := range layerGPUInfo.SummaryGPUKernelInformations {
@@ -481,10 +459,8 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
 			layerGPUInfo.SummaryGPUKernelInformations[ii] = cki
 		}
-		layerGPUInfos = append(layerGPUInfos, layerGPUInfo)
+		summary = append(summary, layerGPUInfo)
 	}
-
-	summary = layerGPUInfos
 
 	sort.Sort(summary)
 
@@ -495,5 +471,3 @@ func dummyPP() {
 	// for importing pp
 	pp.Println("dummy")
 }
-
-//
