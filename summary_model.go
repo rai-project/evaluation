@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"errors"
+	"time"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
@@ -61,15 +62,19 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		for _, span := range cPredictSpans {
 			durations = append(durations, cast.ToInt64(span.Duration))
 		}
-		duration := TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction)
+		duration := time.Duration(TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction))
 		base := evals[0].summaryBase()
 		batchSize := base.BatchSize
+		if duration == 0 {
+			duration = time.Nanosecond
+		}
+		latency := float64(duration) / float64(time.Duration(batchSize)*time.Microsecond)
 		summary = append(summary, SummaryModelInformation{
 			SummaryBase: base,
 			Durations:   durations,
-			Duration:    duration,
-			Throughput:  float64(1000000*batchSize) / duration,
-			Latency:     duration / float64(batchSize*1000),
+			Duration:    duration.Seconds(),
+			Throughput:  1 / latency,
+			Latency:     latency,
 		})
 	}
 	return summary, nil
