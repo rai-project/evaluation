@@ -66,7 +66,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		base := evals[0].summaryBase()
 		batchSize := base.BatchSize
 		if duration == 0 {
-			duration = time.Nanosecond
+			continue
 		}
 		latency := float64(duration) / float64(time.Duration(batchSize)*time.Microsecond)
 		summary = append(summary, SummaryModelInformation{
