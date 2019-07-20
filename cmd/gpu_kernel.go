@@ -28,4 +28,5 @@ func init() {
 	gpuKernelCmd.AddCommand(gpuKernelLayerFlopsCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerDramReadCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerDramWriteCmd)
+	gpuKernelCmd.AddCommand(gpuKernelLayerDurationCmd)
 }

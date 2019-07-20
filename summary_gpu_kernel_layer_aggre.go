@@ -78,6 +78,9 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 	}
 
 	for _, gpuLayerInfo := range gpuLayerInfos {
+		if gpuLayerInfo.Index == 0 {
+			continue
+		}
 		layerInfo := gpuLayerInfo.SummaryLayerInformation
 		gpuInfos := gpuLayerInfo.SummaryGPUKernelInformations
 		duration := float64(0)
@@ -112,6 +115,8 @@ type SummaryGPUKernelLayerDramReadInformations SummayGPUKernelLayerAggreInformat
 
 type SummaryGPUKernelLayerDramWriteInformations SummayGPUKernelLayerAggreInformations
 
+type SummaryGPUKernelLayerDurationInformations SummayGPUKernelLayerAggreInformations
+
 func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
@@ -131,6 +136,13 @@ func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
 		return ""
 	}
 	return o[0].ModelName + " Layer GPU Kernel Dram Write Bytes"
+}
+
+func (o SummaryGPUKernelLayerDurationInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Layer GPU Kernel Duration"
 }
 
 func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Bar {
@@ -154,6 +166,16 @@ func (o SummaryGPUKernelLayerDramReadInformations) BarPlot(title string) *charts
 }
 
 func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot(title string) *charts.Bar {
+	bar := charts.NewBar()
+	bar.SetGlobalOptions(
+		charts.TitleOpts{Title: title},
+		charts.ToolboxOpts{Show: true},
+	)
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerDurationInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
@@ -224,6 +246,16 @@ func (o SummaryGPUKernelLayerDramWriteInformations) BarPlotAdd(bar0 *charts.Bar)
 	return bar
 }
 
+func (o SummaryGPUKernelLayerDurationInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummayGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummayGPUKernelLayerAggreInformation) float64 {
+		return elem.Duration
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "us"},
+	)
+	return bar
+}
+
 func (o SummaryGPUKernelLayerFlopsInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
@@ -236,6 +268,10 @@ func (o SummaryGPUKernelLayerDramWriteInformations) WriteBarPlot(path string) er
 	return writeBarPlot(o, path)
 }
 
+func (o SummaryGPUKernelLayerDurationInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
 func (o SummaryGPUKernelLayerFlopsInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
@@ -245,5 +281,9 @@ func (o SummaryGPUKernelLayerDramReadInformations) OpenBarPlot() error {
 }
 
 func (o SummaryGPUKernelLayerDramWriteInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryGPUKernelLayerDurationInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
