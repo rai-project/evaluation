@@ -12,9 +12,9 @@ import (
 )
 
 var gpuKernelLayerDurationCmd = &cobra.Command{
-	Use:     "layer_aggre",
+	Use:     "layer_duraiton",
 	Aliases: []string{},
-	Short:   "Get gpu information aggregated within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get the total duration of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
