@@ -33,7 +33,8 @@ type Evaluation struct {
 	PerformanceID       bson.ObjectId                 `json:"performance_id,omitempty" bson:"performance_id,omitempty"`
 	Public              bool                          `json:"public,omitempty" bson:"public,omitempty"`
 	MachineInformation  *machine.Machine              `json:"machine_information,omitempty" bson:"machine_information,omitempty"`
-	GPUInformation      *nvidiasmi.NvidiaSmi          `json:"gpu_information,omitempty" bson:"gpu_information,omitempty"`
+	GPUDriver           *string                       `json:"gpu_driver,omitempty" bson:"gpu_driver,omitempty"`
+	GPUInformation      *nvidiasmi.GPU                `json:"gpu_information,omitempty" bson:"gpu_information,omitempty"`
 	Metadata            map[string]string             `json:"metadata,omitempty" bson:"metadata,omitempty"`
 }
 
