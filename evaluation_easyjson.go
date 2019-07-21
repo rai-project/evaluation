@@ -6007,12 +6007,22 @@ func easyjson679db3deDecodeGithubComRaiProjectEvaluation25(in *jlexer.Lexer, out
 		case "gpu_driver":
 			if in.IsNull() {
 				in.Skip()
-				out.GPUDriver = nil
+				out.GPUDriverVersion = nil
 			} else {
-				if out.GPUDriver == nil {
-					out.GPUDriver = new(string)
+				if out.GPUDriverVersion == nil {
+					out.GPUDriverVersion = new(string)
 				}
-				*out.GPUDriver = string(in.String())
+				*out.GPUDriverVersion = string(in.String())
+			}
+		case "int":
+			if in.IsNull() {
+				in.Skip()
+				out.GPUDevice = nil
+			} else {
+				if out.GPUDevice == nil {
+					out.GPUDevice = new(int)
+				}
+				*out.GPUDevice = int(in.Int())
 			}
 		case "gpu_information":
 			if in.IsNull() {
@@ -6257,7 +6267,7 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation25(out *jwriter.Writer, 
 		}
 		easyjson679db3deEncodeGithubComRaiProjectMachine(out, *in.MachineInformation)
 	}
-	if in.GPUDriver != nil {
+	if in.GPUDriverVersion != nil {
 		const prefix string = ",\"gpu_driver\":"
 		if first {
 			first = false
@@ -6265,7 +6275,17 @@ func easyjson679db3deEncodeGithubComRaiProjectEvaluation25(out *jwriter.Writer, 
 		} else {
 			out.RawString(prefix)
 		}
-		out.String(string(*in.GPUDriver))
+		out.String(string(*in.GPUDriverVersion))
+	}
+	if in.GPUDevice != nil {
+		const prefix string = ",\"int\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Int(int(*in.GPUDevice))
 	}
 	if in.GPUInformation != nil {
 		const prefix string = ",\"gpu_information\":"
