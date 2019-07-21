@@ -12,6 +12,7 @@ import (
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/tracer"
 	"github.com/spf13/cast"
+	model "github.com/uber/jaeger/model/json"
 )
 
 //easyjson:json
@@ -26,7 +27,8 @@ type SummaryLayerInformation struct {
 	Durations                []int64 `json:"durations,omitempty"`
 	AllocatedBytes           []int64 `json:"allocated_bytes,omitempty"`      // Total number of bytes allocated if known
 	PeakAllocatedBytes       []int64 `json:"peak_allocated_bytes,omitempty"` // Total number of ebytes allocated if known
-	AllocatorName            string  `json:"allocator_name,omitempty"`       // Name of the allocator used
+	AllocatorBytesInUse      []int64 `json:"allocator_bytes_in_use,omitempty"`
+	AllocatorName            string  `json:"allocator_name,omitempty"` // Name of the allocator used
 	HostTempMemSizes         []int64 `json:"host_temp_mem_sizes,omitempty"`
 	DeviceTempMemSizes       []int64 `json:"device_temp_mem_sizes,omitempty"`
 	HostPersistentMemSizes   []int64 `json:"host_persistent_mem_sizes,omitempty"`
@@ -55,6 +57,7 @@ func (SummaryLayerInformation) Header(iopts ...writer.Option) []string {
 		"layer_durations (us)",
 		"layer_allocated_bytes",
 		"layer_peak_allocated_bytes",
+		"layer_allocator_bytes_in_use",
 		"layer_allocator_name",
 		"layer_host_temp_mem_size",
 		"layer_device_temp_mem_size",
@@ -78,6 +81,7 @@ func (s SummaryLayerInformation) Row(iopts ...writer.Option) []string {
 		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.AllocatedBytes), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.PeakAllocatedBytes), DefaultDimiter),
+		strings.Join(int64SliceToStringSlice(s.AllocatorBytesInUse), DefaultDimiter),
 		s.AllocatorName,
 		strings.Join(int64SliceToStringSlice(s.HostTempMemSizes), DefaultDimiter),
 		strings.Join(int64SliceToStringSlice(s.DeviceTempMemSizes), DefaultDimiter),
@@ -111,6 +115,86 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 		cast.ToString(TrimmedMeanInt64Slice(s.HostPersistentMemSizes, DefaultTrimmedMeanFraction)),
 		cast.ToString(TrimmedMeanInt64Slice(s.DevicePersistentMemSizes, DefaultTrimmedMeanFraction)),
 	}
+}
+
+func getLayerInfoFromLayerSpan(span model.Span) SummaryLayerInformation {
+	layerInfo := SummaryLayerInformation{}
+	idx, err := getTagValueAsString(span, "layer_sequence_index")
+	if err != nil || idx == "" {
+		return layerInfo
+	}
+	shape, _ := getTagValueAsString(span, "shape")
+	staticType, _ := getTagValueAsString(span, "static_type")
+	allocationDesc := getAllocationDescription(span)
+	allocatorName := allocationDesc.AllocatorName
+	allocationBytes := allocationDesc.AllocatedBytes
+	peakAllocationBytes := []int64{}
+	allocatorBytesInUse := []int64{}
+	memoryUsed, exist := getTensorFlowAllocatorMemoryUsed(span)
+	if exist {
+		m, err := cast.ToInt64E(memoryUsed.PeakBytes)
+		if err == nil {
+			peakAllocationBytes = []int64{m}
+		}
+		m, err = cast.ToInt64E(memoryUsed.AllocatorBytesInUse)
+		if err == nil {
+			allocatorBytesInUse = []int64{m}
+		}
+	}
+	hostTempMemSizes := []int64{}
+	hostTempMemSize, err := getTagValueAsString(span, "temp_memory_size")
+	if err == nil && hostTempMemSize != "" {
+		m, err := cast.ToInt64E(hostTempMemSize)
+		if err == nil {
+			hostTempMemSizes = []int64{m}
+		}
+	}
+	deviceTempMemSizes := []int64{}
+	deviceTempMemSize, err := getTagValueAsString(span, "device_temp_memory_size")
+	if err == nil && deviceTempMemSize != "" {
+		m, err := cast.ToInt64E(deviceTempMemSize)
+		if err == nil {
+			deviceTempMemSizes = []int64{m}
+		}
+	}
+	hostPersistentMemSizes := []int64{}
+	hostPersistentMemSize, err := getTagValueAsString(span, "persistent_memory_size")
+	if err == nil && hostPersistentMemSize != "" {
+		m, err := cast.ToInt64E(hostPersistentMemSize)
+		if err == nil {
+			hostPersistentMemSizes = []int64{m}
+		}
+	}
+	devicePersistentMemSizes := []int64{}
+	devicePersistentMemSize, err := getTagValueAsString(span, "device_persistent_memory_size")
+	if err == nil && devicePersistentMemSize != "" {
+		m, err := cast.ToInt64E(devicePersistentMemSize)
+		if err == nil {
+			devicePersistentMemSizes = []int64{m}
+		}
+	}
+	layerInfo = SummaryLayerInformation{
+		Index:      cast.ToInt(idx),
+		Name:       span.OperationName,
+		Type:       getOpName(span),
+		StaticType: staticType,
+		Shape:      shape,
+		Duration:   -1,
+		Durations: []int64{
+			cast.ToInt64(span.Duration),
+		},
+		AllocatedBytes: []int64{
+			cast.ToInt64(allocationBytes),
+		},
+		PeakAllocatedBytes:       peakAllocationBytes,
+		AllocatorBytesInUse:      allocatorBytesInUse,
+		AllocatorName:            allocatorName,
+		HostTempMemSizes:         hostTempMemSizes,
+		DeviceTempMemSizes:       deviceTempMemSizes,
+		HostPersistentMemSizes:   hostPersistentMemSizes,
+		DevicePersistentMemSizes: devicePersistentMemSizes,
+	}
+	return layerInfo
 }
 
 func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
@@ -152,51 +236,7 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 			if strings.HasPrefix(span.OperationName, "_") {
 				continue
 			}
-			idx, err := getTagValueAsString(span, "layer_sequence_index")
-			if err != nil || idx == "" {
-				return summary, errors.New("cannot find tag layer_sequence_index")
-			}
-			shape, _ := getTagValueAsString(span, "shape")
-			staticType, _ := getTagValueAsString(span, "static_type")
-			allocationDesc := getAllocationDescription(span)
-			allocatorName := allocationDesc.AllocatorName
-			memoryUsed := getTensorFlowAllocatorMemoryUsed(span)
-			allocationBytes := allocationDesc.AllocatedBytes
-			peakAllocationBytes := memoryUsed.PeakBytes
-			hostTempMemSize, _ := getTagValueAsString(span, "temp_memory_size")
-			deviceTempMemSize, _ := getTagValueAsString(span, "device_temp_memory_size")
-			hostPersistentMemSize, _ := getTagValueAsString(span, "persistent_memory_size")
-			devicePersistentMemSize, _ := getTagValueAsString(span, "device_persistent_memory_size")
-			layerInfo := SummaryLayerInformation{
-				Index:      cast.ToInt(idx),
-				Name:       span.OperationName,
-				Type:       getOpName(span),
-				StaticType: staticType,
-				Shape:      shape,
-				Duration:   -1,
-				Durations: []int64{
-					cast.ToInt64(span.Duration),
-				},
-				AllocatedBytes: []int64{
-					cast.ToInt64(allocationBytes),
-				},
-				PeakAllocatedBytes: []int64{
-					cast.ToInt64(peakAllocationBytes),
-				},
-				AllocatorName: allocatorName,
-				HostTempMemSizes: []int64{
-					cast.ToInt64(hostTempMemSize),
-				},
-				DeviceTempMemSizes: []int64{
-					cast.ToInt64(deviceTempMemSize),
-				},
-				HostPersistentMemSizes: []int64{
-					cast.ToInt64(hostPersistentMemSize),
-				},
-				DevicePersistentMemSizes: []int64{
-					cast.ToInt64(devicePersistentMemSize),
-				},
-			}
+			layerInfo := getLayerInfoFromLayerSpan(span)
 			groupedLayerInfos[ii] = append(groupedLayerInfos[ii], layerInfo)
 		}
 	}

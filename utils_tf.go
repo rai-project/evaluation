@@ -64,15 +64,14 @@ type AllocationRecords struct {
 	AllocBytes  int   `json:"alloc_bytes"`
 }
 
-func getTensorFlowAllocatorMemoryUsed(span model.Span) TensorFlowAllocatorMemoryUsed {
+func getTensorFlowAllocatorMemoryUsed(span model.Span) (TensorFlowAllocatorMemoryUsed, bool) {
 	ret := TensorFlowAllocatorMemoryUsed{}
 	output, err := getTagValueAsString(span, "memory")
 	if err != nil {
-		log.WithError(err).Info("fail to get output value in the tags")
-		return ret
+		return ret, false
 	}
 	if output == "" {
-		return ret
+		return ret, false
 	}
 	output = strings.Replace(output, "\\", "", -1)
 
@@ -80,8 +79,8 @@ func getTensorFlowAllocatorMemoryUsed(span model.Span) TensorFlowAllocatorMemory
 	json.Unmarshal([]byte(output), &result)
 
 	if len(result) == 0 {
-		return ret
+		return ret, false
 	}
 	ret = result[0]
-	return ret
+	return ret, true
 }

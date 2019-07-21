@@ -6,6 +6,8 @@ import (
 	"github.com/rai-project/database"
 	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/dlframework"
+	"github.com/rai-project/machine"
+	nvidiasmi "github.com/rai-project/nvidia-smi"
 	"gopkg.in/mgo.v2/bson"
 	"upper.io/db.v3"
 )
@@ -30,6 +32,8 @@ type Evaluation struct {
 	InputPredictionIDs  []bson.ObjectId               `json:"input_prediction_ids,omitempty" bson:"input_prediction_ids,omitempty"`
 	PerformanceID       bson.ObjectId                 `json:"performance_id,omitempty" bson:"performance_id,omitempty"`
 	Public              bool                          `json:"public,omitempty" bson:"public,omitempty"`
+	MachineInformation  *machine.Machine              `json:"machine_information,omitempty" bson:"machine_information,omitempty"`
+	GPUInformation      *nvidiasmi.NvidiaSmi          `json:"gpu_information,omitempty" bson:"gpu_information,omitempty"`
 	Metadata            map[string]string             `json:"metadata,omitempty" bson:"metadata,omitempty"`
 }
 

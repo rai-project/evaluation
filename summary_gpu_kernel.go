@@ -333,42 +333,8 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 
 			layerInfo := SummaryLayerInformation{}
 			if len(layerInfos) == 0 {
-				idx, err := getTagValueAsString(layerSpan, "layer_sequence_index")
-				if err != nil || idx == "" {
-					return summary, errors.New("cannot find tag layer_sequence_index")
-				}
-				allocationDesc := getAllocationDescription(layerSpan)
-				memoryUsed := getTensorFlowAllocatorMemoryUsed(layerSpan)
-				allocationBytes := allocationDesc.AllocatedBytes
-				peakAllocationBytes := memoryUsed.PeakBytes
-				hostTempMemSize, _ := getTagValueAsString(layerSpan, "temp_memory_size")
-				deviceTempMemSize, _ := getTagValueAsString(layerSpan, "device_temp_memory_size")
-				hostPersistentMemSize, _ := getTagValueAsString(layerSpan, "persistent_memory_size")
-				devicePersistentMemSize, _ := getTagValueAsString(layerSpan, "device_persistent_memory_size")
-				layerInfo = SummaryLayerInformation{
-					Index:     cast.ToInt(idx),
-					Name:      layerSpan.OperationName,
-					Type:      getOpName(layerSpan),
-					Durations: []int64{},
-					AllocatedBytes: []int64{
-						cast.ToInt64(allocationBytes),
-					},
-					PeakAllocatedBytes: []int64{
-						cast.ToInt64(peakAllocationBytes),
-					},
-					HostTempMemSizes: []int64{
-						cast.ToInt64(hostTempMemSize),
-					},
-					DeviceTempMemSizes: []int64{
-						cast.ToInt64(deviceTempMemSize),
-					},
-					HostPersistentMemSizes: []int64{
-						cast.ToInt64(hostPersistentMemSize),
-					},
-					DevicePersistentMemSizes: []int64{
-						cast.ToInt64(devicePersistentMemSize),
-					},
-				}
+				layerInfo = getLayerInfoFromLayerSpan(layerSpan)
+				layerInfo.Durations = []int64{}
 			} else {
 				layerInfo = layerInfos.GetLayerInfoByName(layerSpan.OperationName)
 			}
@@ -408,7 +374,6 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 					if tracer.LevelFromName(traceLevel) != tracer.SYSTEM_LIBRARY_TRACE {
 						continue
 					}
-
 					if strings.ToLower(ssp.OperationName) != "gpu_kernel" {
 						continue
 					}
