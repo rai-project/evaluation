@@ -14,6 +14,8 @@ type SummaryGPUKernelModelAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
+	ArithmeticIntensity     float64 `json:"dram_write_bytes,omitempty"`
+	MemoryBound             bool    `json:"memory_bound,omitempty"`
 }
 
 type SummaryGPUKernelModelAggreInformations []SummaryGPUKernelModelAggreInformation
@@ -32,10 +34,12 @@ func (info SummaryGPUKernelModelAggreInformation) Header(opts ...writer.Option) 
 	return []string{
 		"kernel_name",
 		"kernel_duration (us)",
+		"model_duration_percentage",
 		"kernel_flops",
 		"kernel_dram_read_bytes",
 		"kernel_dram_write_bytes",
-		"model_duration_percentage",
+		"arithmetic_intensity (flops/byte)",
+		"memory_bound",
 	}
 }
 
@@ -43,10 +47,12 @@ func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []s
 	return []string{
 		info.Name,
 		cast.ToString(info.Duration),
+		cast.ToString(info.Duration * float64(100) / info.SummaryModelInformation.Duration),
 		cast.ToString(info.Flops),
 		cast.ToString(info.DramReadBytes),
 		cast.ToString(info.DramWriteBytes),
-		cast.ToString(info.Duration * float64(100) / info.SummaryModelInformation.Duration),
+		cast.ToString(info.ArithmeticIntensity),
+		cast.ToString(info.MemoryBound),
 	}
 }
 
@@ -93,8 +99,14 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 			infoMap[info.Name] = v
 		}
 	}
-
 	for _, v := range infoMap {
+		arithmeticIntensity := v.Flops / (v.DramReadBytes + v.DramWriteBytes)
+		v.ArithmeticIntensity = arithmeticIntensity
+		memoryBound := false
+		if arithmeticIntensity < v.IdealArithmeticIntensity {
+			memoryBound = true
+		}
+		v.MemoryBound = memoryBound
 		summary = append(summary, v)
 	}
 

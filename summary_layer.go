@@ -109,6 +109,7 @@ func (s SummaryMeanLayerInformation) Row(opts ...writer.Option) []string {
 		strings.Join(int64SliceToStringSlice(s.Durations), DefaultDimiter),
 		cast.ToString(TrimmedMeanInt64Slice(s.AllocatedBytes, DefaultTrimmedMeanFraction)),
 		cast.ToString(TrimmedMeanInt64Slice(s.PeakAllocatedBytes, DefaultTrimmedMeanFraction)),
+		cast.ToString(TrimmedMeanInt64Slice(s.AllocatorBytesInUse, DefaultTrimmedMeanFraction)),
 		s.AllocatorName,
 		cast.ToString(TrimmedMeanInt64Slice(s.HostTempMemSizes, DefaultTrimmedMeanFraction)),
 		cast.ToString(TrimmedMeanInt64Slice(s.DeviceTempMemSizes, DefaultTrimmedMeanFraction)),
@@ -251,13 +252,13 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 				layerInfo.Durations = append(layerInfo.Durations, lli.Durations...)
 				layerInfo.AllocatedBytes = append(layerInfo.AllocatedBytes, lli.AllocatedBytes...)
 				layerInfo.PeakAllocatedBytes = append(layerInfo.PeakAllocatedBytes, lli.PeakAllocatedBytes...)
+				layerInfo.AllocatorBytesInUse = append(layerInfo.AllocatorBytesInUse, lli.AllocatorBytesInUse...)
 				layerInfo.HostTempMemSizes = append(layerInfo.HostTempMemSizes, lli.HostTempMemSizes...)
 				layerInfo.DeviceTempMemSizes = append(layerInfo.DeviceTempMemSizes, lli.DeviceTempMemSizes...)
 				layerInfo.HostPersistentMemSizes = append(layerInfo.HostPersistentMemSizes, lli.HostPersistentMemSizes...)
 				layerInfo.DevicePersistentMemSizes = append(layerInfo.DevicePersistentMemSizes, lli.DevicePersistentMemSizes...)
 			}
 		}
-
 		layerInfo.SummaryModelInformation = modelInfo
 		layerInfo.Duration = TrimmedMeanInt64Slice(layerInfo.Durations, DefaultTrimmedMeanFraction)
 		summary = append(summary, layerInfo)

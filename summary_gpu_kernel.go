@@ -17,16 +17,18 @@ import (
 type Metadata map[string]interface{}
 
 type SummaryGPUKernelInformation struct {
-	Name               string     `json:"name,omitempty"`
-	MangledName        string     `json:"mangled_name,omitempty"`
-	Durations          []int64    `json:"durations,omitempty"`
-	Tags               []Metadata `json:"tags,omitempty"`
-	Logs               []Metadata `json:"logs,omitempty"`
-	CorrelationId      int64      `json:"correlation_id,omitempty"`
-	Duration           float64    `json:"mean_duration,omitempty"`
-	MeanFlops          float64    `json:"mean_flops,omitempty"`
-	MeanDramReadBytes  float64    `json:"mean_dram_read_bytes,omitempty"`
-	MeanDramWriteBytes float64    `json:"mean_dram_write_bytes,omitempty"`
+	Name                string     `json:"name,omitempty"`
+	MangledName         string     `json:"mangled_name,omitempty"`
+	Durations           []int64    `json:"durations,omitempty"`
+	Tags                []Metadata `json:"tags,omitempty"`
+	Logs                []Metadata `json:"logs,omitempty"`
+	CorrelationId       int64      `json:"correlation_id,omitempty"`
+	Duration            float64    `json:"mean_duration,omitempty"`
+	MeanFlops           float64    `json:"mean_flops,omitempty"`
+	MeanDramReadBytes   float64    `json:"mean_dram_read_bytes,omitempty"`
+	MeanDramWriteBytes  float64    `json:"mean_dram_write_bytes,omitempty"`
+	ArithmeticIntensity float64    `json:"arithmetic_intensity,omitempty"`
+	MemoryBound         bool       `json:"memory_bound,omitempty"`
 }
 
 type SummaryGPUKernelInformations []SummaryGPUKernelInformation
@@ -46,6 +48,8 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 		"kernel_mean_flops",
 		"kernel_mean_dram_read_bytes",
 		"kernel_mean_dram_write_bytes",
+		"kernel_arithmetic_intensity",
+		"kernel_memory_bound",
 		"kernel_durations (us)",
 	}
 	kernelLogKeys := SummaryGPUKernelInformations{info}.GetKernelLogKeys()
@@ -62,6 +66,8 @@ func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 		cast.ToString(info.MeanFlops),
 		cast.ToString(info.MeanDramReadBytes),
 		cast.ToString(info.MeanDramWriteBytes),
+		cast.ToString(info.ArithmeticIntensity),
+		cast.ToString(info.MemoryBound),
 		strings.Join(int64SliceToStringSlice(info.Durations), DefaultDimiter),
 	}
 	kernelLogKeys := SummaryGPUKernelInformations{info}.GetKernelLogKeys()
@@ -422,6 +428,11 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			cki.MeanFlops = GetMeanLogValue(cki, "flop_count_sp", trimmedMeanFraction)
 			cki.MeanDramReadBytes = GetMeanLogValue(cki, "dram_read_bytes", trimmedMeanFraction)
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
+			cki.ArithmeticIntensity = cki.MeanFlops / (cki.MeanDramReadBytes + cki.MeanDramWriteBytes)
+			cki.MemoryBound = false
+			if cki.ArithmeticIntensity < layerGPUInfo.IdealArithmeticIntensity {
+				cki.MemoryBound = true
+			}
 			layerGPUInfo.SummaryGPUKernelInformations[ii] = cki
 		}
 		summary = append(summary, layerGPUInfo)

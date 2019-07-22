@@ -17,6 +17,8 @@ type SummayGPUKernelLayerAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
+	ArithmeticIntensity     float64 `json:"dram_write_bytes,omitempty"`
+	MemoryBound             bool    `json:"memory_bound,omitempty"`
 }
 
 //easyjson:json
@@ -43,6 +45,8 @@ func (SummayGPUKernelLayerAggreInformation) Header(iopts ...writer.Option) []str
 		"flops",
 		"dram_read_bytes",
 		"dram_write_bytes",
+		"arithmetic_intensity (flops/byte)",
+		"memory_bound",
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -62,6 +66,8 @@ func (s SummayGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []stri
 		cast.ToString(s.Flops),
 		cast.ToString(s.DramReadBytes),
 		cast.ToString(s.DramWriteBytes),
+		cast.ToString(s.ArithmeticIntensity),
+		cast.ToString(s.MemoryBound),
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -93,7 +99,11 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes
 		}
-
+		arithmeticIntensity := flops / (readBytes + writeBytes)
+		memoryBound := false
+		if arithmeticIntensity < layerInfo.IdealArithmeticIntensity {
+			memoryBound = true
+		}
 		summary = append(summary, SummayGPUKernelLayerAggreInformation{
 			SummaryLayerInformation: layerInfo,
 			GPUDuration:             duration,
@@ -101,6 +111,8 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			Flops:                   flops,
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
+			ArithmeticIntensity:     arithmeticIntensity,
+			MemoryBound:             memoryBound,
 		})
 	}
 
