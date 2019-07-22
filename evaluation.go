@@ -34,7 +34,7 @@ type Evaluation struct {
 	Public              bool                          `json:"public,omitempty" bson:"public,omitempty"`
 	MachineInformation  *machine.Machine              `json:"machine_information,omitempty" bson:"machine_information,omitempty"`
 	GPUDriverVersion    *string                       `json:"gpu_driver,omitempty" bson:"gpu_driver,omitempty"`
-	GPUDevice           *int                          `json:"int,omitempty" bson:"int,omitempty"`
+	GPUDevice           *int                          `json:"gpu_device,omitempty" bson:"gpu_device,omitempty"`
 	GPUInformation      *nvidiasmi.GPU                `json:"gpu_information,omitempty" bson:"gpu_information,omitempty"`
 	Metadata            map[string]string             `json:"metadata,omitempty" bson:"metadata,omitempty"`
 }

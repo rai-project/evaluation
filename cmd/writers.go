@@ -49,24 +49,22 @@ func NewWriter(rower Rower, opts ...writer.Option) *Writer {
 		opts:            writer.NewOptions(append(baseOpts, opts...)...),
 	}
 	if wr.hasFormat("table") {
-		tOutputFileName := outputFileName + ".tbl"
-		output := getOutput(tOutputFileName)
+		output := getOutput(outputFileName)
 		wr.outputs["table"] = output
+		tOutputFileName := outputFileName + ".tbl"
 		wr.outputFileNames["table"] = tOutputFileName
 		wr.tbl = tablewriter.NewWriter(output)
 	}
 	if wr.hasFormat("csv") {
-		cOutputFileName := outputFileName + ".csv"
-		output := getOutput(cOutputFileName)
+		output := getOutput(outputFileName)
 		wr.outputs["csv"] = output
-		wr.outputFileNames["csv"] = cOutputFileName
+		wr.outputFileNames["csv"] = outputFileName + ".csv"
 		wr.csv = csv.NewWriter(output)
 	}
 	if wr.hasFormat("json") {
-		jOutputFileName := outputFileName + ".json"
-		output := getOutput(jOutputFileName)
+		output := getOutput(outputFileName)
 		wr.outputs["json"] = output
-		wr.outputFileNames["json"] = jOutputFileName
+		wr.outputFileNames["json"] = outputFileName + ".json"
 		wr.jsonRows = []interface{}{}
 	}
 	if rower != nil && (!noHeader || appendOutput) {
@@ -162,9 +160,11 @@ func (w *Writer) Flush() {
 
 func (w *Writer) Close() {
 	w.Flush()
-	for format, output := range w.outputs {
-		com.WriteFile(w.outputFileNames[format], output.(*bytes.Buffer).Bytes())
-		//pp.Println("Finish writing = ", outputFileName)
+	if outputFileName != "" {
+		for format, output := range w.outputs {
+			com.WriteFile(w.outputFileNames[format], output.(*bytes.Buffer).Bytes())
+			//pp.Println("Finish writing = ", outputFileName)
+		}
 	}
 }
 

@@ -72,7 +72,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		summary = append(summary, SummaryModelInformation{
 			SummaryBase: base,
 			Durations:   durations,
-			Duration:    duration.Seconds(),
+			Duration:    float64(duration),
 			Throughput:  1 / latency,
 			Latency:     latency,
 		})
