@@ -17,7 +17,8 @@ type SummayGPUKernelLayerAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
-	ArithmeticIntensity     float64 `json:"dram_write_bytes,omitempty"`
+	ArithmeticIntensity     float64 `json:"arithmetic_intensity,omitempty"`
+	ArithmeticThroughput    float64 `json:"arithmetic_throughput,omitempty"`
 	MemoryBound             bool    `json:"memory_bound,omitempty"`
 }
 
@@ -40,13 +41,14 @@ func (SummayGPUKernelLayerAggreInformation) Header(iopts ...writer.Option) []str
 		"layer_name",
 		"layer_type",
 		"layer_duration (us)",
-		"gpu_duration (us)",
-		"cpu_duration (us)",
-		"flops",
-		"dram_read_bytes",
-		"dram_write_bytes",
-		"arithmetic_intensity (flops/byte)",
-		"memory_bound",
+		"layer_gpu_duration (us)",
+		"layer_cpu_duration (us)",
+		"layer_flops",
+		"layer_dram_read_bytes",
+		"layer_dram_write_bytes",
+		"layer_arithmetic_intensity (flops/byte)",
+		"layer_arithmetic_throughput (GFlops)",
+		"layer_memory_bound",
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -67,6 +69,7 @@ func (s SummayGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []stri
 		cast.ToString(s.DramReadBytes),
 		cast.ToString(s.DramWriteBytes),
 		cast.ToString(s.ArithmeticIntensity),
+		cast.ToString(s.ArithmeticThroughput),
 		cast.ToString(s.MemoryBound),
 	}
 	opts := writer.NewOptions(iopts...)
@@ -100,10 +103,13 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			writeBytes += gpuInfo.MeanDramWriteBytes
 		}
 		arithmeticIntensity := flops / (readBytes + writeBytes)
+
 		memoryBound := false
 		if arithmeticIntensity < layerInfo.IdealArithmeticIntensity {
 			memoryBound = true
 		}
+		arithmeticThroughput := flops / duration / float64(1000)
+
 		summary = append(summary, SummayGPUKernelLayerAggreInformation{
 			SummaryLayerInformation: layerInfo,
 			GPUDuration:             duration,
@@ -112,6 +118,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
 			ArithmeticIntensity:     arithmeticIntensity,
+			ArithmeticThroughput:    arithmeticThroughput,
 			MemoryBound:             memoryBound,
 		})
 	}

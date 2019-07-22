@@ -23,6 +23,7 @@ func init() {
 	gpuKernelCmd.PersistentFlags().IntVar(&topKernels, "top_kernels", -1, "consider only the top k kernel ranked by duration")
 
 	gpuKernelCmd.AddCommand(gpuKernelInfoCmd)
+	gpuKernelCmd.AddCommand(gpuKernelNameAggreCmd)
 	gpuKernelCmd.AddCommand(gpuKernelModelAggreCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerAggreCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerFlopsCmd)

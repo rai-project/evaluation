@@ -212,6 +212,10 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 		return summary, errors.New("no evaluation is found in the database")
 	}
 
+	if len(es.GroupByBatchSize()) != 1 {
+		return summary, errors.New("evaluations are not with the same batch size")
+	}
+
 	cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
 	groupedLayerSpans, err := getGroupedLayerSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
