@@ -73,7 +73,7 @@ func TrimmedMean(data []float64, frac float64) float64 {
 
 	ret := mean(trimmed, nil)
 
-	return ret
+	return math.Round(x*1000) / 1000
 }
 
 func convertInt64SliceToFloat64Slice(in []int64) []float64 {

@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelLayerDramWriteCmd = &cobra.Command{
-	Use:     "layer_dram_write",
+var gpuKernelLayerGPUCPUCmd = &cobra.Command{
+	Use:     "layer_gpu_cpu",
 	Aliases: []string{},
-	Short:   "Get the total dram write of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get layer GPU duration vs CPU Duration from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -50,7 +50,8 @@ var gpuKernelLayerDramWriteCmd = &cobra.Command{
 			if sortOutput {
 				sort.Sort(summary0)
 			}
-			summary := evaluation.SummaryGPUKernelLayerDramWriteInformations(summary0)
+			summary := evaluation.SummaryGPUKernelLayerGPUCPUInformations(summary0)
+
 			if barPlot {
 				err := summary.WriteBarPlot(plotPath)
 				if err != nil {

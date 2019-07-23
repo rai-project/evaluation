@@ -59,7 +59,7 @@ var gpuKernelLayerAggreCmd = &cobra.Command{
 
 			var writer *Writer
 			if len(gpuInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUKernelModelAggreInformation{})
+				writer = NewWriter(evaluation.SummaryGPUKernelLayerAggreInformation{})
 				defer writer.Close()
 			}
 			writer = NewWriter(gpuInfos[0])

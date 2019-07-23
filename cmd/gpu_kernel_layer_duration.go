@@ -47,13 +47,10 @@ var gpuKernelLayerDurationCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryGPUKernelLayerDurationInformations(summary0)
-
 			if sortOutput {
-				sort.Slice(summary, func(ii, jj int) bool {
-					return summary[ii].Index > summary[jj].Index
-				})
+				sort.Sort(summary0)
 			}
+			summary := evaluation.SummaryGPUKernelLayerDurationInformations(summary0)
 
 			if barPlot {
 				err := summary.WriteBarPlot(plotPath)
@@ -70,7 +67,7 @@ var gpuKernelLayerDurationCmd = &cobra.Command{
 
 			var writer *Writer
 			if len(summary0) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUKernelModelAggreInformation{})
+				writer = NewWriter(evaluation.SummaryGPUKernelLayerAggreInformation{})
 				defer writer.Close()
 			}
 			writer = NewWriter(summary0[0])
