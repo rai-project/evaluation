@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cast"
 )
 
+//easyjson:json
 type SummaryGPUKernelNameAggreInformation struct {
 	SummaryModelInformation `json:",inline"`
 	Name                    string  `json:"name,omitempty"`

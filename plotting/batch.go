@@ -132,8 +132,11 @@ func (o batchPlot) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 		// pp.Println(key, " --", vals)
 		bar.AddYAxis(key, vals)
 	}
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: true})
-	bar.SetGlobalOptions(charts.XAxisOpts{Name: "BatchSize"}, charts.YAxisOpts{Name: "Latency(ms)"})
+	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetGlobalOptions(
+		charts.XAxisOpts{Name: "BatchSize", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.YAxisOpts{Name: "Latency(ms)"},
+	)
 	return bar
 }
 

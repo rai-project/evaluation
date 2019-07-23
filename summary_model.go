@@ -109,9 +109,10 @@ func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 		data[ii] = elem.Throughput
 	}
 	bar.AddYAxis("", data)
+
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Batch Size"},
+		charts.XAxisOpts{Name: "Batch Size", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
 		charts.YAxisOpts{Name: "Throughput (inputs/second)"},
 	)
 	return bar

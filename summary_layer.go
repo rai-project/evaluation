@@ -375,8 +375,9 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 	}
 	bar.AddYAxis("", data)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index"},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
 	)
 	return bar
 }
@@ -469,7 +470,7 @@ func (o SummaryLayerLatencyInformations) BoxPlotAdd(box *charts.BoxPlot) *charts
   }`
 	box.SetGlobalOptions(
 		charts.XAxisOpts{
-			Name:      "Layer Name",
+			Name:      "Layer Index",
 			Type:      "category",
 			AxisLabel: charts.LabelTextOpts{Show: true, Rotate: 45, Formatter: charts.FuncOpts(jsFun)},
 			SplitLine: charts.SplitLineOpts{Show: false},

@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cast"
 )
 
+//easyjson:json
 type SummaryGPUKernelModelAggreInformation struct {
 	SummaryModelInformation `json:",inline"`
 	Duration                float64 `json:"gpu_duration,omitempty"`

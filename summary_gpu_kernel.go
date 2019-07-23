@@ -16,6 +16,7 @@ import (
 
 type Metadata map[string]interface{}
 
+//easyjson:json
 type SummaryGPUKernelInformation struct {
 	Name                 string     `json:"name,omitempty"`
 	MangledName          string     `json:"mangled_name,omitempty"`
@@ -95,6 +96,7 @@ func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 	return extra
 }
 
+//easyjson:json
 type SummaryGPUKernelLayerInformation struct {
 	SummaryLayerInformation      `json:",inline"`
 	SummaryGPUKernelInformations SummaryGPUKernelInformations `json:"kernel_launch_information,omitempty"`
