@@ -73,7 +73,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 			SummaryBase: base,
 			Durations:   durations,
 			Duration:    float64(duration),
-			Throughput:  1 / latency,
+			Throughput:  float64(1000) / latency,
 			Latency:     latency,
 		})
 	}
