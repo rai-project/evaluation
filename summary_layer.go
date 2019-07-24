@@ -330,14 +330,14 @@ func (o SummaryLayerLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer Latency"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency"
 }
 
 func (o SummaryLayerMemoryInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer Allocated Memory"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory"
 }
 
 func (o SummaryLayerLatencyInformations) BarPlot(title string) *charts.Bar {
@@ -376,8 +376,13 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 	bar.AddYAxis("", data)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
 
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+	  var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
+	  return labels.indexOf(name);
+  }`
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
 	)
 	return bar
 }
@@ -463,6 +468,7 @@ func (o SummaryLayerLatencyInformations) BoxPlotAdd(box *charts.BoxPlot) *charts
 	}
 	box.AddYAxis("", durations)
 	box.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+
 	jsLabelsBts, _ := json.Marshal(labels)
 	jsFun := `function (name, index) {
     var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;

@@ -1,7 +1,9 @@
 package evaluation
 
 import (
+	json "encoding/json"
 	"errors"
+	"strings"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
@@ -139,35 +141,35 @@ func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Flops"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Flops per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramReadInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Dram Read Bytes"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Read per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Dram Write Bytes"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Write per Layer"
 }
 
 func (o SummaryGPUKernelLayerDurationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Duration"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Duration per Layer"
 }
 
 func (o SummaryGPUKernelLayerGPUCPUInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU vs CPU Duration"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Duration per Layer"
 }
 
 func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Bar {
@@ -235,9 +237,16 @@ func (o SummaryGPUKernelLayerAggreInformations) barPlotAdd(bar *charts.Bar, elem
 	}
 	bar.AddYAxis("", data)
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+	  var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
+	  return labels.indexOf(name);
+  }`
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
 	)
+
 	return bar
 }
 
@@ -301,8 +310,14 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 	bar.AddYAxis("CPU", cpu, charts.BarOpts{Stack: "stack"})
 
 	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+	  var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
+	  return labels.indexOf(name);
+  }`
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
 	)
 
 	bar.SetGlobalOptions(

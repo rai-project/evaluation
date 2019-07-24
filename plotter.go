@@ -44,7 +44,7 @@ func writeBarPlot(o BarPlotter, path string) error {
 			Right: "center",
 			Top:   "top",
 		},
-		charts.LegendOpts{Right: "80%"},
+		charts.LegendOpts{Right: "85%"},
 		charts.ToolboxOpts{Show: true},
 		charts.InitOpts{Theme: charts.ThemeType.Shine},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
@@ -90,11 +90,12 @@ func writePiePlot(o PiePlotter, path string) error {
 	pie.SetGlobalOptions(
 		charts.TitleOpts{
 			Title: o.PlotName(),
-			Right: "right",
-			Top:   "top",
+			Right: "center",
+			Top:   "bottom",
 		},
 		charts.LegendOpts{
-			Right: "90%",
+			Right: "right",
+			Top:   "top",
 		},
 	)
 	f, err := os.Create(path)
