@@ -7,7 +7,6 @@ import (
 
 	"github.com/mattn/go-zglob"
 	"github.com/spf13/cast"
-	"github.com/thoas/go-funk"
 )
 
 func contains(lst interface{}, elem interface{}) bool {

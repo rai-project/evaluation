@@ -1,8 +1,13 @@
 package evaluation
 
 import (
+	"encoding/base64"
+	json "encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
+
+	"github.com/golang/snappy"
 	"github.com/rai-project/database"
 	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/tracer"
@@ -37,10 +42,11 @@ type structuredError struct {
 
 //easyjson:json
 type Performance struct {
-	ID         bson.ObjectId    `json:"id,omitempty"  bson:"_id,omitempty"`
-	CreatedAt  time.Time        `json:"created_at" bson:"created_at,omitempty"`
-	Trace      TraceInformation `json:"trace" bson:"trace,omitempty"`
-	TraceLevel tracer.Level     `json:"trace_level" bson:"trace_level,omitempty"`
+	ID              bson.ObjectId     `json:"id,omitempty"  bson:"_id,omitempty"`
+	CreatedAt       time.Time         `json:"created_at" bson:"created_at,omitempty"`
+	TraceCompressed []byte            `json:"trace_compressed" bson:"trace,omitempty"`
+	Trace           *TraceInformation `json:"trace" bson:"-"`
+	TraceLevel      tracer.Level      `json:"trace_level" bson:"trace_level,omitempty"`
 }
 
 func (Performance) TableName() string {
@@ -49,6 +55,41 @@ func (Performance) TableName() string {
 
 func (p Performance) Spans() Spans {
 	return p.Trace.Spans()
+}
+
+func (p *Performance) UncompressTrace() error {
+	if p.TraceCompressed == nil || len(p.TraceCompressed) == 0 {
+		return nil
+	}
+	bts, err := base64.StdEncoding.DecodeString(string(p.TraceCompressed))
+	if err != nil {
+		return errors.Wrap(err, "cannot decode compressed trace")
+	}
+	out, err := snappy.Decode(nil, bts)
+	if err != nil {
+		return errors.Wrap(err, "cannot snappy uncompressed trace")
+	}
+
+	traceInfo := &TraceInformation{}
+
+	err = json.Unmarshal(out, traceInfo)
+	if err != nil {
+		return errors.Wrap(err, "cannot unmarshal trace")
+	}
+	p.Trace = traceInfo
+
+	return nil
+}
+
+func (p *Performance) CompressTrace() error {
+	bts, err := json.Marshal(p.Trace)
+	if err != nil {
+		return errors.Wrap(err, "cannot marshal trace")
+	}
+	out := snappy.Encode(nil, bts)
+	p.TraceCompressed = []byte(base64.StdEncoding.EncodeToString(out))
+	p.Trace = nil
+	return nil
 }
 
 type PerformanceCollection struct {
@@ -68,15 +109,21 @@ func NewPerformanceCollection(db database.Database) (*PerformanceCollection, err
 }
 
 func (c *PerformanceCollection) Find(as ...interface{}) ([]Performance, error) {
-	pref := []Performance{}
+	perfs := []Performance{}
 
 	collection := c.Session.Collection(c.Name())
 
-	err := collection.Find(as...).All(&pref)
+	err := collection.Find(as...).All(&perfs)
 	if err != nil {
 		return nil, err
 	}
-	return pref, nil
+	for ii := range perfs {
+		err = (&perfs[ii]).UncompressTrace()
+		if err != nil {
+			return nil, errors.New("unable to uncompress trace")
+		}
+	}
+	return perfs, nil
 }
 
 func (m *PerformanceCollection) Close() error {
