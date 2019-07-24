@@ -45,7 +45,7 @@ func writeBarPlot(o BarPlotter, path string) error {
 			Top:   "top",
 		},
 		charts.LegendOpts{Right: "85%"},
-		charts.ToolboxOpts{Show: true},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{Theme: charts.ThemeType.Shine},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
@@ -70,7 +70,7 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 			Top:   "top",
 		},
 		charts.LegendOpts{Right: "80%"},
-		charts.ToolboxOpts{Show: true},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{Theme: charts.ThemeType.Shine},
 	)
 	f, err := os.Create(path)
@@ -97,6 +97,7 @@ func writePiePlot(o PiePlotter, path string) error {
 			Right: "right",
 			Top:   "top",
 		},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 	)
 	f, err := os.Create(path)
 	if err != nil {

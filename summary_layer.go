@@ -330,7 +330,7 @@ func (o SummaryLayerLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Duration"
 }
 
 func (o SummaryLayerMemoryInformations) PlotName() string {
@@ -344,7 +344,6 @@ func (o SummaryLayerLatencyInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -354,7 +353,6 @@ func (o SummaryLayerMemoryInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -428,7 +426,6 @@ func (o SummaryLayerLatencyInformations) BoxPlot(title string) *charts.BoxPlot {
 	box := charts.NewBoxPlot()
 	box.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	box = o.BoxPlotAdd(box)
 	return box

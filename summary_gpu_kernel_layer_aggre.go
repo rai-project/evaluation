@@ -176,7 +176,6 @@ func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Ba
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -186,7 +185,6 @@ func (o SummaryGPUKernelLayerDramReadInformations) BarPlot(title string) *charts
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -196,7 +194,6 @@ func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot(title string) *chart
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -206,7 +203,6 @@ func (o SummaryGPUKernelLayerDurationInformations) BarPlot(title string) *charts
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -216,7 +212,6 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlot(title string) *charts.B
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar

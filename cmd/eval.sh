@@ -16,11 +16,12 @@ fi
 
 go build main.go
 
-echo "Start to run layer analysis"
 
 # ./main model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --output="$OUTPUTFOLDER/$MODELNAME/model"
 
-./main model  info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/model.html"
+# ./main model  info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --bar_plot --plot_path="$OUTPUTFOLDER/$MODELNAME/model.html"
+
+echo "Start to run layer analysis"
 
 ./main layer info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --format=csv,table --output="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer"
 

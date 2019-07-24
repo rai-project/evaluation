@@ -84,14 +84,13 @@ func (o SummaryModelInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Throughput"
+	return o[0].ModelName + " Throughput"
 }
 
 func (o SummaryModelInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
