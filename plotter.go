@@ -57,9 +57,10 @@ func writeBarPlot(o BarPlotter, path string) error {
 		charts.LegendOpts{Right: "85%"},
 		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{
-			Theme:  charts.ThemeType.Shine,
-			Width:  fmt.Sprintf("%vpx", DefaultBarPlotWidth),
-			Height: fmt.Sprintf("%vpx", DefaultBarPlotHeight),
+			AssetsHost: DefaultAssetHost,
+			Theme:      charts.ThemeType.Shine,
+			Width:      fmt.Sprintf("%vpx", DefaultBarPlotWidth),
+			Height:     fmt.Sprintf("%vpx", DefaultBarPlotHeight),
 		},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
@@ -95,9 +96,10 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 		charts.LegendOpts{Right: "80%"},
 		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{
-			Theme:  charts.ThemeType.Shine,
-			Width:  fmt.Sprintf("%vpx", DefaultBarPlotWidth),
-			Height: fmt.Sprintf("%vpx", DefaultBarPlotHeight),
+			AssetsHost: DefaultAssetHost,
+			Theme:      charts.ThemeType.Shine,
+			Width:      fmt.Sprintf("%vpx", DefaultBarPlotWidth),
+			Height:     fmt.Sprintf("%vpx", DefaultBarPlotHeight),
 		},
 	)
 	f, err := os.Create(path)
@@ -131,6 +133,12 @@ func writePiePlot(o PiePlotter, path string) error {
 			},
 		},
 		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
+		charts.InitOpts{
+			AssetsHost: DefaultAssetHost,
+			Theme:      charts.ThemeType.Shine,
+			Width:      fmt.Sprintf("%vpx", DefaultPiePlotWidth),
+			Height:     fmt.Sprintf("%vpx", DefaultPiePlotHeight),
+		},
 	)
 	f, err := os.Create(path)
 	if err != nil {

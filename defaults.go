@@ -5,6 +5,7 @@ const (
 )
 
 var (
+	DefaultAssetHost          = `http://chenjiandongx.com/go-echarts-assets/assets/`
 	DefaultTitleFontSize      = 25
 	DefaultSeriesFontSize     = 14
 	DefaultLegendFontSize     = 14
