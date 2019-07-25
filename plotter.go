@@ -54,7 +54,8 @@ func writeBarPlot(o BarPlotter, path string) error {
 				FontSize: DefaultLegendFontSize,
 			},
 		},
-		charts.ToolboxOpts{Show: true},
+		charts.LegendOpts{Right: "85%"},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{
 			Theme:  charts.ThemeType.Shine,
 			Width:  fmt.Sprintf("%vpx", DefaultBarPlotWidth),
@@ -91,11 +92,12 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 				FontSize: DefaultLegendFontSize,
 			},
 		},
-		charts.ToolboxOpts{Show: true},
+		charts.LegendOpts{Right: "80%"},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{
 			Theme:  charts.ThemeType.Shine,
-			Width:  fmt.Sprintf("%vpx", DefaultBoxPlotWidth),
-			Height: fmt.Sprintf("%vpx", DefaultBoxPlotHeight),
+			Width:  fmt.Sprintf("%vpx", DefaultBarPlotWidth),
+			Height: fmt.Sprintf("%vpx", DefaultBarPlotHeight),
 		},
 	)
 	f, err := os.Create(path)
@@ -115,23 +117,20 @@ func writePiePlot(o PiePlotter, path string) error {
 	pie.SetGlobalOptions(
 		charts.TitleOpts{
 			Title: o.PlotName(),
-			Right: "right",
-			Top:   "top",
+			Right: "center",
+			Top:   "bottom",
 			TitleStyle: charts.TextStyleOpts{
-				FontSize: DefaultTitleFontSize,
+				FontSize: DefaultLegendFontSize,
 			},
 		},
 		charts.LegendOpts{
-			Right: "90%",
+			Right: "right",
+			Top:   "top",
 			TextStyle: charts.TextStyleOpts{
 				FontSize: DefaultLegendFontSize,
 			},
 		},
-		charts.InitOpts{
-			Theme:  charts.ThemeType.Shine,
-			Width:  fmt.Sprintf("%vpx", DefaultPiePlotWidth),
-			Height: fmt.Sprintf("%vpx", DefaultPiePlotHeight),
-		},
+		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 	)
 	f, err := os.Create(path)
 	if err != nil {

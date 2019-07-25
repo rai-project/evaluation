@@ -91,7 +91,6 @@ func (o SummaryModelInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar

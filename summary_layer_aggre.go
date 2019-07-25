@@ -114,7 +114,7 @@ func (o SummaryLayerDruationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer Duration Percentage"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Duration Percentage"
 }
 
 func (o SummaryLayerDruationInformations) PiePlot(title string) *charts.Pie {

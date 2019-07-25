@@ -1,7 +1,9 @@
 package evaluation
 
 import (
+	json "encoding/json"
 	"errors"
+	"strings"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
@@ -139,42 +141,41 @@ func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Flops"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Flops per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramReadInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Dram Read Bytes"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Read per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Dram Write Bytes"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Write per Layer"
 }
 
 func (o SummaryGPUKernelLayerDurationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU Kernel Duration"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Duration per Layer"
 }
 
 func (o SummaryGPUKernelLayerGPUCPUInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Layer GPU vs CPU Duration"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Duration per Layer"
 }
 
 func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -184,7 +185,6 @@ func (o SummaryGPUKernelLayerDramReadInformations) BarPlot(title string) *charts
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -194,7 +194,6 @@ func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot(title string) *chart
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -204,7 +203,6 @@ func (o SummaryGPUKernelLayerDurationInformations) BarPlot(title string) *charts
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -214,7 +212,6 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlot(title string) *charts.B
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -238,9 +235,16 @@ func (o SummaryGPUKernelLayerAggreInformations) barPlotAdd(bar *charts.Bar, elem
 		charts.LabelTextOpts{Show: false},
 		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
 	)
+
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+	  var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
+	  return labels.indexOf(name);
+  }`
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
 	)
+
 	return bar
 }
 
@@ -307,8 +311,14 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 		charts.LabelTextOpts{Show: false},
 		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
 	)
+
+	jsLabelsBts, _ := json.Marshal(labels)
+	jsFun := `function (name, index) {
+	  var labels = ` + strings.Replace(string(jsLabelsBts), `"`, "'", -1) + `;
+	  return labels.indexOf(name);
+  }`
 	bar.SetGlobalOptions(
-		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
 	)
 
 	bar.SetGlobalOptions(

@@ -147,7 +147,7 @@ func (o batchPlot) BarPlot(title string) *charts.Bar {
 	bar := charts.NewBar()
 	bar.SetGlobalOptions(
 		charts.TitleOpts{Title: title},
-		charts.ToolboxOpts{Show: true},
+		charts.ToolboxOpts{Show: true, TBFeature{SaveAsImage: struct{pixelRatio: 5}}},
 	)
 	bar = o.BarPlotAdd(bar)
 	return bar
