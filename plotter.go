@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/pkg/errors"
@@ -43,10 +44,22 @@ func writeBarPlot(o BarPlotter, path string) error {
 			Title: o.PlotName(),
 			Right: "center",
 			Top:   "top",
+			TitleStyle: charts.TextStyleOpts{
+				FontSize: DefaultTitleFontSize,
+			},
 		},
-		charts.LegendOpts{Right: "80%"},
+		charts.LegendOpts{
+			Right: "80%",
+			TextStyle: charts.TextStyleOpts{
+				FontSize: DefaultLegendFontSize,
+			},
+		},
 		charts.ToolboxOpts{Show: true},
-		charts.InitOpts{Theme: charts.ThemeType.Shine},
+		charts.InitOpts{
+			Theme:  charts.ThemeType.Shine,
+			Width:  fmt.Sprintf("%vpx", DefaultBarPlotWidth),
+			Height: fmt.Sprintf("%vpx", DefaultBarPlotHeight),
+		},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
 	f, err := os.Create(path)
@@ -68,10 +81,22 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 			Title: o.PlotName(),
 			Right: "center",
 			Top:   "top",
+			TitleStyle: charts.TextStyleOpts{
+				FontSize: DefaultTitleFontSize,
+			},
 		},
-		charts.LegendOpts{Right: "80%"},
+		charts.LegendOpts{
+			Right: "80%",
+			TextStyle: charts.TextStyleOpts{
+				FontSize: DefaultLegendFontSize,
+			},
+		},
 		charts.ToolboxOpts{Show: true},
-		charts.InitOpts{Theme: charts.ThemeType.Shine},
+		charts.InitOpts{
+			Theme:  charts.ThemeType.Shine,
+			Width:  fmt.Sprintf("%vpx", DefaultBoxPlotWidth),
+			Height: fmt.Sprintf("%vpx", DefaultBoxPlotHeight),
+		},
 	)
 	f, err := os.Create(path)
 	if err != nil {
@@ -92,9 +117,20 @@ func writePiePlot(o PiePlotter, path string) error {
 			Title: o.PlotName(),
 			Right: "right",
 			Top:   "top",
+			TitleStyle: charts.TextStyleOpts{
+				FontSize: DefaultTitleFontSize,
+			},
 		},
 		charts.LegendOpts{
 			Right: "90%",
+			TextStyle: charts.TextStyleOpts{
+				FontSize: DefaultLegendFontSize,
+			},
+		},
+		charts.InitOpts{
+			Theme:  charts.ThemeType.Shine,
+			Width:  fmt.Sprintf("%vpx", DefaultPiePlotWidth),
+			Height: fmt.Sprintf("%vpx", DefaultPiePlotHeight),
 		},
 	)
 	f, err := os.Create(path)

@@ -374,7 +374,10 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 		data[ii] = elemSelector(elem)
 	}
 	bar.AddYAxis("", data)
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetSeriesOptions(
+		charts.LabelTextOpts{Show: false},
+		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
+	)
 
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},

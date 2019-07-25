@@ -110,7 +110,11 @@ func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 	}
 	bar.AddYAxis("", data)
 
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetSeriesOptions(
+		charts.LabelTextOpts{Show: false},
+		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
+	)
+
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Batch Size", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
 		charts.YAxisOpts{Name: "Throughput (inputs/second)"},

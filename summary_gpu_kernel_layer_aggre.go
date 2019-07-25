@@ -234,7 +234,10 @@ func (o SummaryGPUKernelLayerAggreInformations) barPlotAdd(bar *charts.Bar, elem
 		data[ii] = elemSelector(elem)
 	}
 	bar.AddYAxis("", data)
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetSeriesOptions(
+		charts.LabelTextOpts{Show: false},
+		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
+	)
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
 	)
@@ -300,7 +303,10 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 	}
 	bar.AddYAxis("CPU", cpu, charts.BarOpts{Stack: "stack"})
 
-	bar.SetSeriesOptions(charts.LabelTextOpts{Show: false})
+	bar.SetSeriesOptions(
+		charts.LabelTextOpts{Show: false},
+		charts.TextStyleOpts{FontSize: DefaultSeriesFontSize},
+	)
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
 	)
