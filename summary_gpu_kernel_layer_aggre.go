@@ -49,7 +49,7 @@ func (SummaryGPUKernelLayerAggreInformation) Header(iopts ...writer.Option) []st
 		"layer_flops",
 		"layer_dram_read_bytes",
 		"layer_dram_write_bytes",
-		"layer_achieved_occupancy",
+		"layer_achieved_occupancy (%)",
 		"layer_arithmetic_intensity (flops/byte)",
 		"layer_arithmetic_throughput (GFlops)",
 		"layer_memory_bound",
@@ -124,7 +124,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			Flops:                   flops,
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
-			AchievedOccupancy:       achievedOccupancy / duration,
+			AchievedOccupancy:       float64(100) * achievedOccupancy / duration,
 			ArithmeticIntensity:     arithmeticIntensity,
 			ArithmeticThroughput:    arithmeticThroughput,
 			MemoryBound:             memoryBound,
@@ -143,6 +143,8 @@ type SummaryGPUKernelLayerDramWriteInformations SummaryGPUKernelLayerAggreInform
 type SummaryGPUKernelLayerDurationInformations SummaryGPUKernelLayerAggreInformations
 
 type SummaryGPUKernelLayerGPUCPUInformations SummaryGPUKernelLayerAggreInformations
+
+type SummaryGPUKernelLayerAchievedOccupancyInformations SummaryGPUKernelLayerAggreInformations
 
 func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
@@ -179,6 +181,13 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) PlotName() string {
 	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Latency per Layer"
 }
 
+func (o SummaryGPUKernelLayerAchievedOccupancyInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Achieved Occupany per Layer"
+}
+
 func (o SummaryGPUKernelLayerFlopsInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
 	bar = o.BarPlotAdd(bar)
@@ -204,6 +213,12 @@ func (o SummaryGPUKernelLayerDurationInformations) BarPlot() *charts.Bar {
 }
 
 func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlot() *charts.Bar {
+	bar := charts.NewBar()
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+func (o SummaryGPUKernelLayerAchievedOccupancyInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -320,6 +335,16 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 	return bar
 }
 
+func (o SummaryGPUKernelLayerAchievedOccupancyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummaryGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummaryGPUKernelLayerAggreInformation) float64 {
+		return elem.AchievedOccupancy
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "%"},
+	)
+	return bar
+}
+
 func (o SummaryGPUKernelLayerFlopsInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
@@ -333,6 +358,10 @@ func (o SummaryGPUKernelLayerDramWriteInformations) WriteBarPlot(path string) er
 }
 
 func (o SummaryGPUKernelLayerDurationInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryGPUKernelLayerAchievedOccupancyInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
@@ -353,6 +382,10 @@ func (o SummaryGPUKernelLayerDramWriteInformations) OpenBarPlot() error {
 }
 
 func (o SummaryGPUKernelLayerDurationInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryGPUKernelLayerAchievedOccupancyInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 

@@ -31,4 +31,5 @@ func init() {
 	gpuKernelCmd.AddCommand(gpuKernelLayerDramWriteCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerDurationCmd)
 	gpuKernelCmd.AddCommand(gpuKernelLayerGPUCPUCmd)
+	gpuKernelCmd.AddCommand(gpuKernelLayerAchievedOccupancyCmd)
 }

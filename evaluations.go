@@ -17,7 +17,7 @@ func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceColl
 			return nil, err
 		}
 		if len(foundPerfs) != 1 {
-			return nil, errors.New("expecting on performance output")
+			return nil, errors.New("expecting one performance output")
 		}
 		perf := foundPerfs[0]
 

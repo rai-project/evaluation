@@ -43,7 +43,7 @@ func (info SummaryGPUKernelNameAggreInformation) Header(opts ...writer.Option) [
 		"kernel_flops",
 		"kernel_dram_read_bytes",
 		"kernel_dram_write_bytes",
-		"kernel_achieved_occupancy",
+		"kernel_achieved_occupancy (%)",
 		"kernel_arithmetic_intensity (flops/byte)",
 		"kernel_arithmetic_throughput (GFlops)",
 		"kernel_memory_bound",
@@ -115,7 +115,7 @@ func (es Evaluations) SummaryGPUKernelNameAggreInformations(perfCol *Performance
 		if arithmeticIntensity < v.IdealArithmeticIntensity {
 			memoryBound = true
 		}
-		v.AchievedOccupancy = v.AchievedOccupancy / v.Duration
+		v.AchievedOccupancy = float64(100) * v.AchievedOccupancy / v.Duration
 		v.MemoryBound = memoryBound
 		v.ArithmeticThroughput = v.Flops / v.Duration / float64(1000)
 		summary = append(summary, v)

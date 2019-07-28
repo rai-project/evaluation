@@ -5,15 +5,14 @@ import (
 	json "encoding/json"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/golang/snappy"
+	"github.com/levigross/grequests"
+	"github.com/pkg/errors"
 	"github.com/rai-project/database"
 	"github.com/rai-project/database/mongodb"
 	"github.com/rai-project/tracer"
-	"gopkg.in/mgo.v2/bson"
-
 	model "github.com/uber/jaeger/model/json"
+	"gopkg.in/mgo.v2/bson"
 )
 
 //easyjson:json
@@ -47,6 +46,7 @@ type Performance struct {
 	TraceCompressed []byte            `json:"trace_compressed" bson:"trace,omitempty"`
 	Trace           *TraceInformation `json:"trace" bson:"-"`
 	TraceLevel      tracer.Level      `json:"trace_level" bson:"trace_level,omitempty"`
+	TraceURL        string            `json:"trace_url" bson:"trace_url,omitempty"`
 }
 
 func (Performance) TableName() string {
@@ -54,7 +54,17 @@ func (Performance) TableName() string {
 }
 
 func (p Performance) Spans() Spans {
-	return p.Trace.Spans()
+	resp, err := grequests.Get(p.TraceURL, nil)
+	if err != nil {
+		return Spans{}
+	}
+	var traceInfo TraceInformation
+	jsonDecoder := json.NewDecoder(resp)
+	err = jsonDecoder.Decode(&traceInfo)
+	if err != nil {
+		return Spans{}
+	}
+	return traceInfo.Spans()
 }
 
 func (p *Performance) UncompressTrace() error {
@@ -118,6 +128,7 @@ func (c *PerformanceCollection) Find(as ...interface{}) ([]Performance, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for ii := range perfs {
 		err = (&perfs[ii]).UncompressTrace()
 		if err != nil {

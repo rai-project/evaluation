@@ -52,7 +52,7 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 		"kernel_flops",
 		"kernel_dram_read_bytes",
 		"kernel_dram_write_bytes",
-		"kernel_achieved_occupancy",
+		"kernel_achieved_occupancy (%)",
 		"kernel_arithmetic_intensity (flops/byte)",
 		"kernel_arithmetic_throughput (GFlops)",
 		"kernel_memory_bound",
