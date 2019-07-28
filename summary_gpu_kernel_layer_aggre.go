@@ -98,7 +98,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 		readBytes := float64(0)
 		writeBytes := float64(0)
 		for _, gpuInfo := range gpuInfos {
-			duration += gpuInfo.Duration
+			duration += gpuInfo.MeanDuration
 			flops += gpuInfo.MeanFlops
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes
@@ -162,57 +162,42 @@ func (o SummaryGPUKernelLayerDurationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Duration per Layer"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Latency per Layer"
 }
 
 func (o SummaryGPUKernelLayerGPUCPUInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Duration per Layer"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Latency per Layer"
 }
 
-func (o SummaryGPUKernelLayerFlopsInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryGPUKernelLayerFlopsInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }
 
-func (o SummaryGPUKernelLayerDramReadInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryGPUKernelLayerDramReadInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }
 
-func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryGPUKernelLayerDurationInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }
 
-func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }

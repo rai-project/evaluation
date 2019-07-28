@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/rai-project/evaluation/writer"
@@ -21,9 +22,21 @@ type SummaryModelInformation struct {
 
 type SummaryModelInformations []SummaryModelInformation
 
+func (p SummaryModelInformations) Len() int { return len(p) }
+func (p SummaryModelInformations) Less(i, j int) bool {
+	return p[i].BatchSize < p[j].BatchSize
+}
+func (p SummaryModelInformations) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+type SummaryModelLatencyInformations SummaryModelInformations
+
+type SummaryModelThroughputInformations SummaryModelInformations
+
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
-		"duration (us)",
+		"batch latency (ms)",
 		"latency (ms)",
 		"throughput (input/s)",
 		// "durations (us)",
@@ -33,9 +46,9 @@ func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 
 func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
-		cast.ToString(s.Duration),
-		cast.ToString(s.Latency),
-		cast.ToString(s.Throughput),
+		fmt.Sprintf("%.2f", s.Duration),
+		fmt.Sprintf("%.2f", s.Latency),
+		fmt.Sprintf("%.2f", s.Throughput),
 		// strings.Join(int64SliceToStringSlice(s.Durations), ","),
 	}
 	return append(s.SummaryBase.Row(opts...), extra...)
@@ -72,7 +85,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		summary = append(summary, SummaryModelInformation{
 			SummaryBase: base,
 			Durations:   durations,
-			Duration:    float64(duration),
+			Duration:    float64(duration) / float64(1000),
 			Throughput:  float64(1000) / latency,
 			Latency:     latency,
 		})
@@ -80,23 +93,35 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 	return summary, nil
 }
 
-func (o SummaryModelInformations) PlotName() string {
+func (o SummaryModelThroughputInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
 	return o[0].ModelName + " Throughput"
 }
 
-func (o SummaryModelInformations) BarPlot(title string) *charts.Bar {
+func (o SummaryModelLatencyInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Batch Latency"
+}
+
+func (o SummaryModelThroughputInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
-	bar.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	bar = o.BarPlotAdd(bar)
 	return bar
 }
 
-func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
+func (o SummaryModelLatencyInformations) BarPlot() *charts.Bar {
+	bar := charts.NewBar()
+	bar = o.BarPlotAdd(bar)
+	return bar
+}
+
+type SummaryModelInformationsSelector func(elem SummaryModelInformation) float64
+
+func (o SummaryModelInformations) barPlotAdd(bar *charts.Bar, elemSelector SummaryModelInformationsSelector) *charts.Bar {
 	labels := []string{}
 	for _, elem := range o {
 		labels = append(labels, cast.ToString(elem.BatchSize))
@@ -105,7 +130,7 @@ func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 
 	data := make([]float64, len(o))
 	for ii, elem := range o {
-		data[ii] = elem.Throughput
+		data[ii] = elemSelector(elem)
 	}
 	bar.AddYAxis("", data)
 
@@ -116,15 +141,42 @@ func (o SummaryModelInformations) BarPlotAdd(bar *charts.Bar) *charts.Bar {
 
 	bar.SetGlobalOptions(
 		charts.XAxisOpts{Name: "Batch Size", Show: false, AxisLabel: charts.LabelTextOpts{Show: true}},
+	)
+	return bar
+}
+
+func (o SummaryModelThroughputInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummaryModelInformations(o).barPlotAdd(bar0, func(elem SummaryModelInformation) float64 {
+		return elem.Throughput
+	})
+	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "Throughput (inputs/second)"},
 	)
 	return bar
 }
 
-func (o SummaryModelInformations) WriteBarPlot(path string) error {
+func (o SummaryModelLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+	bar := SummaryModelInformations(o).barPlotAdd(bar0, func(elem SummaryModelInformation) float64 {
+		return (elem.Duration) / float64(1000)
+	})
+	bar.SetGlobalOptions(
+		charts.YAxisOpts{Name: "Batch Latency (ms)"},
+	)
+	return bar
+}
+
+func (o SummaryModelThroughputInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o SummaryModelInformations) OpenBarPlot() error {
+func (o SummaryModelLatencyInformations) WriteBarPlot(path string) error {
+	return writeBarPlot(o, path)
+}
+
+func (o SummaryModelThroughputInformations) OpenBarPlot() error {
+	return openBarPlot(o)
+}
+
+func (o SummaryModelLatencyInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }

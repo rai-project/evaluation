@@ -61,6 +61,7 @@ var gpuKernelNameAggreCmd = &cobra.Command{
 			if len(gpuKernelInfos) == 0 {
 				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
 				defer writer.Close()
+				return nil
 			}
 			writer = NewWriter(gpuKernelInfos[0])
 			defer writer.Close()

@@ -54,6 +54,9 @@ func NewWriter(rower Rower, opts ...writer.Option) *Writer {
 		tOutputFileName := outputFileName + ".tbl"
 		wr.outputFileNames["table"] = tOutputFileName
 		wr.tbl = tablewriter.NewWriter(output)
+		wr.tbl.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+		wr.tbl.SetCenterSeparator("|")
+		wr.tbl.SetAutoWrapText(false)
 	}
 	if wr.hasFormat("csv") {
 		output := getOutput(outputFileName)

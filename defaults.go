@@ -5,9 +5,10 @@ const (
 )
 
 var (
-	DefaultTitleFontSize      = 25
-	DefaultSeriesFontSize     = 14
-	DefaultLegendFontSize     = 14
+	DefaultShowTitle          = true
+	DefaultTitleFontSize      = 20
+	DefaultSeriesFontSize     = 25
+	DefaultLegendFontSize     = 25
 	DefaultBarPlotAspectRatio = 3.0
 	DefaultBarPlotWidth       = 900
 	DefaultBarPlotHeight      = int(float64(DefaultBarPlotWidth) / DefaultBarPlotAspectRatio)

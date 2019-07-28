@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/rai-project/evaluation/writer"
@@ -54,9 +55,9 @@ func (s SummaryLayerAggreInformation) Row(iopts ...writer.Option) []string {
 	extra := []string{
 		s.Type,
 		cast.ToString(s.Occurence),
-		cast.ToString(s.OccurencePercentage),
-		cast.ToString(s.Duration),
-		cast.ToString(s.DurationPercentage),
+		fmt.Sprintf("%.2f", s.OccurencePercentage),
+		fmt.Sprintf("%.2f", s.Duration),
+		fmt.Sprintf("%.2f", s.DurationPercentage),
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -114,14 +115,11 @@ func (o SummaryLayerDruationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Duration Percentage"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency Percentage"
 }
 
-func (o SummaryLayerDruationInformations) PiePlot(title string) *charts.Pie {
+func (o SummaryLayerDruationInformations) PiePlot() *charts.Pie {
 	pie := charts.NewPie()
-	pie.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	pie = o.PiePlotAdd(pie)
 	return pie
 }
@@ -133,11 +131,8 @@ func (o SummaryLayerOccurrenceInformations) PlotName() string {
 	return o[0].ModelName + " Layer Occurrence Percentage"
 }
 
-func (o SummaryLayerOccurrenceInformations) PiePlot(title string) *charts.Pie {
+func (o SummaryLayerOccurrenceInformations) PiePlot() *charts.Pie {
 	pie := charts.NewPie()
-	pie.SetGlobalOptions(
-		charts.TitleOpts{Title: title},
-	)
 	pie = o.PiePlotAdd(pie)
 	return pie
 }

@@ -34,6 +34,7 @@ type SummaryBase struct {
 	GPUDriverVersion         *string          `json:"gpu_driver,omitempty"`
 	GPUDevice                *int             `json:"gpu_device,omitempty"`
 	GPUInformation           *nvidiasmi.GPU   `json:"gpu_information,omitempty"`
+	InterconnectName         string           `json:"interconnect_name,omitempty"`
 	TheoreticalGFlops        int64            `json:"theoretical_glops,omitempty"`
 	MemoryBandwidth          float64          `json:"memory_bandwidth,omitempty"`
 	IdealArithmeticIntensity float64          `json:"ideal_arithmetic_intensity,omitempty"`
@@ -44,22 +45,22 @@ func (SummaryBase) Header(opts ...writer.Option) []string {
 	return []string{
 		"id",
 		"created_at",
-		"updated_at",
 		"model_name",
-		"model_version",
 		"framework_name",
-		"framework_version",
-		"machine_architecture",
 		"using_gpu",
 		"batch_size",
-		"hostname",
 		"trace_level",
+		"hostname",
+		"machine_architecture",
 		"machine_memory (KB)",
-		"gpu_driver",
+		"CPU_name",
+		"GPU_name",
+		"GPU_driver",
+		"interconnect_name",
 		"theoretical_flops (GFLOPS)",
 		"memory_bandwidth (GB/s)",
-		"ideal_arithmetic_intensity (flops/byte)",
 		"interconnect_bandwidth (GB/s)",
+		"ideal_arithmetic_intensity (flops/byte)",
 	}
 }
 
@@ -67,22 +68,22 @@ func (s SummaryBase) Row(opts ...writer.Option) []string {
 	return []string{
 		fmt.Sprintf(`%x`, string(s.ID)),
 		s.CreatedAt.String(),
-		s.UpdatedAt.String(),
 		s.ModelName,
-		s.ModelVersion,
 		s.FrameworkName,
-		s.FrameworkVersion,
-		s.MachineArchitecture,
 		cast.ToString(s.UsingGPU),
 		cast.ToString(s.BatchSize),
-		s.HostName,
 		s.TraceLevel,
+		s.HostName,
+		s.MachineArchitecture,
 		cast.ToString(s.MachineInformation.MemTotal),
+		s.MachineInformation.CPU[0].ModelName,
+		s.GPUInformation.ProductName,
 		*s.GPUDriverVersion,
+		s.InterconnectName,
 		cast.ToString(s.TheoreticalGFlops),
 		cast.ToString(s.MemoryBandwidth),
-		cast.ToString(s.IdealArithmeticIntensity),
 		cast.ToString(s.InterconnectBandwidth),
+		fmt.Sprintf("%.2f", s.IdealArithmeticIntensity),
 	}
 }
 
@@ -115,10 +116,15 @@ func (e Evaluation) summaryBase() SummaryBase {
 	if err != nil {
 		log.WithError(err).Error("unable to get memory bandwidth")
 	}
+	interconnectName, err := e.GPUInformation.InterconnectName()
+	if err != nil {
+		log.WithError(err).Error("unable to get interconnect name")
+	}
 	interconnectBandwidth, err := e.GPUInformation.InterconnectBandwidth()
 	if err != nil {
 		log.WithError(err).Error("unable to get interconnect bandwidth")
 	}
+
 	idealArithmeticIntensity := float64(theoreticalGFlops) / memoryBandwidth
 
 	return SummaryBase{
@@ -142,5 +148,6 @@ func (e Evaluation) summaryBase() SummaryBase {
 		MemoryBandwidth:          memoryBandwidth,
 		IdealArithmeticIntensity: idealArithmeticIntensity,
 		InterconnectBandwidth:    interconnectBandwidth,
+		InterconnectName:         interconnectName,
 	}
 }

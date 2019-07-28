@@ -1,6 +1,8 @@
 package evaluation
 
 import (
+	"fmt"
+
 	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
 )
@@ -40,6 +42,7 @@ func (info SummaryGPUKernelNameAggreInformation) Header(opts ...writer.Option) [
 		"kernel_flops",
 		"kernel_dram_read_bytes",
 		"kernel_dram_write_bytes",
+		"kernel_achieved_occupancy",
 		"kernel_arithmetic_intensity (flops/byte)",
 		"kernel_arithmetic_throughput (GFlops)",
 		"kernel_memory_bound",
@@ -50,13 +53,13 @@ func (info SummaryGPUKernelNameAggreInformation) Row(opts ...writer.Option) []st
 	return []string{
 		info.Name,
 		cast.ToString(info.Count),
-		cast.ToString(info.Duration),
-		cast.ToString(info.Duration * float64(100) / info.SummaryModelInformation.Duration),
+		fmt.Sprintf("%.2f", info.Duration),
+		fmt.Sprintf("%.2f", info.Duration*float64(100)/info.SummaryModelInformation.Duration),
 		cast.ToString(info.Flops),
-		cast.ToString(info.DramReadBytes),
-		cast.ToString(info.DramWriteBytes),
-		cast.ToString(info.ArithmeticIntensity),
-		cast.ToString(info.ArithmeticThroughput),
+		fmt.Sprintf("%.2f", info.DramReadBytes),
+		fmt.Sprintf("%.2f", info.DramWriteBytes),
+		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
+		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
 	}
 }
@@ -85,14 +88,14 @@ func (es Evaluations) SummaryGPUKernelNameAggreInformations(perfCol *Performance
 			infoMap[info.Name] = SummaryGPUKernelNameAggreInformation{
 				SummaryModelInformation: modelInfo,
 				Name:                    info.Name,
-				Duration:                info.Duration,
+				Duration:                info.MeanDuration,
 				Count:                   0,
 				Flops:                   info.MeanFlops,
 				DramReadBytes:           info.MeanDramReadBytes,
 				DramWriteBytes:          info.MeanDramWriteBytes,
 			}
 		} else {
-			v.Duration += info.Duration
+			v.Duration += info.MeanDuration
 			v.Count += 1
 			v.Flops += info.MeanFlops
 			v.DramReadBytes += info.MeanDramReadBytes

@@ -2,6 +2,7 @@ package evaluation
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/spf13/cast"
@@ -46,13 +47,13 @@ func (info SummaryGPUKernelModelAggreInformation) Header(opts ...writer.Option) 
 
 func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []string {
 	return []string{
-		cast.ToString(info.SummaryModelInformation.Duration),
-		cast.ToString(info.Duration),
+		fmt.Sprintf("%.2f", info.SummaryModelInformation.Duration),
+		fmt.Sprintf("%.2f", info.Duration),
 		cast.ToString(info.Flops),
-		cast.ToString(info.DramReadBytes),
-		cast.ToString(info.DramWriteBytes),
-		cast.ToString(info.ArithmeticIntensity),
-		cast.ToString(info.ArithmeticThroughput),
+		fmt.Sprintf("%.2f", info.DramReadBytes),
+		fmt.Sprintf("%.2f", info.DramWriteBytes),
+		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
+		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
 	}
 }
@@ -73,7 +74,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 		}
 		gpuInfos := gpuLayerInfo.SummaryGPUKernelInformations
 		for _, gpuInfo := range gpuInfos {
-			duration += gpuInfo.Duration
+			duration += gpuInfo.MeanDuration
 			flops += gpuInfo.MeanFlops
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes

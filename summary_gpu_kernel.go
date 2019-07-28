@@ -3,6 +3,7 @@ package evaluation
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -24,10 +25,11 @@ type SummaryGPUKernelInformation struct {
 	Tags                 []Metadata `json:"tags,omitempty"`
 	Logs                 []Metadata `json:"logs,omitempty"`
 	CorrelationId        int64      `json:"correlation_id,omitempty"`
-	Duration             float64    `json:"mean_duration,omitempty"`
+	MeanDuration         float64    `json:"mean_duration,omitempty"`
 	MeanFlops            float64    `json:"mean_flops,omitempty"`
 	MeanDramReadBytes    float64    `json:"mean_dram_read_bytes,omitempty"`
 	MeanDramWriteBytes   float64    `json:"mean_dram_write_bytes,omitempty"`
+	AchievedOccupancy    float64    `json:"mean_dram_write_bytes,omitempty"`
 	ArithmeticIntensity  float64    `json:"arithmetic_intensity,omitempty"`
 	ArithmeticThroughput float64    `json:"arithmetic_throughput,omitempty"`
 	MemoryBound          bool       `json:"memory_bound,omitempty"`
@@ -37,7 +39,7 @@ type SummaryGPUKernelInformations []SummaryGPUKernelInformation
 
 func (p SummaryGPUKernelInformations) Len() int { return len(p) }
 func (p SummaryGPUKernelInformations) Less(i, j int) bool {
-	return p[i].Duration > p[j].Duration
+	return p[i].MeanDuration > p[j].MeanDuration
 }
 func (p SummaryGPUKernelInformations) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
@@ -47,13 +49,14 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 	extraHeader := []string{
 		"kernel_name",
 		"kernel_duration (us)",
-		"kernel_mean_flops",
-		"kernel_mean_dram_read_bytes",
-		"kernel_mean_dram_write_bytes",
+		"kernel_flops",
+		"kernel_dram_read_bytes",
+		"kernel_dram_write_bytes",
+		"kernel_achieved_occupancy",
 		"kernel_arithmetic_intensity (flops/byte)",
 		"kernel_arithmetic_throughput (GFlops)",
 		"kernel_memory_bound",
-		"kernel_durations (us)",
+		// "kernel_durations (us)",
 	}
 	kernelLogKeys := SummaryGPUKernelInformations{info}.GetKernelLogKeys()
 	if len(kernelLogKeys) != 0 {
@@ -65,14 +68,15 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		info.Name,
-		cast.ToString(info.Duration),
-		cast.ToString(info.MeanFlops),
-		cast.ToString(info.MeanDramReadBytes),
-		cast.ToString(info.MeanDramWriteBytes),
-		cast.ToString(info.ArithmeticIntensity),
-		cast.ToString(info.ArithmeticThroughput),
+		cast.ToString(info.MeanDuration),
+		fmt.Sprintf("%.2f", info.MeanFlops),
+		fmt.Sprintf("%.2f", info.MeanDramReadBytes),
+		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
+		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
+		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
+		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
-		strings.Join(int64SliceToStringSlice(info.Durations), DefaultDimiter),
+		// strings.Join(int64SliceToStringSlice(info.Durations), DefaultDimiter),
 	}
 	kernelLogKeys := SummaryGPUKernelInformations{info}.GetKernelLogKeys()
 	for _, kernelLogKey := range kernelLogKeys {
@@ -106,7 +110,7 @@ func (p SummaryGPUKernelLayerInformation) Len() int { return len(p.SummaryGPUKer
 func (p SummaryGPUKernelLayerInformation) Less(i, j int) bool {
 	x := p.SummaryGPUKernelInformations[i]
 	y := p.SummaryGPUKernelInformations[j]
-	return x.Duration > y.Duration
+	return x.MeanDuration > y.MeanDuration
 }
 func (p SummaryGPUKernelLayerInformation) Swap(i, j int) {
 	p.SummaryGPUKernelInformations[i], p.SummaryGPUKernelInformations[j] = p.SummaryGPUKernelInformations[j], p.SummaryGPUKernelInformations[i]
@@ -433,7 +437,7 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 				}
 			}
 			trimmedMeanFraction := DefaultTrimmedMeanFraction
-			cki.Duration = TrimmedMeanInt64Slice(cki.Durations, trimmedMeanFraction)
+			cki.MeanDuration = TrimmedMeanInt64Slice(cki.Durations, trimmedMeanFraction)
 			cki.MeanFlops = GetMeanLogValue(cki, "flop_count_sp", trimmedMeanFraction)
 			cki.MeanDramReadBytes = GetMeanLogValue(cki, "dram_read_bytes", trimmedMeanFraction)
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
@@ -442,7 +446,7 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			if cki.ArithmeticIntensity < layerGPUInfo.IdealArithmeticIntensity {
 				cki.MemoryBound = true
 			}
-			cki.ArithmeticThroughput = cki.MeanFlops / cki.Duration / float64(1000)
+			cki.ArithmeticThroughput = cki.MeanFlops / cki.MeanDuration / float64(1000)
 			layerGPUInfo.SummaryGPUKernelInformations[ii] = cki
 		}
 		summary = append(summary, layerGPUInfo)

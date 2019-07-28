@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -9,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var modelInfoCmd = &cobra.Command{
-	Use:     "info",
+var modelThroughputCmd = &cobra.Command{
+	Use:     "throughput",
 	Aliases: []string{},
-	Short:   "Get evaluation model information summary from model traces in a database",
+	Short:   "Get evaluation model throughput summary from model traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["model"]
@@ -36,12 +37,27 @@ var modelInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.SummaryModelInformations(performanceCollection)
+			summary0, err := evals.SummaryModelInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
-			sort.Sort(summary)
+			sort.Sort(summary0)
+
+			summary := evaluation.SummaryModelThroughputInformations(summary0)
+
+			if openPlot {
+				return summary.OpenBarPlot()
+			}
+
+			if barPlot {
+				err := summary.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
 
 			writer := NewWriter(evaluation.SummaryModelInformation{})
 			defer writer.Close()
