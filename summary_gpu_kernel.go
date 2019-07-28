@@ -19,20 +19,20 @@ type Metadata map[string]interface{}
 
 //easyjson:json
 type SummaryGPUKernelInformation struct {
-	Name                 string     `json:"name,omitempty"`
-	MangledName          string     `json:"mangled_name,omitempty"`
-	Durations            []int64    `json:"durations,omitempty"`
-	Tags                 []Metadata `json:"tags,omitempty"`
-	Logs                 []Metadata `json:"logs,omitempty"`
-	CorrelationId        int64      `json:"correlation_id,omitempty"`
-	MeanDuration         float64    `json:"mean_duration,omitempty"`
-	MeanFlops            float64    `json:"mean_flops,omitempty"`
-	MeanDramReadBytes    float64    `json:"mean_dram_read_bytes,omitempty"`
-	MeanDramWriteBytes   float64    `json:"mean_dram_write_bytes,omitempty"`
-	AchievedOccupancy    float64    `json:"mean_dram_write_bytes,omitempty"`
-	ArithmeticIntensity  float64    `json:"arithmetic_intensity,omitempty"`
-	ArithmeticThroughput float64    `json:"arithmetic_throughput,omitempty"`
-	MemoryBound          bool       `json:"memory_bound,omitempty"`
+	Name                  string     `json:"name,omitempty"`
+	MangledName           string     `json:"mangled_name,omitempty"`
+	Durations             []int64    `json:"durations,omitempty"`
+	Tags                  []Metadata `json:"tags,omitempty"`
+	Logs                  []Metadata `json:"logs,omitempty"`
+	CorrelationId         int64      `json:"correlation_id,omitempty"`
+	MeanDuration          float64    `json:"mean_duration,omitempty"`
+	MeanFlops             float64    `json:"mean_flops,omitempty"`
+	MeanDramReadBytes     float64    `json:"mean_dram_read_bytes,omitempty"`
+	MeanDramWriteBytes    float64    `json:"mean_dram_write_bytes,omitempty"`
+	MeanAchievedOccupancy float64    `json:"mean_achieved_occupancy,omitempty"`
+	ArithmeticIntensity   float64    `json:"arithmetic_intensity,omitempty"`
+	ArithmeticThroughput  float64    `json:"arithmetic_throughput,omitempty"`
+	MemoryBound           bool       `json:"memory_bound,omitempty"`
 }
 
 type SummaryGPUKernelInformations []SummaryGPUKernelInformation
@@ -72,7 +72,7 @@ func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 		fmt.Sprintf("%.2f", info.MeanFlops),
 		fmt.Sprintf("%.2f", info.MeanDramReadBytes),
 		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
-		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
+		fmt.Sprintf("%.2f", info.MeanAchievedOccupancy),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
@@ -441,6 +441,7 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			cki.MeanFlops = GetMeanLogValue(cki, "flop_count_sp", trimmedMeanFraction)
 			cki.MeanDramReadBytes = GetMeanLogValue(cki, "dram_read_bytes", trimmedMeanFraction)
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
+			cki.MeanAchievedOccupancy = GetMeanLogValue(cki, "achieved_occupancy", trimmedMeanFraction)
 			cki.ArithmeticIntensity = cki.MeanFlops / (cki.MeanDramReadBytes + cki.MeanDramWriteBytes)
 			cki.MemoryBound = false
 			if cki.ArithmeticIntensity < layerGPUInfo.IdealArithmeticIntensity {

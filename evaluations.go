@@ -3,6 +3,7 @@ package evaluation
 import (
 	"errors"
 
+	"github.com/k0kubun/pp"
 	model "github.com/uber/jaeger/model/json"
 	"upper.io/db.v3"
 )
@@ -20,6 +21,7 @@ func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceColl
 			return nil, errors.New("expecting on performance output")
 		}
 		perf := foundPerfs[0]
+		pp.Println(len(perf.Spans()))
 		spans = append(spans, perf.Spans()...)
 	}
 	return spans, nil
