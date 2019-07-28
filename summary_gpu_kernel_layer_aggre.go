@@ -3,6 +3,7 @@ package evaluation
 import (
 	json "encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/rai-project/evaluation/writer"
@@ -18,6 +19,7 @@ type SummaryGPUKernelLayerAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
+	AchievedOccupancy       float64 `json:"achieved_occupancy,omitempty"`
 	ArithmeticIntensity     float64 `json:"arithmetic_intensity,omitempty"`
 	ArithmeticThroughput    float64 `json:"arithmetic_throughput,omitempty"`
 	MemoryBound             bool    `json:"memory_bound,omitempty"`
@@ -47,6 +49,7 @@ func (SummaryGPUKernelLayerAggreInformation) Header(iopts ...writer.Option) []st
 		"layer_flops",
 		"layer_dram_read_bytes",
 		"layer_dram_write_bytes",
+		"layer_achieved_occupancy",
 		"layer_arithmetic_intensity (flops/byte)",
 		"layer_arithmetic_throughput (GFlops)",
 		"layer_memory_bound",
@@ -63,14 +66,15 @@ func (s SummaryGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []str
 		cast.ToString(s.Index),
 		s.Name,
 		s.Type,
-		cast.ToString(s.Duration),
-		cast.ToString(s.GPUDuration),
-		cast.ToString(s.CPUDuration),
+		fmt.Sprintf("%.2f", s.Duration),
+		fmt.Sprintf("%.2f", s.GPUDuration),
+		fmt.Sprintf("%.2f", s.CPUDuration),
 		cast.ToString(s.Flops),
-		cast.ToString(s.DramReadBytes),
-		cast.ToString(s.DramWriteBytes),
-		cast.ToString(s.ArithmeticIntensity),
-		cast.ToString(s.ArithmeticThroughput),
+		fmt.Sprintf("%.2f", s.DramReadBytes),
+		fmt.Sprintf("%.2f", s.DramWriteBytes),
+		fmt.Sprintf("%.2f", s.AchievedOccupancy),
+		fmt.Sprintf("%.2f", s.ArithmeticIntensity),
+		fmt.Sprintf("%.2f", s.ArithmeticThroughput),
 		cast.ToString(s.MemoryBound),
 	}
 	opts := writer.NewOptions(iopts...)
@@ -97,11 +101,13 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 		flops := float64(0)
 		readBytes := float64(0)
 		writeBytes := float64(0)
+		achievedOccupancy := float64(0)
 		for _, gpuInfo := range gpuInfos {
 			duration += gpuInfo.MeanDuration
 			flops += gpuInfo.MeanFlops
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes
+			achievedOccupancy += gpuInfo.MeanDuration * gpuInfo.MeanAchievedOccupancy
 		}
 		arithmeticIntensity := flops / (readBytes + writeBytes)
 
@@ -118,6 +124,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			Flops:                   flops,
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
+			AchievedOccupancy:       achievedOccupancy / duration,
 			ArithmeticIntensity:     arithmeticIntensity,
 			ArithmeticThroughput:    arithmeticThroughput,
 			MemoryBound:             memoryBound,

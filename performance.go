@@ -76,6 +76,7 @@ func (p *Performance) UncompressTrace() error {
 	if err != nil {
 		return errors.Wrap(err, "cannot unmarshal trace")
 	}
+
 	p.Trace = traceInfo
 
 	return nil

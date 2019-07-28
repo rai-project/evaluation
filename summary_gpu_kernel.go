@@ -68,8 +68,8 @@ func (info SummaryGPUKernelInformation) Header(opts ...writer.Option) []string {
 func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 	extra := []string{
 		info.Name,
-		cast.ToString(info.MeanDuration),
-		fmt.Sprintf("%.2f", info.MeanFlops),
+		fmt.Sprintf("%.2f", info.MeanDuration),
+		cast.ToString(info.MeanFlops),
 		fmt.Sprintf("%.2f", info.MeanDramReadBytes),
 		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
 		fmt.Sprintf("%.2f", info.MeanAchievedOccupancy),

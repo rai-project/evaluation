@@ -15,6 +15,7 @@ type SummaryGPUKernelModelAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
+	AchievedOccupancy       float64 `json:"achieved_occupancy,omitempty"`
 	ArithmeticIntensity     float64 `json:"arithmetic_intensity,omitempty"`
 	ArithmeticThroughput    float64 `json:"arithmetic_throughput,omitempty"`
 	MemoryBound             bool    `json:"memory_bound,omitempty"`
@@ -39,6 +40,7 @@ func (info SummaryGPUKernelModelAggreInformation) Header(opts ...writer.Option) 
 		"model_flops",
 		"model_dram_read_bytes",
 		"model_dram_write_bytes",
+		"model_achieved_occupancy",
 		"model_arithmetic_intensity (flops/byte)",
 		"model_arithmetic_throughput (GFlops)",
 		"model_memory_bound",
@@ -52,6 +54,7 @@ func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []s
 		cast.ToString(info.Flops),
 		fmt.Sprintf("%.2f", info.DramReadBytes),
 		fmt.Sprintf("%.2f", info.DramWriteBytes),
+		fmt.Sprintf("%.2f", info.AchievedOccupancy),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
@@ -68,6 +71,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 	flops := float64(0)
 	readBytes := float64(0)
 	writeBytes := float64(0)
+	achievedOccupancy := float64(0)
 	for _, gpuLayerInfo := range gpuLayerInfos {
 		if gpuLayerInfo.Index == 0 {
 			continue
@@ -78,6 +82,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 			flops += gpuInfo.MeanFlops
 			readBytes += gpuInfo.MeanDramReadBytes
 			writeBytes += gpuInfo.MeanDramWriteBytes
+			achievedOccupancy += gpuInfo.MeanDuration * gpuInfo.MeanAchievedOccupancy
 		}
 	}
 
@@ -100,6 +105,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 		Flops:                   flops,
 		DramReadBytes:           readBytes,
 		DramWriteBytes:          writeBytes,
+		AchievedOccupancy:       achievedOccupancy / duration,
 		ArithmeticIntensity:     arithmeticIntensity,
 		ArithmeticThroughput:    arithmeticThroughput,
 		MemoryBound:             memoryBound,

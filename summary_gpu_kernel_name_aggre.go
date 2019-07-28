@@ -16,6 +16,7 @@ type SummaryGPUKernelNameAggreInformation struct {
 	Flops                   float64 `json:"flops,omitempty"`
 	DramReadBytes           float64 `json:"dram_read_bytes,omitempty"`
 	DramWriteBytes          float64 `json:"dram_write_bytes,omitempty"`
+	AchievedOccupancy       float64 `json:"achieved_occupancy,omitempty"`
 	ArithmeticIntensity     float64 `json:"arithmetic_intensity,omitempty"`
 	ArithmeticThroughput    float64 `json:"arithmetic_throughput,omitempty"`
 	MemoryBound             bool    `json:"memory_bound,omitempty"`
@@ -57,7 +58,8 @@ func (info SummaryGPUKernelNameAggreInformation) Row(opts ...writer.Option) []st
 		fmt.Sprintf("%.2f", info.Duration*float64(100)/info.SummaryModelInformation.Duration),
 		cast.ToString(info.Flops),
 		fmt.Sprintf("%.2f", info.DramReadBytes),
-		fmt.Sprintf("%.2f", info.DramWriteBytes),
+    fmt.Sprintf("%.2f", info.DramWriteBytes),
+    fmt.Sprintf("%.2f", s.AchievedOccupancy),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
@@ -92,15 +94,17 @@ func (es Evaluations) SummaryGPUKernelNameAggreInformations(perfCol *Performance
 				Count:                   0,
 				Flops:                   info.MeanFlops,
 				DramReadBytes:           info.MeanDramReadBytes,
-				DramWriteBytes:          info.MeanDramWriteBytes,
+        DramWriteBytes:          info.MeanDramWriteBytes,
+        AchievedOccupancy: info.MeanDuration * info.MeanAchievedOccupancy,
 			}
 		} else {
 			v.Duration += info.MeanDuration
 			v.Count += 1
 			v.Flops += info.MeanFlops
 			v.DramReadBytes += info.MeanDramReadBytes
-			v.DramWriteBytes += info.MeanDramWriteBytes
-			v.SummaryModelInformation = modelInfo
+      v.DramWriteBytes += info.MeanDramWriteBytes
+      v.AchievedOccupancy += info.MeanDuration * info.MeanAchievedOccupancy,
+      v.SummaryModelInformation = modelInfo
 			infoMap[info.Name] = v
 		}
 	}
@@ -110,7 +114,8 @@ func (es Evaluations) SummaryGPUKernelNameAggreInformations(perfCol *Performance
 		memoryBound := false
 		if arithmeticIntensity < v.IdealArithmeticIntensity {
 			memoryBound = true
-		}
+    }
+    v.AchievedOccupancy = v.AchievedOccupancy/v.Duration
 		v.MemoryBound = memoryBound
 		v.ArithmeticThroughput = v.Flops / v.Duration / float64(1000)
 		summary = append(summary, v)
