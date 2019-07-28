@@ -27,6 +27,7 @@ type Evaluation struct {
 	BatchSize           int                           `json:"batch_size,omitempty" bson:"batch_size,omitempty"`
 	GPUMetrics          string                        `json:"gpu_metrics,omitempty" bson:"gpu_metrics,omitempty"`
 	Hostname            string                        `json:"hostname,omitempty" bson:"hostname,omitempty"`
+	HostIP              string                        `json:"host_ip,omitempty" bson:"host_ip,omitempty"`
 	TraceLevel          string                        `json:"trace_level,omitempty" bson:"trace_level,omitempty"`
 	ModelAccuracyID     bson.ObjectId                 `json:"model_accuracy_id,omitempty" bson:"model_accuracy_id,omitempty"`
 	InputPredictionIDs  []bson.ObjectId               `json:"input_prediction_ids,omitempty" bson:"input_prediction_ids,omitempty"`

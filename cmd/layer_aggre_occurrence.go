@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerOcurrenceCmd = &cobra.Command{
-	Use:     "occurrence",
+var layerAggreOcurrenceCmd = &cobra.Command{
+	Use:     "aggre_occurrence",
 	Aliases: []string{},
 	Short:   "Get model layer occurrence information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -44,7 +44,7 @@ var layerOcurrenceCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryLayerOccurrenceInformations(summary0)
+			summary := evaluation.SummaryLayerAggreOccurrenceInformations(summary0)
 
 			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {

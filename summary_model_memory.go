@@ -62,7 +62,11 @@ type SummaryMemoryInformation struct {
 }
 
 func (p Performance) MemoryInformationSummary(e Evaluation) (*SummaryMemoryInformation, error) {
-	cPredictSpans := p.Spans().FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
+	perfSpans, err := p.Spans()
+	if err != nil {
+		return nil, err
+	}
+	cPredictSpans := perfSpans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.FRAMEWORK_TRACE.String())
 
 	return &SummaryMemoryInformation{
 		SummaryBase:        e.summaryBase(),

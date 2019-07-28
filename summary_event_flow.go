@@ -50,7 +50,11 @@ func spansToEventFlow(spans Spans) eventflow.Events {
 }
 
 func (p Performance) EventFlowSummary(e Evaluation) (*SummaryEventFlow, error) {
-	flow := spansToEventFlow(p.Spans())
+	perfSpans, err := p.Spans()
+	if err != nil {
+		return nil, err
+	}
+	flow := spansToEventFlow(perfSpans)
 	return &SummaryEventFlow{
 		SummaryBase: e.summaryBase(),
 		EventFlow:   flow,

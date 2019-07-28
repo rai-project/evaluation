@@ -7,7 +7,11 @@ type Performances []Performance
 func (ps Performances) Spans() Spans {
 	res := []model.Span{}
 	for _, p := range ps {
-		res = append(res, p.Spans()...)
+		perfSpans, err := p.Spans()
+		if err != nil {
+			continue
+		}
+		res = append(res, perfSpans...)
 	}
 	return res
 }

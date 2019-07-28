@@ -55,6 +55,7 @@ var (
 	boxPlot    bool
 	openPlot   bool
 	plotPath   string
+	plotAll    bool
 )
 
 func rootSetup() error {
@@ -180,6 +181,7 @@ func init() {
 	EvaluationCmd.PersistentFlags().BoolVar(&piePlot, "pie_plot", false, "generates a pie plot of the layers")
 	EvaluationCmd.PersistentFlags().BoolVar(&openPlot, "open_plot", false, "opens the plot of the layers")
 	EvaluationCmd.PersistentFlags().StringVar(&plotPath, "plot_path", "", "output file for the layer plot")
+	EvaluationCmd.PersistentFlags().BoolVar(&plotAll, "plot_all", false, "generates all the plots")
 
 	pp.WithLineInfo = true
 }

@@ -3,7 +3,9 @@ package evaluation
 import (
 	"fmt"
 	"os"
+	"path"
 
+	"github.com/k0kubun/pp"
 	"github.com/pkg/errors"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/utils/browser"
@@ -37,7 +39,7 @@ type PiePlotter interface {
 	OpenPiePlot() error
 }
 
-func writeBarPlot(o BarPlotter, path string) error {
+func writeBarPlot(o BarPlotter, filepath string) error {
 	bar := o.BarPlot()
 
 	if DefaultShowTitle {
@@ -68,8 +70,11 @@ func writeBarPlot(o BarPlotter, path string) error {
 		},
 		// charts.DataZoomOpts{XAxisIndex: []int{0}, Start: 50, End: 100},
 	)
-	f, err := os.Create(path)
+	os.MkdirAll(path.Dir(filepath), os.ModePerm)
+	f, err := os.Create(filepath)
 	if err != nil {
+		pp.Println(err)
+
 		return err
 	}
 	defer f.Close()
@@ -80,7 +85,7 @@ func writeBarPlot(o BarPlotter, path string) error {
 	return nil
 }
 
-func writeBoxPlot(o BoxPlotter, path string) error {
+func writeBoxPlot(o BoxPlotter, filepath string) error {
 	box := o.BoxPlot()
 
 	if DefaultShowTitle {
@@ -110,7 +115,8 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 			Height:     fmt.Sprintf("%vpx", DefaultBarPlotHeight),
 		},
 	)
-	f, err := os.Create(path)
+	os.MkdirAll(path.Dir(filepath), os.ModePerm)
+	f, err := os.Create(filepath)
 	if err != nil {
 		return err
 	}
@@ -122,7 +128,7 @@ func writeBoxPlot(o BoxPlotter, path string) error {
 	return nil
 }
 
-func writePiePlot(o PiePlotter, path string) error {
+func writePiePlot(o PiePlotter, filepath string) error {
 	pie := o.PiePlot()
 
 	if DefaultShowTitle {
@@ -148,12 +154,12 @@ func writePiePlot(o PiePlotter, path string) error {
 		charts.ToolboxOpts{Show: true, TBFeature: charts.TBFeature{SaveAsImage: charts.SaveAsImage{PixelRatio: 5}}},
 		charts.InitOpts{
 			AssetsHost: DefaultAssetHost,
-			Theme:      charts.ThemeType.Shine,
 			Width:      fmt.Sprintf("%vpx", DefaultPiePlotWidth),
 			Height:     fmt.Sprintf("%vpx", DefaultPiePlotHeight),
 		},
 	)
-	f, err := os.Create(path)
+	os.MkdirAll(path.Dir(filepath), os.ModePerm)
+	f, err := os.Create(filepath)
 	if err != nil {
 		return err
 	}
@@ -166,51 +172,51 @@ func writePiePlot(o PiePlotter, path string) error {
 }
 
 func openBarPlot(o BarPlotter) error {
-	path := TempFile("", "batchPlot_*.html")
-	if path == "" {
+	filepath := TempFile("", "batchPlot_*.html")
+	if filepath == "" {
 		return errors.New("failed to create temporary file")
 	}
-	err := o.WriteBarPlot(path)
+	err := o.WriteBarPlot(filepath)
 	if err != nil {
 		return err
 	}
-	// defer os.Remove(path)
-	if ok := browser.Open(path); !ok {
-		return errors.New("failed to open browser path")
+	// defer os.Remove(filepath)
+	if ok := browser.Open(filepath); !ok {
+		return errors.New("failed to open browser filepath")
 	}
 
 	return nil
 }
 
 func openBoxPlot(o BoxPlotter) error {
-	path := TempFile("", "batchPlot_*.html")
-	if path == "" {
+	filepath := TempFile("", "batchPlot_*.html")
+	if filepath == "" {
 		return errors.New("failed to create temporary file")
 	}
-	err := o.WriteBoxPlot(path)
+	err := o.WriteBoxPlot(filepath)
 	if err != nil {
 		return err
 	}
-	// defer os.Remove(path)
-	if ok := browser.Open(path); !ok {
-		return errors.New("failed to open browser path")
+	// defer os.Remove(filepath)
+	if ok := browser.Open(filepath); !ok {
+		return errors.New("failed to open browser filepath")
 	}
 
 	return nil
 }
 
 func openPiePlot(o PiePlotter) error {
-	path := TempFile("", "batchPlot_*.html")
-	if path == "" {
+	filepath := TempFile("", "batchPlot_*.html")
+	if filepath == "" {
 		return errors.New("failed to create temporary file")
 	}
-	err := o.WritePiePlot(path)
+	err := o.WritePiePlot(filepath)
 	if err != nil {
 		return err
 	}
-	// defer os.Remove(path)
-	if ok := browser.Open(path); !ok {
-		return errors.New("failed to open browser path")
+	// defer os.Remove(filepath)
+	if ok := browser.Open(filepath); !ok {
+		return errors.New("failed to open browser filepath")
 	}
 
 	return nil

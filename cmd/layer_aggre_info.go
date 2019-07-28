@@ -10,10 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerDurationCmd = &cobra.Command{
-	Use:     "duration",
+var (
+	piePlot bool
+)
+
+var layerAggreInfoCmd = &cobra.Command{
+	Use:     "aggre_info",
 	Aliases: []string{},
-	Short:   "Get model layer latency information from framework traces in a database",
+	Short:   "Get model layer information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["layer"]
@@ -29,7 +33,7 @@ var layerDurationCmd = &cobra.Command{
 			os.RemoveAll(outputFileName)
 		}
 		if plotPath == "" {
-			plotPath = evaluation.TempFile("", "layer_latency_plot_*.html")
+			plotPath = evaluation.TempFile("", "layer_plot_*.html")
 		}
 		return nil
 	},
@@ -40,47 +44,45 @@ var layerDurationCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryLayerInformations(performanceCollection)
+			summary0, err := evals.SummaryLayerAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryLayerLatencyInformations(summary0)
 
 			if sortOutput {
-				sort.Slice(summary, func(ii, jj int) bool {
-					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
+				sort.Slice(summary0, func(ii, jj int) bool {
+					return summary0[ii].Duration > summary0[jj].Duration
 				})
 			}
 
-			if barPlot {
-				err := summary.WriteBarPlot(plotPath)
+			if plotAll {
+				plotPath = outputFileName + "_occurence.html"
+				summary1 := evaluation.SummaryLayerAggreOccurrenceInformations(summary0)
+				err := summary1.WritePiePlot(plotPath)
 				if err != nil {
 					return err
 				}
 				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
 
-			if boxPlot {
-				err := summary.WriteBoxPlot(plotPath)
+				plotPath = outputFileName + "_latency.html"
+				summary2 := evaluation.SummaryLayerAggreDurationInformations(summary0)
+				err = summary2.WritePiePlot(plotPath)
 				if err != nil {
 					return err
 				}
 				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
 
-			if openPlot {
-				if boxPlot {
-					return summary.OpenBoxPlot()
-				} else {
-					return summary.OpenBarPlot()
+				plotPath = outputFileName + "_allocated_memory.html"
+				summary3 := evaluation.SummaryLayerAggreAllocatedMemoryInformations(summary0)
+				err = summary3.WritePiePlot(plotPath)
+				if err != nil {
+					return err
 				}
+				fmt.Println("Created plot in " + plotPath)
 			}
 
-			writer := NewWriter(evaluation.SummaryLayerInformation{})
+			writer := NewWriter(evaluation.SummaryLayerAggreInformation{})
 			defer writer.Close()
-
 			for _, v := range summary0 {
 				writer.Row(v)
 			}

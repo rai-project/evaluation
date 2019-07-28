@@ -11,30 +11,27 @@ import (
 
 //easyjson:json
 type SummaryLayerAggreInformation struct {
-	SummaryModelInformation `json:",inline"`
-	Type                    string  `json:"type,omitempty"`
-	Occurence               int     `json:"occurrence,omitempty"`
-	OccurencePercentage     float64 `json:"occurrence_percentage,omitempty"`
-	Duration                float64 `json:"duration,omitempty"`
-	DurationPercentage      float64 `json:"duration_percentage,omitempty"`
-	Memory                  int64   `json:"memory,omitempty"`
-	MemoryPercentage        float64 `json:"memory_percentage,omitempty"`
+	SummaryModelInformation   `json:",inline"`
+	Type                      string  `json:"type,omitempty"`
+	Occurence                 int     `json:"occurrence,omitempty"`
+	OccurencePercentage       float64 `json:"occurrence_percentage,omitempty"`
+	Duration                  float64 `json:"duration,omitempty"`
+	DurationPercentage        float64 `json:"duration_percentage,omitempty"`
+	AllocatedMemory           int64   `json:"allocated_memory,omitempty"`
+	AllocatedMemoryPercentage float64 `json:"allocated_memory_percentage,omitempty"`
 }
 
 //easyjson:json
 type SummaryLayerAggreInformations []SummaryLayerAggreInformation
 
 //easyjson:json
-type SummaryLayerDruationInformation SummaryLayerAggreInformation
+type SummaryLayerAggreOccurrenceInformations SummaryLayerAggreInformations
 
 //easyjson:json
-type SummaryLayerOccurenceInformation SummaryLayerAggreInformation
+type SummaryLayerAggreDurationInformations SummaryLayerAggreInformations
 
 //easyjson:json
-type SummaryLayerDruationInformations SummaryLayerAggreInformations
-
-//easyjson:json
-type SummaryLayerOccurrenceInformations SummaryLayerAggreInformations
+type SummaryLayerAggreAllocatedMemoryInformations SummaryLayerAggreInformations
 
 func (SummaryLayerAggreInformation) Header(iopts ...writer.Option) []string {
 	extra := []string{
@@ -43,6 +40,8 @@ func (SummaryLayerAggreInformation) Header(iopts ...writer.Option) []string {
 		"occurrence percentage (%)",
 		"duration (us)",
 		"duration percentage (%)",
+		"allocated memory (bytes)",
+		"allocated memory percentage (%)",
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -58,6 +57,8 @@ func (s SummaryLayerAggreInformation) Row(iopts ...writer.Option) []string {
 		fmt.Sprintf("%.2f", s.OccurencePercentage),
 		fmt.Sprintf("%.2f", s.Duration),
 		fmt.Sprintf("%.2f", s.DurationPercentage),
+		cast.ToString(s.AllocatedMemory),
+		fmt.Sprintf("%.2f", s.AllocatedMemoryPercentage),
 	}
 	opts := writer.NewOptions(iopts...)
 	if opts.ShowSummaryBase {
@@ -82,9 +83,13 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 	exsistedLayers := make(map[string]SummaryLayerAggreInformation)
 	totalOcurrences := 0
 	totalDuration := float64(0)
+	totalAllocatedMemory := int64(0)
+
 	for _, info := range layerInfos {
 		layerType := info.Type
 		duration := TrimmedMeanInt64Slice(info.Durations, DefaultTrimmedMeanFraction)
+		memory := int64(TrimmedMeanInt64Slice(info.AllocatedBytes, DefaultTrimmedMeanFraction))
+
 		v, ok := exsistedLayers[layerType]
 		if !ok {
 			exsistedLayers[layerType] = SummaryLayerAggreInformation{
@@ -92,46 +97,63 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 				Type:                    layerType,
 				Occurence:               1,
 				Duration:                duration,
+				AllocatedMemory:         memory,
 			}
 		} else {
 			v.Occurence += 1
 			v.Duration += duration
+			v.AllocatedMemory += memory
 			exsistedLayers[layerType] = v
 		}
 		totalOcurrences += 1
 		totalDuration += duration
+		totalAllocatedMemory += memory
 	}
 
 	for _, info := range exsistedLayers {
 		info.DurationPercentage = math.Round(100*100*float64(info.Duration)/float64(totalDuration)) / 100
 		info.OccurencePercentage = math.Round(100*100*float64(info.Occurence)/float64(totalOcurrences)) / 100
+		info.OccurencePercentage = math.Round(100*100*float64(info.AllocatedMemory)/float64(totalAllocatedMemory)) / 100
 		summary = append(summary, info)
 	}
 
 	return summary, nil
 }
 
-func (o SummaryLayerDruationInformations) PlotName() string {
+func (o SummaryLayerAggreDurationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
 	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency Percentage"
 }
 
-func (o SummaryLayerDruationInformations) PiePlot() *charts.Pie {
+func (o SummaryLayerAggreDurationInformations) PiePlot() *charts.Pie {
 	pie := charts.NewPie()
 	pie = o.PiePlotAdd(pie)
 	return pie
 }
 
-func (o SummaryLayerOccurrenceInformations) PlotName() string {
+func (o SummaryLayerAggreAllocatedMemoryInformations) PlotName() string {
+	if len(o) == 0 {
+		return ""
+	}
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Allocated AllocatedMemory Percentage"
+}
+
+func (o SummaryLayerAggreAllocatedMemoryInformations) PiePlot() *charts.Pie {
+	pie := charts.NewPie()
+	pie = o.PiePlotAdd(pie)
+	return pie
+}
+
+func (o SummaryLayerAggreOccurrenceInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
 	return o[0].ModelName + " Layer Occurrence Percentage"
 }
 
-func (o SummaryLayerOccurrenceInformations) PiePlot() *charts.Pie {
+func (o SummaryLayerAggreOccurrenceInformations) PiePlot() *charts.Pie {
 	pie := charts.NewPie()
 	pie = o.PiePlotAdd(pie)
 	return pie
@@ -151,29 +173,44 @@ func (o SummaryLayerAggreInformations) piePlotAdd(pie *charts.Pie, elemSelector 
 	return pie
 }
 
-func (o SummaryLayerDruationInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+func (o SummaryLayerAggreDurationInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
 	return SummaryLayerAggreInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggreInformation) interface{} {
 		return elem.DurationPercentage
 	})
 }
-func (o SummaryLayerOccurrenceInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+
+func (o SummaryLayerAggreAllocatedMemoryInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
+	return SummaryLayerAggreInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggreInformation) interface{} {
+		return elem.AllocatedMemoryPercentage
+	})
+}
+
+func (o SummaryLayerAggreOccurrenceInformations) PiePlotAdd(pie *charts.Pie) *charts.Pie {
 	return SummaryLayerAggreInformations(o).piePlotAdd(pie, func(elem SummaryLayerAggreInformation) interface{} {
 		return elem.OccurencePercentage
 	})
 }
 
-func (o SummaryLayerOccurrenceInformations) WritePiePlot(path string) error {
+func (o SummaryLayerAggreOccurrenceInformations) WritePiePlot(path string) error {
 	return writePiePlot(o, path)
 }
 
-func (o SummaryLayerOccurrenceInformations) OpenPiePlot() error {
+func (o SummaryLayerAggreOccurrenceInformations) OpenPiePlot() error {
 	return openPiePlot(o)
 }
 
-func (o SummaryLayerDruationInformations) WritePiePlot(path string) error {
+func (o SummaryLayerAggreDurationInformations) WritePiePlot(path string) error {
 	return writePiePlot(o, path)
 }
 
-func (o SummaryLayerDruationInformations) OpenPiePlot() error {
+func (o SummaryLayerAggreDurationInformations) OpenPiePlot() error {
+	return openPiePlot(o)
+}
+
+func (o SummaryLayerAggreAllocatedMemoryInformations) WritePiePlot(path string) error {
+	return writePiePlot(o, path)
+}
+
+func (o SummaryLayerAggreAllocatedMemoryInformations) OpenPiePlot() error {
 	return openPiePlot(o)
 }

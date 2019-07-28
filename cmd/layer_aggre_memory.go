@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerAggreDurationCmd = &cobra.Command{
-	Use:     "aggre_duration",
+var layerAggreMemoryCmd = &cobra.Command{
+	Use:     "aggre_memory",
 	Aliases: []string{},
-	Short:   "Get model layer aggregated duration information from framework traces in a database",
+	Short:   "Get model layer aggregated allocated memory information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["layer"]
@@ -44,7 +44,7 @@ var layerAggreDurationCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryLayerAggreDurationInformations(summary0)
+			summary := evaluation.SummaryLayerAggreAllocatedMemoryInformations(summary0)
 
 			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {

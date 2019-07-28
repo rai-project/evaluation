@@ -20,8 +20,11 @@ func (es Evaluations) GetSpansFromPerformanceCollection(perfCol *PerformanceColl
 			return nil, errors.New("expecting one performance output")
 		}
 		perf := foundPerfs[0]
-
-		spans = append(spans, perf.Spans()...)
+		perfSpans, err := perf.Spans()
+		if err != nil {
+			return nil, err
+		}
+		spans = append(spans, perfSpans...)
 	}
 	return spans, nil
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -43,35 +44,60 @@ var layerInfoCmd = &cobra.Command{
 				return err
 			}
 
-			summary, err := evals.SummaryLayerInformations(performanceCollection)
+			summary0, err := evals.SummaryLayerInformations(performanceCollection)
 			if err != nil {
 				return err
+			}
+
+			if sortOutput || topLayers != -1 {
+				sort.Slice(summary0, func(ii, jj int) bool {
+					return evaluation.TrimmedMeanInt64Slice(summary0[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary0[jj].Durations, 0)
+				})
+				if topLayers != -1 {
+					if topLayers >= len(summary0) {
+						topLayers = len(summary0)
+					}
+					summary0 = summary0[:topLayers]
+				}
+			}
+
+			if plotAll {
+				plotPath = outputFileName + "_latency_bar.html"
+				summary1 := evaluation.SummaryLayerLatencyInformations(summary0)
+				err := summary1.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+
+				plotPath = outputFileName + "_latency_box.html"
+				err = summary1.WriteBoxPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
+
+				plotPath = outputFileName + "_allocated_memory.html"
+				summary2 := evaluation.SummaryLayerMemoryInformations(summary0)
+				err = summary2.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Created plot in " + plotPath)
 			}
 
 			if listRuns {
 				writer := NewWriter(evaluation.SummaryLayerInformation{})
 				defer writer.Close()
-				for _, v := range summary {
+				for _, v := range summary0 {
 					writer.Row(v)
 				}
 				return nil
 			}
 
-			if sortOutput || topLayers != -1 {
-				sort.Slice(summary, func(ii, jj int) bool {
-					return evaluation.TrimmedMeanInt64Slice(summary[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].Durations, 0)
-				})
-				if topLayers != -1 {
-					if topLayers >= len(summary) {
-						topLayers = len(summary)
-					}
-					summary = summary[:topLayers]
-				}
-			}
-
 			writer := NewWriter(evaluation.SummaryMeanLayerInformation{})
 			defer writer.Close()
-			for _, v := range summary {
+			for _, v := range summary0 {
 				writer.Row(evaluation.SummaryMeanLayerInformation(v))
 			}
 			return nil

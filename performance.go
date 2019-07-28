@@ -53,18 +53,18 @@ func (Performance) TableName() string {
 	return "performance"
 }
 
-func (p Performance) Spans() Spans {
+func (p Performance) Spans() (Spans, error) {
 	resp, err := grequests.Get(p.TraceURL, nil)
 	if err != nil {
-		return Spans{}
+		return Spans{}, err
 	}
 	var traceInfo TraceInformation
 	jsonDecoder := json.NewDecoder(resp)
 	err = jsonDecoder.Decode(&traceInfo)
 	if err != nil {
-		return Spans{}
+		return Spans{}, err
 	}
-	return traceInfo.Spans()
+	return traceInfo.Spans(), nil
 }
 
 func (p *Performance) UncompressTrace() error {

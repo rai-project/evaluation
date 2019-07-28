@@ -20,8 +20,10 @@ func init() {
 	layerCmd.PersistentFlags().IntVar(&topLayers, "top_layers", -1, "consider only the top k layers ranked by duration")
 
 	layerCmd.AddCommand(layerInfoCmd)
-	layerCmd.AddCommand(layerAggreDurationCmd)
-	layerCmd.AddCommand(layerOcurrenceCmd)
-	layerCmd.AddCommand(layerDurationCmd)
+	layerCmd.AddCommand(layerLatencyCmd)
 	layerCmd.AddCommand(layerMemoryCmd)
+	layerCmd.AddCommand(layerAggreInfoCmd)
+	layerCmd.AddCommand(layerAggreDurationCmd)
+	layerCmd.AddCommand(layerAggreOcurrenceCmd)
+	layerCmd.AddCommand(layerAggreMemoryCmd)
 }

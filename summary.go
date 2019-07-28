@@ -29,6 +29,7 @@ type SummaryBase struct {
 	UsingGPU                 bool             `json:"using_gpu,omitempty"`
 	BatchSize                int              `json:"batch_size,omitempty"`
 	HostName                 string           `json:"host_name,omitempty"`
+	HostIP                   string           `json:"host_ip,omitempty"`
 	TraceLevel               string           `json:"trace_level,omitempty"`
 	MachineInformation       *machine.Machine `json:"machine_information,omitempty"`
 	GPUDriverVersion         *string          `json:"gpu_driver,omitempty"`
@@ -139,6 +140,7 @@ func (e Evaluation) summaryBase() SummaryBase {
 		UsingGPU:                 e.UsingGPU,
 		BatchSize:                e.BatchSize,
 		HostName:                 e.Hostname,
+		HostIP:                   e.HostIP,
 		TraceLevel:               e.TraceLevel,
 		MachineInformation:       e.MachineInformation,
 		GPUDriverVersion:         e.GPUDriverVersion,
