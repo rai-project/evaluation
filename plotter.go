@@ -56,7 +56,8 @@ func writeBarPlot(o BarPlotter, filepath string) error {
 
 	bar.SetGlobalOptions(
 		charts.LegendOpts{
-			Right: "80%",
+			Right: "right",
+			Top:   "middle",
 			TextStyle: charts.TextStyleOpts{
 				FontSize: DefaultLegendFontSize,
 			},
