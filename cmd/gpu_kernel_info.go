@@ -46,29 +46,29 @@ var gpuKernelInfoCmd = &cobra.Command{
 				return err
 			}
 
-			layerGPUInfos, err := evals.SummaryGPUKernelLayerInformations(performanceCollection)
+			summary0, err := evals.SummaryGPUKernelLayerInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
 
 			if sortOutput || topLayers != -1 {
-				sort.Sort(layerGPUInfos)
+				sort.Sort(summary0)
 				if topLayers != -1 {
-					if topLayers >= len(layerGPUInfos) {
-						topLayers = len(layerGPUInfos)
+					if topLayers >= len(summary0) {
+						topLayers = len(summary0)
 					}
-					layerGPUInfos = layerGPUInfos[:topLayers]
+					summary0 = summary0[:topLayers]
 				}
-				for ii := range layerGPUInfos {
-					kernelInfo := layerGPUInfos[ii]
+				for ii := range summary0 {
+					kernelInfo := summary0[ii]
 					sort.Sort(kernelInfo)
-					layerGPUInfos[ii] = kernelInfo
+					summary0[ii] = kernelInfo
 				}
 			}
 
-			writer := NewWriter(layerGPUInfos)
+			writer := NewWriter(summary0)
 			defer writer.Close()
-			for _, elem := range layerGPUInfos {
+			for _, elem := range summary0 {
 				writer.Rows(elem)
 			}
 			return nil

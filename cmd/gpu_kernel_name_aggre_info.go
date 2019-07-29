@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -11,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelLayerGPUCPUCmd = &cobra.Command{
-	Use:     "layer_gpu_cpu",
+var gpuKernelNameAggreInfoCmd = &cobra.Command{
+	Use:     "name_aggre_info",
 	Aliases: []string{},
-	Short:   "Get layer GPU duration vs CPU Duration from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get gpu information aggregated by name from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -43,37 +42,31 @@ var gpuKernelLayerGPUCPUCmd = &cobra.Command{
 				return err
 			}
 
-			summary0, err := evals.SummaryGPUKernelLayerAggreInformations(performanceCollection)
+			gpuKernelInfos, err := evals.SummaryGPUKernelNameAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
-			if sortOutput {
-				sort.Sort(summary0)
-			}
-			summary := evaluation.SummaryGPUKernelLayerGPUCPUInformations(summary0)
 
-			if barPlot {
-				err := summary.WriteBarPlot(plotPath)
-				if err != nil {
-					return err
+			if sortOutput || topKernels != -1 {
+				sort.Sort(gpuKernelInfos)
+				if topKernels != -1 {
+					if topKernels >= len(gpuKernelInfos) {
+						topKernels = len(gpuKernelInfos)
+					}
+					gpuKernelInfos = gpuKernelInfos[:topKernels]
 				}
-				fmt.Println("Created plot in " + plotPath)
-				return nil
-			}
-
-			if openPlot {
-				return summary.OpenBarPlot()
 			}
 
 			var writer *Writer
-			if len(summary0) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUKernelLayerAggreInformation{})
+			if len(gpuKernelInfos) == 0 {
+				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
 				defer writer.Close()
+				return nil
 			}
-			writer = NewWriter(summary0[0])
+			writer = NewWriter(gpuKernelInfos[0])
 			defer writer.Close()
 
-			for _, elem := range summary0 {
+			for _, elem := range gpuKernelInfos {
 				writer.Row(elem)
 			}
 

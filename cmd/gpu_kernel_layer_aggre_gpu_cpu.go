@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -10,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelModelAggreCmd = &cobra.Command{
-	Use:     "model_aggre",
+var gpuKernelLayerAggreGPUCPUCmd = &cobra.Command{
+	Use:     "layer_aggre_gpu_cpu",
 	Aliases: []string{},
-	Short:   "Get gpu information aggregated within the model from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get layer GPU duration vs CPU Duration from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -42,30 +43,37 @@ var gpuKernelModelAggreCmd = &cobra.Command{
 				return err
 			}
 
-			gpuKernelInfos, err := evals.SummaryGPUKernelModelAggreInformations(performanceCollection)
+			summary0, err := evals.SummaryGPUKernelLayerAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
+			if sortOutput {
+				sort.Sort(summary0)
+			}
+			summary := evaluation.SummaryGPUKernelLayerGPUCPUInformations(summary0)
 
-			if sortOutput || topKernels != -1 {
-				sort.Sort(gpuKernelInfos)
-				if topKernels != -1 {
-					if topKernels >= len(gpuKernelInfos) {
-						topKernels = len(gpuKernelInfos)
-					}
-					gpuKernelInfos = gpuKernelInfos[:topKernels]
+			if barPlot {
+				err := summary.WriteBarPlot(plotPath)
+				if err != nil {
+					return err
 				}
+				fmt.Println("Created plot in " + plotPath)
+				return nil
+			}
+
+			if openPlot {
+				return summary.OpenBarPlot()
 			}
 
 			var writer *Writer
-			if len(gpuKernelInfos) == 0 {
-				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
+			if len(summary0) == 0 {
+				writer = NewWriter(evaluation.SummaryGPUKernelLayerAggreInformation{})
 				defer writer.Close()
 			}
-			writer = NewWriter(gpuKernelInfos[0])
+			writer = NewWriter(summary0[0])
 			defer writer.Close()
 
-			for _, elem := range gpuKernelInfos {
+			for _, elem := range summary0 {
 				writer.Row(elem)
 			}
 

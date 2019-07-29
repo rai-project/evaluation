@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelLayerFlopsCmd = &cobra.Command{
-	Use:     "layer_flops",
+var gpuKernelLayerAggreLatencyCmd = &cobra.Command{
+	Use:     "layer_aggre_latency",
 	Aliases: []string{},
-	Short:   "Get the total flops of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get the total duration of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -50,7 +50,7 @@ var gpuKernelLayerFlopsCmd = &cobra.Command{
 			if sortOutput {
 				sort.Sort(summary0)
 			}
-			summary := evaluation.SummaryGPUKernelLayerFlopsInformations(summary0)
+			summary := evaluation.SummaryGPUKernelLayerLatencyInformations(summary0)
 
 			if barPlot {
 				err := summary.WriteBarPlot(plotPath)

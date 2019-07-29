@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelLayerAchievedOccupancyCmd = &cobra.Command{
-	Use:     "layer_achieved_occupancy (%)",
+var gpuKernelLayerAggreAchievedOccupancyCmd = &cobra.Command{
+	Use:     "layer_aggre_achieved_occupancy",
 	Aliases: []string{},
 	Short:   "Get the weighted achieved_occupancy of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {

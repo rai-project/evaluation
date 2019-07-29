@@ -72,7 +72,7 @@ func (info SummaryGPUKernelInformation) Row(opts ...writer.Option) []string {
 		cast.ToString(info.MeanFlops),
 		fmt.Sprintf("%.2f", info.MeanDramReadBytes),
 		fmt.Sprintf("%.2f", info.MeanDramWriteBytes),
-		fmt.Sprintf("%.2f", info.MeanAchievedOccupancy),
+		fmt.Sprintf("%.2f", info.MeanAchievedOccupancy*100),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),
@@ -247,15 +247,15 @@ func GetMeanLogValue(info SummaryGPUKernelInformation, name string, trimmedMeanF
 	if info.Logs == nil {
 		info.Logs = []Metadata{}
 	}
-	kernelLogs := []int64{}
+	kernelLogs := []float64{}
 	for _, kernelLog := range info.Logs {
 		for kernelLogKeyName, keryeLogValue := range kernelLog {
 			if kernelLogKeyName == name {
-				kernelLogs = append(kernelLogs, cast.ToInt64(keryeLogValue))
+				kernelLogs = append(kernelLogs, cast.ToFloat64(keryeLogValue))
 			}
 		}
 	}
-	return TrimmedMeanInt64Slice(kernelLogs, trimmedMeanFraction)
+	return TrimmedMean(kernelLogs, trimmedMeanFraction)
 }
 
 func GPUKernelSpantoGPUInformation(span model.Span) SummaryGPUKernelInformation {

@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelNameAggreCmd = &cobra.Command{
-	Use:     "name_aggre",
+var gpuKernelModelAggreInfoCmd = &cobra.Command{
+	Use:     "model_aggre_info",
 	Aliases: []string{},
-	Short:   "Get gpu information aggregated by name from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get gpu information aggregated within the model from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -42,7 +42,7 @@ var gpuKernelNameAggreCmd = &cobra.Command{
 				return err
 			}
 
-			gpuKernelInfos, err := evals.SummaryGPUKernelNameAggreInformations(performanceCollection)
+			gpuKernelInfos, err := evals.SummaryGPUKernelModelAggreInformations(performanceCollection)
 			if err != nil {
 				return err
 			}
@@ -61,7 +61,6 @@ var gpuKernelNameAggreCmd = &cobra.Command{
 			if len(gpuKernelInfos) == 0 {
 				writer = NewWriter(evaluation.SummaryGPUKernelInformation{})
 				defer writer.Close()
-				return nil
 			}
 			writer = NewWriter(gpuKernelInfos[0])
 			defer writer.Close()

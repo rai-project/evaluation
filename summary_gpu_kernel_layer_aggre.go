@@ -72,7 +72,7 @@ func (s SummaryGPUKernelLayerAggreInformation) Row(iopts ...writer.Option) []str
 		cast.ToString(s.Flops),
 		fmt.Sprintf("%.2f", s.DramReadBytes),
 		fmt.Sprintf("%.2f", s.DramWriteBytes),
-		fmt.Sprintf("%.2f", s.AchievedOccupancy),
+		fmt.Sprintf("%.2f", s.AchievedOccupancy*100),
 		fmt.Sprintf("%.2f", s.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", s.ArithmeticThroughput),
 		cast.ToString(s.MemoryBound),
@@ -140,7 +140,7 @@ type SummaryGPUKernelLayerDramReadInformations SummaryGPUKernelLayerAggreInforma
 
 type SummaryGPUKernelLayerDramWriteInformations SummaryGPUKernelLayerAggreInformations
 
-type SummaryGPUKernelLayerDurationInformations SummaryGPUKernelLayerAggreInformations
+type SummaryGPUKernelLayerLatencyInformations SummaryGPUKernelLayerAggreInformations
 
 type SummaryGPUKernelLayerGPUCPUInformations SummaryGPUKernelLayerAggreInformations
 
@@ -167,7 +167,7 @@ func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
 	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Write per Layer"
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) PlotName() string {
+func (o SummaryGPUKernelLayerLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
@@ -206,7 +206,7 @@ func (o SummaryGPUKernelLayerDramWriteInformations) BarPlot() *charts.Bar {
 	return bar
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) BarPlot() *charts.Bar {
+func (o SummaryGPUKernelLayerLatencyInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -285,7 +285,7 @@ func (o SummaryGPUKernelLayerDramWriteInformations) BarPlotAdd(bar0 *charts.Bar)
 	return bar
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+func (o SummaryGPUKernelLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummaryGPUKernelLayerAggreInformation) float64 {
 		return elem.Duration
 	})
@@ -357,7 +357,7 @@ func (o SummaryGPUKernelLayerDramWriteInformations) WriteBarPlot(path string) er
 	return writeBarPlot(o, path)
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) WriteBarPlot(path string) error {
+func (o SummaryGPUKernelLayerLatencyInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
@@ -381,7 +381,7 @@ func (o SummaryGPUKernelLayerDramWriteInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 
-func (o SummaryGPUKernelLayerDurationInformations) OpenBarPlot() error {
+func (o SummaryGPUKernelLayerLatencyInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 

@@ -54,7 +54,7 @@ func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []s
 		cast.ToString(info.Flops),
 		fmt.Sprintf("%.2f", info.DramReadBytes),
 		fmt.Sprintf("%.2f", info.DramWriteBytes),
-		fmt.Sprintf("%.2f", info.AchievedOccupancy),
+		fmt.Sprintf("%.2f", info.AchievedOccupancy*100),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
 		cast.ToString(info.MemoryBound),

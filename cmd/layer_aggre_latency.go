@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerAggreDurationCmd = &cobra.Command{
-	Use:     "aggre_duration",
+var layerAggreLatencyCmd = &cobra.Command{
+	Use:     "aggre_latency",
 	Aliases: []string{},
-	Short:   "Get model layer aggregated duration information from framework traces in a database",
+	Short:   "Get layer aggregated latency information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["layer"]

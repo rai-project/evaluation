@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var gpuKernelLayerDramReadCmd = &cobra.Command{
-	Use:     "layer_dram_read",
+var gpuKernelLayerAggreFlopsCmd = &cobra.Command{
+	Use:     "layer_aggre_flops",
 	Aliases: []string{},
-	Short:   "Get the total dram read of all GPU kernels  within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
+	Short:   "Get the total flops of all GPU kernels within each layer from system library traces in a database. Specify model name as `all` to list information of all the models.",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if databaseName == "" {
 			databaseName = defaultDatabaseName["cuda_kernel"]
@@ -50,7 +50,7 @@ var gpuKernelLayerDramReadCmd = &cobra.Command{
 			if sortOutput {
 				sort.Sort(summary0)
 			}
-			summary := evaluation.SummaryGPUKernelLayerDramReadInformations(summary0)
+			summary := evaluation.SummaryGPUKernelLayerFlopsInformations(summary0)
 
 			if barPlot {
 				err := summary.WriteBarPlot(plotPath)
