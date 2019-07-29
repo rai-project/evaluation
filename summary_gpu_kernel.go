@@ -350,14 +350,24 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			layerSpan := *layerInterval.Span
 			layerChildren := tree.ChildrenOf(layerInterval)
 
+			if strings.HasPrefix(layerSpan.OperationName, "_") {
+				continue
+			}
+
 			layerInfo := SummaryLayerInformation{}
 			if len(layerInfos) == 0 {
 				layerInfo = getLayerInfoFromLayerSpan(layerSpan)
 				layerInfo.Durations = []int64{}
+				if layerInfo.Index == 0 {
+					pp.Println(layerSpan)
+				}
 			} else {
 				layerInfo = layerInfos.GetLayerInfoByName(layerSpan.OperationName)
 			}
-
+			// HACK: to skip "pool5-1-0-TransposeNCHWToNHWC-LayoutOptimizer" in BVLC_AlexNet_Caffe
+			if layerInfo.Shape == "" {
+				continue
+			}
 			layerGPUInformation := SummaryGPUKernelLayerInformation{
 				SummaryLayerInformation:      layerInfo,
 				SummaryGPUKernelInformations: []SummaryGPUKernelInformation{},

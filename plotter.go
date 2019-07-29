@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/k0kubun/pp"
 	"github.com/pkg/errors"
 	"github.com/rai-project/go-echarts/charts"
 	"github.com/rai-project/utils/browser"
@@ -74,8 +73,6 @@ func writeBarPlot(o BarPlotter, filepath string) error {
 	os.MkdirAll(path.Dir(filepath), os.ModePerm)
 	f, err := os.Create(filepath)
 	if err != nil {
-		pp.Println(err)
-
 		return err
 	}
 	defer f.Close()
