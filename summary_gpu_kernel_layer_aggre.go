@@ -158,7 +158,7 @@ func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Flops per Layer"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel flops per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramReadInformations) PlotName() string {
