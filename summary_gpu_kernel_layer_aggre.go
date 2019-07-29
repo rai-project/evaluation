@@ -158,42 +158,42 @@ func (o SummaryGPUKernelLayerFlopsInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel flops per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU Kernel flops per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramReadInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Read per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Read per Layer"
 }
 
 func (o SummaryGPUKernelLayerDramWriteInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Write per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU Kernel Dram Write per Layer"
 }
 
 func (o SummaryGPUKernelLayerLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Latency per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU Kernel Latency per Layer"
 }
 
 func (o SummaryGPUKernelLayerGPUCPUInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU vs CPU Latency per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU vs CPU Latency per Layer"
 }
 
 func (o SummaryGPUKernelLayerAchievedOccupancyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " GPU Kernel Achieved Occupany per Layer"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " GPU Kernel Achieved Occupany per Layer"
 }
 
 func (o SummaryGPUKernelLayerFlopsInformations) BarPlot() *charts.Bar {

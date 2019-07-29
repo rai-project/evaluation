@@ -329,14 +329,14 @@ func (o SummaryLayerLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Latency"
 }
 
 func (o SummaryLayerAllocatedMemoryInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory"
+	return o[0].ModelName + ` \nBatch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory"
 }
 
 func (o SummaryLayerLatencyInformations) BarPlot() *charts.Bar {
