@@ -21,7 +21,7 @@ func init() {
 
 	layerCmd.AddCommand(layerInfoCmd)
 	layerCmd.AddCommand(layerLatencyCmd)
-	layerCmd.AddCommand(layerMemoryCmd)
+	layerCmd.AddCommand(layerAllocatedMemoryCmd)
 	layerCmd.AddCommand(layerAggreInfoCmd)
 	layerCmd.AddCommand(layerAggreLatencyCmd)
 	layerCmd.AddCommand(layerAggreOcurrenceCmd)

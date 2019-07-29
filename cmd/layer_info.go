@@ -51,7 +51,7 @@ var layerInfoCmd = &cobra.Command{
 
 			if sortOutput || topLayers != -1 {
 				sort.Slice(summary0, func(ii, jj int) bool {
-					return evaluation.TrimmedMeanInt64Slice(summary0[ii].Durations, 0) > evaluation.TrimmedMeanInt64Slice(summary0[jj].Durations, 0)
+					return summary0[ii].Duration > summary0[jj].Duration
 				})
 				if topLayers != -1 {
 					if topLayers >= len(summary0) {
@@ -78,7 +78,7 @@ var layerInfoCmd = &cobra.Command{
 				fmt.Println("Created plot in " + plotPath)
 
 				plotPath = outputFileName + "_allocated_memory.html"
-				summary2 := evaluation.SummaryLayerMemoryInformations(summary0)
+				summary2 := evaluation.SummaryLayerAllocatedMemoryInformations(summary0)
 				err = summary2.WriteBarPlot(plotPath)
 				if err != nil {
 					return err

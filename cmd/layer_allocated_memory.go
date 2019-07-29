@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var layerMemoryCmd = &cobra.Command{
-	Use:     "memory",
+var layerAllocatedMemoryCmd = &cobra.Command{
+	Use:     "allocated_memory",
 	Aliases: []string{},
 	Short:   "Get model layer memory information from framework traces in a database",
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -29,7 +29,7 @@ var layerMemoryCmd = &cobra.Command{
 			os.RemoveAll(outputFileName)
 		}
 		if plotPath == "" {
-			plotPath = evaluation.TempFile("", "layer_memory_plot_*.html")
+			plotPath = evaluation.TempFile("", "layer_allocated_memory_plot_*.html")
 		}
 		return nil
 	},
@@ -44,11 +44,11 @@ var layerMemoryCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			summary := evaluation.SummaryLayerMemoryInformations(summary0)
+			summary := evaluation.SummaryLayerAllocatedMemoryInformations(summary0)
 
 			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {
-					return evaluation.TrimmedMeanInt64Slice(summary[ii].AllocatedBytes, 0) > evaluation.TrimmedMeanInt64Slice(summary[jj].AllocatedBytes, 0)
+					return evaluation.TrimmedMeanInt64Slice(summary[ii].AllocatedBytes, evaluation.DefaultTrimmedMeanFraction) > evaluation.TrimmedMeanInt64Slice(summary[jj].AllocatedBytes, evaluation.DefaultTrimmedMeanFraction)
 				})
 			}
 

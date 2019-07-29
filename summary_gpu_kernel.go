@@ -442,7 +442,10 @@ func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceColl
 			cki.MeanDramReadBytes = GetMeanLogValue(cki, "dram_read_bytes", trimmedMeanFraction)
 			cki.MeanDramWriteBytes = GetMeanLogValue(cki, "dram_write_bytes", trimmedMeanFraction)
 			cki.MeanAchievedOccupancy = GetMeanLogValue(cki, "achieved_occupancy", trimmedMeanFraction)
-			cki.ArithmeticIntensity = cki.MeanFlops / (cki.MeanDramReadBytes + cki.MeanDramWriteBytes)
+			cki.ArithmeticIntensity = 0
+			if (cki.MeanDramReadBytes + cki.MeanDramWriteBytes) != 0 {
+				cki.ArithmeticIntensity = cki.MeanFlops / (cki.MeanDramReadBytes + cki.MeanDramWriteBytes)
+			}
 			cki.MemoryBound = false
 			if cki.ArithmeticIntensity < layerGPUInfo.IdealArithmeticIntensity {
 				cki.MemoryBound = true

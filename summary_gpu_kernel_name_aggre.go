@@ -55,10 +55,10 @@ func (info SummaryGPUKernelNameAggreInformation) Row(opts ...writer.Option) []st
 		info.Name,
 		cast.ToString(info.Count),
 		fmt.Sprintf("%.2f", info.Duration),
-		fmt.Sprintf("%.2f", info.Duration*float64(100)/info.SummaryModelInformation.Duration),
+		fmt.Sprintf("%.2f", float64(info.Duration*100)/float64(info.SummaryModelInformation.Duration)),
 		cast.ToString(info.Flops),
-		fmt.Sprintf("%.2f", info.DramReadBytes),
-		fmt.Sprintf("%.2f", info.DramWriteBytes),
+		cast.ToString(info.DramReadBytes),
+		cast.ToString(info.DramWriteBytes),
 		fmt.Sprintf("%.2f", info.AchievedOccupancy*100),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
@@ -109,13 +109,15 @@ func (es Evaluations) SummaryGPUKernelNameAggreInformations(perfCol *Performance
 		}
 	}
 	for _, v := range infoMap {
-		arithmeticIntensity := v.Flops / (v.DramReadBytes + v.DramWriteBytes)
-		v.ArithmeticIntensity = arithmeticIntensity
+		v.ArithmeticIntensity = 0
+		if (v.DramReadBytes + v.DramWriteBytes) != 0 {
+			v.ArithmeticIntensity = v.Flops / (v.DramReadBytes + v.DramWriteBytes)
+		}
 		memoryBound := false
-		if arithmeticIntensity < v.IdealArithmeticIntensity {
+		if v.ArithmeticIntensity < v.IdealArithmeticIntensity {
 			memoryBound = true
 		}
-		v.AchievedOccupancy = float64(100) * v.AchievedOccupancy / v.Duration
+		v.AchievedOccupancy = v.AchievedOccupancy / v.Duration
 		v.MemoryBound = memoryBound
 		v.ArithmeticThroughput = v.Flops / v.Duration / float64(1000)
 		summary = append(summary, v)

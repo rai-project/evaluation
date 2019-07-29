@@ -17,7 +17,7 @@ type SummaryLayerAggreInformation struct {
 	OccurencePercentage       float64 `json:"occurrence_percentage,omitempty"`
 	Duration                  float64 `json:"duration,omitempty"`
 	DurationPercentage        float64 `json:"duration_percentage,omitempty"`
-	AllocatedMemory           int64   `json:"allocated_memory,omitempty"`
+	AllocatedMemory           float64 `json:"allocated_memory,omitempty"`
 	AllocatedMemoryPercentage float64 `json:"allocated_memory_percentage,omitempty"`
 }
 
@@ -83,12 +83,12 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 	exsistedLayers := make(map[string]SummaryLayerAggreInformation)
 	totalOcurrences := 0
 	totalDuration := float64(0)
-	totalAllocatedMemory := int64(0)
+	totalAllocatedMemory := float64(0)
 
 	for _, info := range layerInfos {
 		layerType := info.Type
 		duration := TrimmedMeanInt64Slice(info.Durations, DefaultTrimmedMeanFraction)
-		memory := int64(TrimmedMeanInt64Slice(info.AllocatedBytes, DefaultTrimmedMeanFraction))
+		memory := TrimmedMeanInt64Slice(info.AllocatedBytes, DefaultTrimmedMeanFraction)
 
 		v, ok := exsistedLayers[layerType]
 		if !ok {
@@ -137,7 +137,7 @@ func (o SummaryLayerAggreAllocatedMemoryInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Allocated AllocatedMemory Percentage"
+	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory Percentage"
 }
 
 func (o SummaryLayerAggreAllocatedMemoryInformations) PiePlot() *charts.Pie {

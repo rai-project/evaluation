@@ -42,7 +42,7 @@ type SummaryLayerInformations []SummaryLayerInformation
 type SummaryMeanLayerInformation SummaryLayerInformation
 
 //easyjson:json
-type SummaryLayerMemoryInformations SummaryLayerInformations
+type SummaryLayerAllocatedMemoryInformations SummaryLayerInformations
 
 //easyjson:json
 type SummaryLayerLatencyInformations SummaryLayerInformations
@@ -332,7 +332,7 @@ func (o SummaryLayerLatencyInformations) PlotName() string {
 	return o[0].ModelName + " Batch Size = " + cast.ToString(o[0].BatchSize) + " Layer Latency"
 }
 
-func (o SummaryLayerMemoryInformations) PlotName() string {
+func (o SummaryLayerAllocatedMemoryInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
@@ -345,7 +345,7 @@ func (o SummaryLayerLatencyInformations) BarPlot() *charts.Bar {
 	return bar
 }
 
-func (o SummaryLayerMemoryInformations) BarPlot() *charts.Bar {
+func (o SummaryLayerAllocatedMemoryInformations) BarPlot() *charts.Bar {
 	bar := charts.NewBar()
 	bar = o.BarPlotAdd(bar)
 	return bar
@@ -383,7 +383,7 @@ func (o SummaryLayerInformations) barPlotAdd(bar *charts.Bar, elemSelector Layer
 
 func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) float64 {
-		return TrimmedMeanInt64Slice(elem.Durations, 0)
+		return TrimmedMeanInt64Slice(elem.Durations, DefaultTrimmedMeanFraction)
 	})
 	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "Latency(" + unitName(time.Microsecond) + ")"},
@@ -391,9 +391,9 @@ func (o SummaryLayerLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Ba
 	return bar
 }
 
-func (o SummaryLayerMemoryInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
+func (o SummaryLayerAllocatedMemoryInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryLayerInformations(o).barPlotAdd(bar0, func(elem SummaryLayerInformation) float64 {
-		return TrimmedMeanInt64Slice(elem.AllocatedBytes, 0) / float64(1048576)
+		return TrimmedMeanInt64Slice(elem.AllocatedBytes, DefaultTrimmedMeanFraction) / float64(1048576)
 	})
 	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "Allocated Memory(MB)"},
@@ -406,7 +406,7 @@ func (o SummaryLayerLatencyInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
-func (o SummaryLayerMemoryInformations) WriteBarPlot(path string) error {
+func (o SummaryLayerAllocatedMemoryInformations) WriteBarPlot(path string) error {
 	return writeBarPlot(o, path)
 }
 
@@ -414,7 +414,7 @@ func (o SummaryLayerLatencyInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 
-func (o SummaryLayerMemoryInformations) OpenBarPlot() error {
+func (o SummaryLayerAllocatedMemoryInformations) OpenBarPlot() error {
 	return openBarPlot(o)
 }
 

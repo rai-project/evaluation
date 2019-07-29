@@ -109,13 +109,21 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			writeBytes += gpuInfo.MeanDramWriteBytes
 			achievedOccupancy += gpuInfo.MeanDuration * gpuInfo.MeanAchievedOccupancy
 		}
-		arithmeticIntensity := flops / (readBytes + writeBytes)
-
+		arithmeticIntensity := float64(0)
+		if (readBytes + writeBytes) != 0 {
+			arithmeticIntensity = flops / (readBytes + writeBytes)
+		}
 		memoryBound := false
 		if arithmeticIntensity < layerInfo.IdealArithmeticIntensity {
 			memoryBound = true
 		}
 		arithmeticThroughput := flops / duration / float64(1000)
+
+		if duration == 0 {
+			achievedOccupancy = 0
+		} else {
+			achievedOccupancy = achievedOccupancy / duration
+		}
 
 		summary = append(summary, SummaryGPUKernelLayerAggreInformation{
 			SummaryLayerInformation: layerInfo,
@@ -124,7 +132,7 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 			Flops:                   flops,
 			DramReadBytes:           readBytes,
 			DramWriteBytes:          writeBytes,
-			AchievedOccupancy:       float64(100) * achievedOccupancy / duration,
+			AchievedOccupancy:       achievedOccupancy,
 			ArithmeticIntensity:     arithmeticIntensity,
 			ArithmeticThroughput:    arithmeticThroughput,
 			MemoryBound:             memoryBound,
@@ -325,10 +333,10 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 	  return labels.indexOf(name);
   }`
 	bar.SetGlobalOptions(
+		charts.LegendOpts{
+			Left: "left",
+		},
 		charts.XAxisOpts{Name: "Layer Index", Show: false, AxisLabel: charts.LabelTextOpts{Show: true, Formatter: charts.FuncOpts(jsFun)}},
-	)
-
-	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "us"},
 	)
 
@@ -337,7 +345,7 @@ func (o SummaryGPUKernelLayerGPUCPUInformations) BarPlotAdd(bar *charts.Bar) *ch
 
 func (o SummaryGPUKernelLayerAchievedOccupancyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryGPUKernelLayerAggreInformations(o).barPlotAdd(bar0, func(elem SummaryGPUKernelLayerAggreInformation) float64 {
-		return elem.AchievedOccupancy
+		return elem.AchievedOccupancy * float64(100)
 	})
 	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "%"},

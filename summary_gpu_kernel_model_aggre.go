@@ -52,8 +52,8 @@ func (info SummaryGPUKernelModelAggreInformation) Row(opts ...writer.Option) []s
 		fmt.Sprintf("%.2f", info.SummaryModelInformation.Duration),
 		fmt.Sprintf("%.2f", info.Duration),
 		cast.ToString(info.Flops),
-		fmt.Sprintf("%.2f", info.DramReadBytes),
-		fmt.Sprintf("%.2f", info.DramWriteBytes),
+		cast.ToString(info.DramReadBytes),
+		cast.ToString(info.DramWriteBytes),
 		fmt.Sprintf("%.2f", info.AchievedOccupancy*100),
 		fmt.Sprintf("%.2f", info.ArithmeticIntensity),
 		fmt.Sprintf("%.2f", info.ArithmeticThroughput),
@@ -92,7 +92,10 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 		modelInfo = SummaryModelInformation{}
 	}
 
-	arithmeticIntensity := flops / (readBytes + writeBytes)
+	arithmeticIntensity := float64(0)
+	if (readBytes + writeBytes) != 0 {
+		arithmeticIntensity = flops / (readBytes + writeBytes)
+	}
 	memoryBound := false
 	if arithmeticIntensity < modelInfo.IdealArithmeticIntensity {
 		memoryBound = true
@@ -105,7 +108,7 @@ func (es Evaluations) SummaryGPUKernelModelAggreInformations(perfCol *Performanc
 		Flops:                   flops,
 		DramReadBytes:           readBytes,
 		DramWriteBytes:          writeBytes,
-		AchievedOccupancy:       float64(100) * achievedOccupancy / duration,
+		AchievedOccupancy:       achievedOccupancy / duration,
 		ArithmeticIntensity:     arithmeticIntensity,
 		ArithmeticThroughput:    arithmeticThroughput,
 		MemoryBound:             memoryBound,

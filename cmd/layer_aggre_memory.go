@@ -48,7 +48,7 @@ var layerAggreMemoryCmd = &cobra.Command{
 
 			if sortOutput {
 				sort.Slice(summary, func(ii, jj int) bool {
-					return summary[ii].Duration > summary[jj].Duration
+					return summary[ii].AllocatedMemory > summary[jj].AllocatedMemory
 				})
 			}
 

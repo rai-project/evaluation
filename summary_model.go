@@ -3,7 +3,6 @@ package evaluation
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
@@ -36,7 +35,7 @@ type SummaryModelThroughputInformations SummaryModelInformations
 
 func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 	extra := []string{
-		"batch latency (ms)",
+		"duration (us)",
 		"latency (ms)",
 		"throughput (input/s)",
 		// "durations (us)",
@@ -75,17 +74,17 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		for _, span := range cPredictSpans {
 			durations = append(durations, cast.ToInt64(span.Duration))
 		}
-		duration := time.Duration(TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction))
+		duration := TrimmedMeanInt64Slice(durations, DefaultTrimmedMeanFraction)
 		base := evals[0].summaryBase()
 		batchSize := base.BatchSize
 		if duration == 0 {
 			continue
 		}
-		latency := float64(duration) / float64(time.Duration(batchSize)*time.Microsecond)
+		latency := duration / float64(batchSize*1000)
 		summary = append(summary, SummaryModelInformation{
 			SummaryBase: base,
 			Durations:   durations,
-			Duration:    float64(duration) / float64(1000),
+			Duration:    duration,
 			Throughput:  float64(1000) / latency,
 			Latency:     latency,
 		})
@@ -157,7 +156,7 @@ func (o SummaryModelThroughputInformations) BarPlotAdd(bar0 *charts.Bar) *charts
 
 func (o SummaryModelLatencyInformations) BarPlotAdd(bar0 *charts.Bar) *charts.Bar {
 	bar := SummaryModelInformations(o).barPlotAdd(bar0, func(elem SummaryModelInformation) float64 {
-		return (elem.Duration) / float64(1000)
+		return float64(elem.Duration) / float64(1000)
 	})
 	bar.SetGlobalOptions(
 		charts.YAxisOpts{Name: "Batch Latency (ms)"},
