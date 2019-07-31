@@ -6,7 +6,7 @@ const (
 
 var (
 	DefaultShowTitle          = true
-	DefaultAssetHost          = `/assets/`
+	DefaultAssetHost          = `https://s3.amazonaws.com/store.carml.org/model_analysis_2019/assets/`
 	DefaultTitleFontSize      = 18
 	DefaultSeriesFontSize     = 14
 	DefaultLegendFontSize     = 14
