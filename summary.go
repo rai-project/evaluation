@@ -57,15 +57,19 @@ func (SummaryBase) Header(opts ...writer.Option) []string {
 		"CPU_name",
 		"GPU_name",
 		"GPU_driver",
-		"interconnect_name",
-		"theoretical_flops (GFLOPS)",
-		"memory_bandwidth (GB/s)",
-		"interconnect_bandwidth (GB/s)",
-		"ideal_arithmetic_intensity (flops/byte)",
+		"GPU_interconnect_name",
+		"GPU_theoretical_flops (GFLOPS)",
+		"GPU_memory_bandwidth (GB/s)",
+		"GPU_interconnect_bandwidth (GB/s)",
+		"GPU_ideal_arithmetic_intensity (flops/byte)",
 	}
 }
 
 func (s SummaryBase) Row(opts ...writer.Option) []string {
+	productName := ""
+	if s.GPUInformation != nil {
+		productName = s.GPUInformation.ProductName
+	}
 	return []string{
 		fmt.Sprintf(`%x`, string(s.ID)),
 		s.CreatedAt.String(),
@@ -78,7 +82,7 @@ func (s SummaryBase) Row(opts ...writer.Option) []string {
 		s.MachineArchitecture,
 		cast.ToString(s.MachineInformation.MemTotal),
 		s.MachineInformation.CPU[0].ModelName,
-		s.GPUInformation.ProductName,
+		productName,
 		*s.GPUDriverVersion,
 		s.InterconnectName,
 		cast.ToString(s.TheoreticalGFlops),
@@ -109,24 +113,35 @@ func (s SummaryBase) key() string {
 }
 
 func (e Evaluation) summaryBase() SummaryBase {
-	theoreticalGFlops, err := e.GPUInformation.TheoreticalGFlops()
-	if err != nil {
-		log.WithError(err).Error("unable to get theoretical gflops")
-	}
-	memoryBandwidth, err := e.GPUInformation.MemoryBandwidth()
-	if err != nil {
-		log.WithError(err).Error("unable to get memory bandwidth")
-	}
-	interconnectName, err := e.GPUInformation.InterconnectName()
-	if err != nil {
-		log.WithError(err).Error("unable to get interconnect name")
-	}
-	interconnectBandwidth, err := e.GPUInformation.InterconnectBandwidth()
-	if err != nil {
-		log.WithError(err).Error("unable to get interconnect bandwidth")
+	theoreticalGFlops := int64(0)
+	memoryBandwidth := float64(0)
+	interconnectBandwidth := float64(0)
+	interconnectName := ""
+	idealArithmeticIntensity := float64(0)
+	var err error
+
+	if e.GPUInformation != nil {
+		theoreticalGFlops, err = e.GPUInformation.TheoreticalGFlops()
+		if err != nil {
+			log.WithError(err).Error("unable to get theoretical gflops")
+		}
+		memoryBandwidth, err = e.GPUInformation.MemoryBandwidth()
+		if err != nil {
+			log.WithError(err).Error("unable to get memory bandwidth")
+		}
+		interconnectName, err = e.GPUInformation.InterconnectName()
+		if err != nil {
+			log.WithError(err).Error("unable to get interconnect name")
+		}
+		interconnectBandwidth, err = e.GPUInformation.InterconnectBandwidth()
+		if err != nil {
+			log.WithError(err).Error("unable to get interconnect bandwidth")
+		}
 	}
 
-	idealArithmeticIntensity := float64(theoreticalGFlops) / memoryBandwidth
+	if memoryBandwidth != 0 {
+		idealArithmeticIntensity = float64(theoreticalGFlops) / memoryBandwidth
+	}
 
 	return SummaryBase{
 		ID:                       e.ID,

@@ -70,6 +70,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 		}
 
 		cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())
+
 		durations := []int64{}
 		for _, span := range cPredictSpans {
 			durations = append(durations, cast.ToInt64(span.Duration))
