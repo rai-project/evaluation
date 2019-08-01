@@ -97,14 +97,14 @@ func (o SummaryModelThroughputInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + ` \nThroughput`
+	return o[0].ModelName + `\nThroughput`
 }
 
 func (o SummaryModelLatencyInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + ` \nBatch Latency`
+	return o[0].ModelName + `\nBatch Latency`
 }
 
 func (o SummaryModelThroughputInformations) BarPlot() *charts.Bar {
