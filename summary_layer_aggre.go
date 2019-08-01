@@ -124,7 +124,8 @@ func (o SummaryLayerAggreDurationInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + `\nBatch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Latency Percentage"
+	return o[0].ModelName + `
+  Batch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Latency Percentage"
 }
 
 func (o SummaryLayerAggreDurationInformations) PiePlot() *charts.Pie {
@@ -137,7 +138,8 @@ func (o SummaryLayerAggreAllocatedMemoryInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + `\nBatch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory Percentage"
+	return o[0].ModelName + `
+  Batch Size = ` + cast.ToString(o[0].BatchSize) + " Layer Allocated Memory Percentage"
 }
 
 func (o SummaryLayerAggreAllocatedMemoryInformations) PiePlot() *charts.Pie {
@@ -150,7 +152,8 @@ func (o SummaryLayerAggreOccurrenceInformations) PlotName() string {
 	if len(o) == 0 {
 		return ""
 	}
-	return o[0].ModelName + `\nLayer Occurrence Percentage`
+	return o[0].ModelName + `
+  Layer Occurrence Percentage`
 }
 
 func (o SummaryLayerAggreOccurrenceInformations) PiePlot() *charts.Pie {

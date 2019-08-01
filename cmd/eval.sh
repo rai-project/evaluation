@@ -2,9 +2,10 @@
 
 DATABASE_ADDRESS=$1
 BATCHSIZE=$2
-MODELNAME=MLPerf_ResNet50_v1.5
-OUTPUTFOLDER=output2
-DATABASE_NAME=carml
+MODELNAME=$3
+FRAMEWORK_NAME=mxnet
+OUTPUTFOLDER=output
+DATABASE_NAME=carml_mxnet
 
 if [ ! -d $OUTPUTFOLDER ]; then
   mkdir $OUTPUTFOLDER
@@ -16,7 +17,7 @@ fi
 
 go build main.go
 
-./main model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/model_info"
+./main model info --database_address=$DATABASE_ADDRESS --framework_name=$FRAMEWORK_NAME --database_name=$DATABASE_NAME --model_name=$MODELNAME --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/model_info"
 
 echo "Start to run layer analysis"
 
