@@ -117,8 +117,10 @@ func (es Evaluations) SummaryGPUKernelLayerAggreInformations(perfCol *Performanc
 		if arithmeticIntensity < layerInfo.IdealArithmeticIntensity {
 			memoryBound = true
 		}
-		arithmeticThroughput := flops / duration / float64(1000)
-
+		arithmeticThroughput := float64(0)
+		if flops != 0 && duration != 0 {
+			arithmeticThroughput = flops / duration / float64(1000)
+		}
 		if duration == 0 {
 			achievedOccupancy = 0
 		} else {

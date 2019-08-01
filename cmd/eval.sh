@@ -2,7 +2,7 @@
 
 DATABASE_ADDRESS=$1
 BATCHSIZE=$2
-MODELNAME=$3
+MODELNAME=AlexNet
 FRAMEWORK_NAME=mxnet
 OUTPUTFOLDER=output
 DATABASE_NAME=carml_mxnet
@@ -21,7 +21,7 @@ go build main.go
 
 echo "Start to run layer analysis"
 
-./main layer info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_info"
+./main layer info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_info"
 
 ./main layer aggre_info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --format=csv,table --plot_all --output="$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/layer_aggre_info"
 

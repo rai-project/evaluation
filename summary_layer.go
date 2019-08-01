@@ -174,6 +174,7 @@ func getLayerInfoFromLayerSpan(span model.Span) SummaryLayerInformation {
 			devicePersistentMemSizes = []int64{m}
 		}
 	}
+
 	layerInfo = SummaryLayerInformation{
 		Index:      cast.ToInt(idx),
 		Name:       span.OperationName,
@@ -232,6 +233,7 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 	}
 
 	groupedLayerInfos := make([][]SummaryLayerInformation, numGroups)
+
 	for ii, spans := range groupedLayerSpans {
 		if groupedLayerInfos[ii] == nil {
 			groupedLayerInfos[ii] = []SummaryLayerInformation{}
@@ -294,6 +296,7 @@ func getGroupedLayerSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, e
 
 	groupedLayerSpans := make([]Spans, numPredictSpans)
 	for ii, grsp := range groupedSpans {
+
 		if len(grsp) == 0 {
 			continue
 		}

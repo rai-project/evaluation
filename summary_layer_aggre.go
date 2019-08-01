@@ -113,7 +113,10 @@ func (es Evaluations) SummaryLayerAggreInformations(perfCol *PerformanceCollecti
 	for _, info := range exsistedLayers {
 		info.DurationPercentage = math.Round(100*100*float64(info.Duration)/float64(totalDuration)) / 100
 		info.OccurencePercentage = math.Round(100*100*float64(info.Occurence)/float64(totalOcurrences)) / 100
-		info.AllocatedMemoryPercentage = math.Round(100*100*float64(info.AllocatedMemory)/float64(totalAllocatedMemory)) / 100
+		info.AllocatedMemoryPercentage = float64(0)
+		if info.AllocatedMemory != 0 && totalAllocatedMemory != 0 {
+			info.AllocatedMemoryPercentage = math.Round(100*100*float64(info.AllocatedMemory)/float64(totalAllocatedMemory)) / 100
+		}
 		summary = append(summary, info)
 	}
 
