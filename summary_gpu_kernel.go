@@ -286,6 +286,13 @@ func CUDALaunchSpantoGPUInformation(span model.Span) SummaryGPUKernelInformation
 	return *info
 }
 
+// func (es Evaluations) SummaryGPUKernelInformations(perfCol *PerformanceCollection) (SummaryGPUKernelInformations, error) {
+// 	summary := SummaryGPUKernelInformations{}
+// 	if len(es) == 0 {
+// 		return summary, errors.New("no evaluation is found in the database")
+// 	}
+// }
+
 func (es Evaluations) SummaryGPUKernelLayerInformations(perfCol *PerformanceCollection) (SummaryGPUKernelLayerInformations, error) {
 	summary := SummaryGPUKernelLayerInformations{}
 	if len(es) == 0 {

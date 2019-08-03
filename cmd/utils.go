@@ -40,7 +40,6 @@ func getEvaluations() (evaluation.Evaluations, error) {
 	if batchSize != 0 {
 		filter["batch_size"] = batchSize
 	}
-
 	evals, err := evaluationCollection.Find(filter)
 	if err != nil {
 		return nil, err

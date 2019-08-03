@@ -201,6 +201,7 @@ func getLayerInfoFromLayerSpan(span model.Span) SummaryLayerInformation {
 
 func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (SummaryLayerInformations, error) {
 	summary := SummaryLayerInformations{}
+
 	spans, err := es.GetSpansFromPerformanceCollection(perfCol)
 	if err != nil {
 		return summary, err
@@ -227,9 +228,9 @@ func (es Evaluations) SummaryLayerInformations(perfCol *PerformanceCollection) (
 	}
 
 	modelInfos, err := (es.SummaryModelInformations(perfCol))
-	modelInfo := modelInfos[0]
-	if err != nil {
-		modelInfo = SummaryModelInformation{}
+	modelInfo := SummaryModelInformation{}
+	if len(modelInfos) != 0 && err == nil {
+		modelInfo = modelInfos[0]
 	}
 
 	groupedLayerInfos := make([][]SummaryLayerInformation, numGroups)
