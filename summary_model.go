@@ -66,7 +66,7 @@ func (es Evaluations) SummaryModelInformations(perfCol *PerformanceCollection) (
 			return summary, err
 		}
 		if len(spans) == 0 {
-			return summary, errors.New("no span is found for the evaluation")
+			continue
 		}
 
 		cPredictSpans := spans.FilterByOperationNameAndEvalTraceLevel("c_predict", tracer.MODEL_TRACE.String())

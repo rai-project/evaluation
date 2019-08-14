@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 
 	"github.com/rai-project/evaluation"
 	"github.com/spf13/cobra"
@@ -49,18 +48,6 @@ var layerInfoCmd = &cobra.Command{
 				return err
 			}
 
-			if sortOutput || topLayers != -1 {
-				sort.Slice(summary0, func(ii, jj int) bool {
-					return summary0[ii].Duration > summary0[jj].Duration
-				})
-				if topLayers != -1 {
-					if topLayers >= len(summary0) {
-						topLayers = len(summary0)
-					}
-					summary0 = summary0[:topLayers]
-				}
-			}
-
 			if plotAll {
 				plotPath = outputFileName + "_latency_bar.html"
 				summary1 := evaluation.SummaryLayerLatencyInformations(summary0)
@@ -84,6 +71,15 @@ var layerInfoCmd = &cobra.Command{
 					return err
 				}
 				fmt.Println("Created plot in " + plotPath)
+			}
+
+			if topLayers != -1 {
+				if topLayers != -1 {
+					if topLayers >= len(summary0) {
+						topLayers = len(summary0)
+					}
+					summary0 = summary0[:topLayers]
+				}
 			}
 
 			if listRuns {

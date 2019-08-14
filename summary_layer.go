@@ -291,7 +291,7 @@ func sortByLayerIndex(spans Spans) {
 func getGroupedLayerSpansFromSpans(cPredictSpans Spans, spans Spans) ([]Spans, error) {
 	groupedSpans, err := getGroupedSpansFromSpans(cPredictSpans, spans)
 	if err != nil {
-		return nil, err
+		groupedSpans = []Spans{spans}
 	}
 	numPredictSpans := len(groupedSpans)
 
