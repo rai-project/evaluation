@@ -484,7 +484,7 @@ func (o SummaryLayerLatencyInformations) BoxPlotAdd(box *charts.BoxPlot) *charts
 			// NameRotate: 90,
 			AxisLabel: charts.LabelTextOpts{Formatter: "{value}" + unitName(timeUnit)},
 			SplitArea: charts.SplitAreaOpts{Show: true},
-			Mix:       0,
+			Min:       0,
 		},
 		charts.DataZoomOpts{
 			Type:       "slider",
