@@ -3,6 +3,7 @@ package evaluation
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/rai-project/evaluation/writer"
 	"github.com/rai-project/go-echarts/charts"
@@ -38,7 +39,7 @@ func (SummaryModelInformation) Header(opts ...writer.Option) []string {
 		"duration (us)",
 		"latency (ms)",
 		"throughput (input/s)",
-		// "durations (us)",
+		"durations (us)",
 	}
 	return append(SummaryBase{}.Header(opts...), extra...)
 }
@@ -48,7 +49,7 @@ func (s SummaryModelInformation) Row(opts ...writer.Option) []string {
 		fmt.Sprintf("%.2f", s.Duration),
 		fmt.Sprintf("%.2f", s.Latency),
 		fmt.Sprintf("%.2f", s.Throughput),
-		// strings.Join(int64SliceToStringSlice(s.Durations), ","),
+		strings.Join(int64SliceToStringSlice(s.Durations), ","),
 	}
 	return append(s.SummaryBase.Row(opts...), extra...)
 }
