@@ -14,5 +14,5 @@ fi
 
 echo Start to run layer analysis
 
-./main model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --format=csv --plot_all --output=$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/model_info
+./main model info --database_address=$DATABASE_ADDRESS --database_name=$DATABASE_NAME --model_name=$MODELNAME --batch_size=$BATCHSIZE --sort_output --format=csv,table --plot_all --output=$OUTPUTFOLDER/$MODELNAME/$BATCHSIZE/model_info
 

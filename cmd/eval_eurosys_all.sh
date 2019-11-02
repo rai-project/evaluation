@@ -36,6 +36,11 @@ declare -a model_list=(
 )
 
 
+# declare -a model_list=(
+#   AI_Matrix_Densenet121
+#   MLPerf_Mobilenet_v1
+#   SRGAN
+# )
 
 if [ -f main ]; then
   rm main
