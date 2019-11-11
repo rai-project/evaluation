@@ -1,9 +1,9 @@
 package metrics
 
 import (
-	"github.com/chewxy/math32"
 	"github.com/rai-project/config"
 	"github.com/rai-project/dlframework"
+	"math"
 )
 
 // https://stackoverflow.com/questions/28723670/intersection-over-union-between-two-detections
@@ -11,10 +11,10 @@ import (
 func BoundingBoxIntersectionOverUnion(boxA, boxB *dlframework.BoundingBox) float64 {
 
 	// determine the (x, y)-coordinates of the intersection rectangle
-	xA := math32.Max(boxA.GetXmin(), boxB.GetXmin())
-	yA := math32.Max(boxA.GetYmin(), boxB.GetYmin())
-	xB := math32.Min(boxA.GetXmax(), boxB.GetXmax())
-	yB := math32.Min(boxA.GetYmax(), boxB.GetYmax())
+	xA := float32(math.Max(float64(boxA.GetXmin()), float64(boxB.GetXmin())))
+	yA := float32(math.Max(float64(boxA.GetYmin()), float64(boxB.GetYmin())))
+	xB := float32(math.Min(float64(boxA.GetXmax()), float64(boxB.GetXmax())))
+	yB := float32(math.Min(float64(boxA.GetYmax()), float64(boxB.GetYmax())))
 
 	// compute the area of intersection rectangle
 	interArea := float64(xB-xA) * float64(yB-yA)
